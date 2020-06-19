@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -229,7 +230,190 @@ public class project {
             }
         }
     }
-    public static void main(String[] args){
+
+    static class Gauss_Jordan_Elimination {
+        private static final double EPSILON = 1e-8;
+        private final int N;
+        private double[][] a;
+        public Gauss_Jordan_Elimination(double[][] A, double[] b) {
+            N = b.length;
+            a = new double[N][N+N+1];
+            for (int i = 0; i < N; i++)
+                for (int j = 0; j < N; j++)
+                    a[i][j] = A[i][j];
+            for (int i = 0; i < N; i++)
+                a[i][N+i] = 1.0;
+            for (int i = 0; i < N; i++)
+                a[i][N+N] = b[i];
+            solve();
+            assert check(A, b);
+        }
+        private void solve() {
+            for (int p = 0; p < N; p++) {
+                int max = p;
+                for (int i = p+1; i < N; i++) {
+                    if (Math.abs(a[i][p]) > Math.abs(a[max][p])) {
+                        max = i;
+                    }
+                }
+                swap(p, max);
+                if (Math.abs(a[p][p]) <= EPSILON) {
+                    continue;
+                }
+                pivot(p, p);
+            }
+        }
+        private void swap(int row1, int row2) {
+            double[] temp = a[row1];
+            a[row1] = a[row2];
+            a[row2] = temp;
+        }
+        private void pivot(int p, int q) {
+            for (int i = 0; i < N; i++) {
+                double alpha = a[i][q] / a[p][q];
+                for (int j = 0; j <= N+N; j++) {
+                    if (i != p && j != q) a[i][j] -= alpha * a[p][j];
+                }
+            }
+            for (int i = 0; i < N; i++)
+                if (i != p) a[i][q] = 0.0;
+            for (int j = 0; j <= N+N; j++)
+                if (j != q) a[p][j] /= a[p][q];
+            a[p][q] = 1.0;
+        }
+        public double[] primal() {
+            double[] x = new double[N];
+            for (int i = 0; i < N; i++) {
+                if (Math.abs(a[i][i]) > EPSILON)
+                    x[i] = a[i][N+N] / a[i][i];
+                else if (Math.abs(a[i][N+N]) > EPSILON)
+                    return null;
+            }
+            return x;
+        }
+        public double[] dual() {
+            double[] y = new double[N];
+            for (int i = 0; i < N; i++) {
+                if ( (Math.abs(a[i][i]) <= EPSILON) && (Math.abs(a[i][N+N]) > EPSILON) ) {
+                    for (int j = 0; j < N; j++)
+                        y[j] = a[i][N+j];
+                    return y;
+                }
+            }
+            return null;
+        }
+        public boolean isFeasible() {
+            return primal() != null;
+        }
+        private void show() {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    System.out.print(" "+a[i][j]);
+                }
+                System.out.print("| ");
+                for (int j = N; j < N+N; j++) {
+                    System.out.print(" "+a[i][j]);
+                }
+                System.out.print("| \n"+a[i][N+N]);
+            }
+            System.out.println();
+        }
+        private boolean check(double[][] A, double[] b) {
+            if (isFeasible()) {
+                double[] x = primal();
+                for (int i = 0; i < N; i++) {
+                    double sum = 0.0;
+                    for (int j = 0; j < N; j++) {
+                        sum += A[i][j] * x[j];
+                    }
+                    if (Math.abs(sum - b[i]) > EPSILON) {
+                        System.out.println("not feasible");
+                        System.out.println(i+" = "+b[i]+", sum = "+sum+"\n");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else {
+                double[] y = dual();
+                for (int j = 0; j < N; j++) {
+                    double sum = 0.0;
+                    for (int i = 0; i < N; i++) {
+                        sum += A[i][j] * y[i];
+                    }
+                    if (Math.abs(sum) > EPSILON) {
+                        System.out.println("invalid certificate of infeasibility");
+                        System.out.println("sum = "+sum+"\n");
+                        return false;
+                    }
+                }
+                double sum = 0.0;
+                for (int i = 0; i < N; i++) {
+                    sum += y[i] * b[i];
+                }
+                if (Math.abs(sum) < EPSILON) {
+                    System.out.println("invalid certificate of infeasibility");
+                    System.out.println("yb  = "+sum+"\n");
+                    return false;
+                }
+                return true;
+            }
+        }
+        public static void test(double[][] A, double[] b) {
+            Gauss_Jordan_Elimination gaussian = new Gauss_Jordan_Elimination(A, b);
+            if (gaussian.isFeasible()) {
+                System.out.println("Solution to Ax = b");
+                double[] x = gaussian.primal();
+                for (int i = 0; i < x.length; i++) {
+                    System.out.println(" "+x[i]+"\n");
+                }
+            }
+            else {
+                System.out.println("Certificate of infeasibility");
+                double[] y = gaussian.dual();
+                for (int j = 0; j < y.length; j++) {
+                    System.out.println(" "+y[j]+"\n");
+                }
+            }
+            System.out.println();
+        }
+    }
+    static double calcGii(int i){
+        double gii=0;
+        for(int k=0;k<R.size();k++){
+            if(R.get(k).n2.name.equals(N.get(i).name)||R.get(k).n1.name.equals(N.get(i).name)){
+                gii+=1.0/(R.get(k).R);
+            }
+        }
+        return gii;
+    }
+    static double calcGij(int i, int j){
+        double gij=0;
+        for(int k=0;k<R.size();k++){
+            if(R.get(k).n2.name.equals(N.get(i).name)&&R.get(k).n1.name.equals(N.get(j).name)){
+                gij-=1.0/(R.get(k).R);
+            }
+            else if(R.get(k).n1.name.equals(N.get(i).name)&&R.get(k).n2.name.equals(N.get(j).name)){
+                gij-=1.0/(R.get(k).R);
+            }
+        }
+        return gij;
+    }
+    static double calcJi(int i){
+        double ji=0;
+        for(int k=0;k<CS.size();k++){
+            if(CS.get(k).n2.name.equals(N.get(i).name)){
+                ji+=CS.get(k).I;
+            }
+            if(CS.get(k).n1.name.equals(N.get(i).name)){
+                ji-=CS.get(k).I;
+            }
+        }
+        return ji;
+    }
+
+
+    public static void main(String[] args) {
         resistor r;
         currentSource cs;
         voltageSource vs;
@@ -255,5 +439,22 @@ public class project {
             s=s.trim();
             s=s.replaceAll("( )+", " ");
         }
+
+
+        int n = N.size()-1;
+        double [][]mat = new double[n][n];
+        double []constants = new double[n];
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                if(i==j){
+                    mat[i][j] = calcGii(i);
+                }
+                else{
+                    mat[i][j] = calcGij(i, j);
+                }
+            }
+            constants[i] = calcJi(i);
+        }
+        Gauss_Jordan_Elimination.test(mat, constants);
     }
 }
