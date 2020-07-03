@@ -392,7 +392,8 @@ public class project {
         double gii=0;
         for(int k=0;k<R.size();k++){
             if(R.get(k).n2.name.equals(N.get(i).name)||R.get(k).n1.name.equals(N.get(i).name)){
-                gii+=1.0/(R.get(k).R);
+                if(!R.get(k).n2.name.equals(R.get(k).n1.name))
+                    gii+=1.0/(R.get(k).R);
             }
         }
         return gii;
@@ -422,39 +423,33 @@ public class project {
         return ji;
     }
 
-    //KVL soloution
-    static double calcRii(int i) {
-     double rii=0;
-            for(int k=0;k<R.size();k++){
-                if(R.get(k).n2.name.equals(N.get(i).name)||R.get(k).n1.name.equals(N.get(i).name)){
-                    rii+=(R.get(k).R);
-                }
-            }
-            return rii;}
-    static double calcRij(int i,int j) {
-        double rij = 0;
-        for (int k = 0; k < R.size(); k++) {
-            if (R.get(k).n2.name.equals(N.get(i).name) && R.get(k).n1.name.equals(N.get(j).name)) {
-                rij -= (R.get(k).R);
-            } else if (R.get(k).n1.name.equals(N.get(i).name) && R.get(k).n2.name.equals(N.get(j).name)) {
-                rij -= (R.get(k).R);
-            }
-        }
-        return rij;
-    }
-    static double calcVi(int i){
-        double vi=0;
-        for(int k=0;k<VS.size();k++){
-            if(VS.get(k).n2.name.equals(N.get(i).name)){
-                vi+=VS.get(k).V;
-            }
-            if(VS.get(k).n1.name.equals(N.get(i).name)){
-                vi-=VS.get(k).V;
-            }
-        }
-        return vi;
-    }
 
+    public static void replaceVS(int i){
+        String n2VName=new String(VS.get(i).n2.name);
+        String n1VName=new String(VS.get(i).n1.name);
+        int j=searchNode(n2VName);
+        for(int k=0;k<R.size();k++){
+            if(R.get(k).n1.name.equals(n2VName)){
+                currentSource csV=new currentSource("IV"+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("IV"+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                CS.add(csV);
+            }
+            else if(R.get(k).n2.name.equals(n2VName)){
+                currentSource csV=new currentSource("IV"+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                CS.add(csV);
+            }
+        }
+        for (int k=0;k<R.size();k++){
+            if(R.get(k).n1.name.equals(n2VName)){
+                R.get(k).n1.name=n1VName;
+            }
+            else if(R.get(k).n2.name.equals(n2VName)){
+                R.get(k).n2.name=n1VName;
+            }
+        }
+        N.remove(j);
+
+    }
 
 
 
@@ -492,19 +487,21 @@ public class project {
         }
 
 
+        for(int i=0;i<VS.size();i++) {
+            replaceVS(i);
+        }
 
 
         int n = N.size()-1;
         double [][]mat = new double[n][n];
         double []constants = new double[n];
-        if(CS.size()>0){
+        if(CS.size()>0) {
 
-            for(int i=0; i<n; i++) {
-                for(int j=0; j<n; j++) {
-                    if(i==j){
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i == j) {
                         mat[i][j] = calcGii(i);
-                    }
-                    else{
+                    } else {
                         mat[i][j] = calcGij(i, j);
                     }
                 }
@@ -512,11 +509,5 @@ public class project {
             }
             Gauss_Jordan_Elimination.test(mat, constants);
         }
-
-
-
-        //new added
-
-
     }
 }
