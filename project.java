@@ -375,14 +375,17 @@ public class project {
             }
             else {
                 System.out.println("Certificate of infeasibility");
+
                 double[] y = gaussian.dual();
                 for (int j = 0; j < y.length; j++) {
                     System.out.println(" "+y[j]+"\n");
                 }
+
             }
             System.out.println();
         }
     }
+    //KCL soloution
     static double calcGii(int i){
         double gii=0;
         for(int k=0;k<R.size();k++){
@@ -417,10 +420,38 @@ public class project {
         return ji;
     }
 
-
-    //static double calcRii(int i) {}
-
-    //static double calcRij(int i,int j) {}
+//KVL soloution
+    static double calcRii(int i) {
+     double rii=0;
+            for(int k=0;k<R.size();k++){
+                if(R.get(k).n2.name.equals(N.get(i).name)||R.get(k).n1.name.equals(N.get(i).name)){
+                    rii+=(R.get(k).R);
+                }
+            }
+            return rii;}
+    static double calcRij(int i,int j) {
+        double rij = 0;
+        for (int k = 0; k < R.size(); k++) {
+            if (R.get(k).n2.name.equals(N.get(i).name) && R.get(k).n1.name.equals(N.get(j).name)) {
+                rij -= (R.get(k).R);
+            } else if (R.get(k).n1.name.equals(N.get(i).name) && R.get(k).n2.name.equals(N.get(j).name)) {
+                rij -= (R.get(k).R);
+            }
+        }
+        return rij;
+    }
+     static double calcVi(int i){
+        double vi=0;
+        for(int k=0;k<VS.size();k++){
+            if(VS.get(k).n2.name.equals(N.get(i).name)){
+                vi+=VS.get(k).V;
+            }
+            if(VS.get(k).n1.name.equals(N.get(i).name)){
+                vi-=VS.get(k).V;
+            }
+        }
+        return vi;
+    }
 
 
 
@@ -459,11 +490,11 @@ public class project {
         }
 
 
-        int n = N.size()-1;
-        double [][]mat = new double[n][n];
-        double []constants = new double[n];
-        if(CS.size()>0){
 
+        if(CS.size()>0){
+            int n = N.size()-1;
+            double [][]mat = new double[n][n];
+            double []constants = new double[n];
             for(int i=0; i<n; i++) {
                 for(int j=0; j<n; j++) {
                     if(i==j){
@@ -477,8 +508,15 @@ public class project {
             }
             Gauss_Jordan_Elimination.test(mat, constants);
         }
-        /*if(VS.size()>0)
+
+
+
+        //new added
+        if(VS.size()>0)
         {
+            int n = R.size()+VS.size()-N.size()+1;
+            double [][]mat = new double[n][n];
+            double []constants = new double[n];
             for(int i=0; i<n; i++) {
                 for(int j=0; j<n; j++) {
                     if(i==j){
@@ -488,10 +526,10 @@ public class project {
                         mat[i][j] = calcRij(i, j);
                     }
                 }
-               // constants[i] = calcJi(i);
+                constants[i] = calcVi(i);
             }
-            //Gauss_Jordan_Elimination.test(mat, constants);
-        }*/
+            Gauss_Jordan_Elimination.test(mat, constants);
+        }
 
 
     }
