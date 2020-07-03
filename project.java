@@ -238,8 +238,8 @@ public class project {
 
     static class Gauss_Jordan_Elimination {
         private static final double EPSILON = 1e-8;
-        private final int N;
-        private double[][] a;
+        private static int N;
+        private static double[][] a;
         public Gauss_Jordan_Elimination(double[][] A, double[] b) {
             N = b.length;
             a = new double[N][N+N+1];
@@ -250,6 +250,7 @@ public class project {
                 a[i][N+i] = 1.0;
             for (int i = 0; i < N; i++)
                 a[i][N+N] = b[i];
+            show();
             solve();
             assert check(A, b);
         }
@@ -310,16 +311,16 @@ public class project {
         public boolean isFeasible() {
             return primal() != null;
         }
-        private void show() {
+        private static void show() {
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
-                    System.out.print(" "+a[i][j]);
+                    System.out.print(a[i][j]+"  ");
                 }
-                System.out.print("| ");
+                System.out.print("|");
                 for (int j = N; j < N+N; j++) {
-                    System.out.print(" "+a[i][j]);
+                    System.out.print(a[i][j]+"  ");
                 }
-                System.out.print("| \n"+a[i][N+N]);
+                System.out.println("| "+a[i][N+N]);
             }
             System.out.println();
         }
@@ -382,6 +383,7 @@ public class project {
                 }
 
             }
+            show();
             System.out.println();
         }
     }
@@ -420,7 +422,7 @@ public class project {
         return ji;
     }
 
-//KVL soloution
+    //KVL soloution
     static double calcRii(int i) {
      double rii=0;
             for(int k=0;k<R.size();k++){
@@ -440,7 +442,7 @@ public class project {
         }
         return rij;
     }
-     static double calcVi(int i){
+    static double calcVi(int i){
         double vi=0;
         for(int k=0;k<VS.size();k++){
             if(VS.get(k).n2.name.equals(N.get(i).name)){
@@ -512,8 +514,7 @@ public class project {
 
 
         //new added
-        if(VS.size()>0)
-        {
+        if(VS.size()>0){
             int n = R.size()+VS.size()-N.size()+1;
             double [][]mat = new double[n][n];
             double []constants = new double[n];
