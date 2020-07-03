@@ -8,6 +8,7 @@ public class project {
     static ArrayList<resistor> R=new ArrayList<resistor>(0);
     static ArrayList<currentSource> CS=new ArrayList<currentSource>(0);
     static ArrayList<voltageSource> VS=new ArrayList<voltageSource>(0);
+    static ArrayList<capacitor> C=new ArrayList<capacitor>(0);
 
     public static int searchNode(String s){
         for(int i=0;i<N.size();i++){
@@ -59,17 +60,21 @@ public class project {
             s=s.replaceAll("k", "000");
             s=s.replaceAll("M", "000000");
             s=s.replaceAll("G", "000000000");
-            if(s.indexOf("u")!=-1){
+            if(s.indexOf("m")!=-1){
                 R=0.001;
-                s=s.replaceAll("u", "");
+                s=s.replaceAll("m","");
             }
-            else if(s.indexOf("n")!=-1){
+            if(s.indexOf("u")!=-1){
                 R=0.000001;
                 s=s.replaceAll("u", "");
             }
-            else if(s.indexOf("p")!=-1){
+            else if(s.indexOf("n")!=-1){
                 R=0.000000001;
-                s=s.replaceAll("u", "");
+                s=s.replaceAll("n", "");
+            }
+            else if(s.indexOf("p")!=-1){
+                R=0.000000000001;
+                s=s.replaceAll("p", "");
             }
             else {
                 R=1;
@@ -413,8 +418,16 @@ public class project {
     }
 
 
+    //static double calcRii(int i) {}
+
+    //static double calcRij(int i,int j) {}
+
+
+
+
     public static void main(String[] args) {
         resistor r;
+        capacitor c;
         currentSource cs;
         voltageSource vs;
         Scanner sc=new Scanner(System.in);
@@ -435,6 +448,11 @@ public class project {
                 vs=new voltageSource(s);
                 VS.add(vs);
             }
+            else if(s.charAt(0)=='C') {
+                //c=new capacitor(s);
+                // C.add(c);
+            }
+
             s=sc.nextLine();
             s=s.trim();
             s=s.replaceAll("( )+", " ");
@@ -444,17 +462,37 @@ public class project {
         int n = N.size()-1;
         double [][]mat = new double[n][n];
         double []constants = new double[n];
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<n; j++) {
-                if(i==j){
-                    mat[i][j] = calcGii(i);
+        if(CS.size()>0){
+
+            for(int i=0; i<n; i++) {
+                for(int j=0; j<n; j++) {
+                    if(i==j){
+                        mat[i][j] = calcGii(i);
+                    }
+                    else{
+                        mat[i][j] = calcGij(i, j);
+                    }
                 }
-                else{
-                    mat[i][j] = calcGij(i, j);
-                }
+                constants[i] = calcJi(i);
             }
-            constants[i] = calcJi(i);
+            Gauss_Jordan_Elimination.test(mat, constants);
         }
-        Gauss_Jordan_Elimination.test(mat, constants);
+        /*if(VS.size()>0)
+        {
+            for(int i=0; i<n; i++) {
+                for(int j=0; j<n; j++) {
+                    if(i==j){
+                        mat[i][j] = calcRii(i);
+                    }
+                    else{
+                        mat[i][j] = calcRij(i, j);
+                    }
+                }
+               // constants[i] = calcJi(i);
+            }
+            //Gauss_Jordan_Elimination.test(mat, constants);
+        }*/
+
+
     }
 }
