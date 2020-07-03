@@ -493,10 +493,12 @@ public class project {
 
 
 
+
+        int n = N.size()-1;
+        double [][]mat = new double[n][n];
+        double []constants = new double[n];
         if(CS.size()>0){
-            int n = N.size()-1;
-            double [][]mat = new double[n][n];
-            double []constants = new double[n];
+
             for(int i=0; i<n; i++) {
                 for(int j=0; j<n; j++) {
                     if(i==j){
@@ -514,23 +516,6 @@ public class project {
 
 
         //new added
-        if(VS.size()>0){
-            int n = R.size()+VS.size()-N.size()+1;
-            double [][]mat = new double[n][n];
-            double []constants = new double[n];
-            for(int i=0; i<n; i++) {
-                for(int j=0; j<n; j++) {
-                    if(i==j){
-                        mat[i][j] = calcRii(i);
-                    }
-                    else{
-                        mat[i][j] = calcRij(i, j);
-                    }
-                }
-                constants[i] = calcVi(i);
-            }
-            Gauss_Jordan_Elimination.test(mat, constants);
-        }
 
 
     }
