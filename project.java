@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -81,19 +80,66 @@ public class project {
             }
             R*=Double.parseDouble(s);
         }
-        void calc_I(){
+        void calc_I(int t){
             I=(n1.volt-n2.volt)/R;
         }
-        void calc_v1(){
+        void calc_v1(int t){
             n1.volt=n2.volt+I*R;
         }
-        void calc_v2(){
+        void calc_v2(int t){
             n2.volt=n1.volt-I*R;
         }
     }
-    public class capacitor extends branch {
+    public static class capacitor extends branch {
         String NameC;
         double C, Q=0, Q0=0;
+        capacitor(String s){
+            NameC=s.substring(0,s.indexOf(" "));
+            s=s.substring(s.indexOf(" ")+1);
+            node n=new node(s.substring(0, s.indexOf(" ")));
+            int i=searchNode(s.substring(0,s.indexOf(" ")));
+            if(i==-1){
+                N.add(n);
+                n1=n;
+            }
+            else{
+                n1=N.get(i);
+            }
+            s=s.substring(s.indexOf(" ")+1);
+            n=new node(s.substring(0, s.indexOf(" ")));
+            i=searchNode(s.substring(0,s.indexOf(" ")));
+            if(i==-1){
+                N.add(n);
+                n2=n;
+            }
+            else{
+                n2=N.get(i);
+            }
+            s=s.substring(s.indexOf(" ")+1);
+            s=s.replaceAll("k", "000");
+            s=s.replaceAll("M", "000000");
+            s=s.replaceAll("G", "000000000");
+            if(s.indexOf("m")!=-1){
+                C=0.001;
+                s=s.replaceAll("m","");
+            }
+            if(s.indexOf("u")!=-1){
+                C=0.000001;
+                s=s.replaceAll("u", "");
+            }
+            else if(s.indexOf("n")!=-1){
+                C=0.000000001;
+                s=s.replaceAll("n", "");
+            }
+            else if(s.indexOf("p")!=-1){
+                C=0.000000000001;
+                s=s.replaceAll("p", "");
+            }
+            else {
+                C=1;
+            }
+            C*=Double.parseDouble(s);
+        }
         void calc_QwithV(double dt){
             Q0=Q;
             Q=C*(n1.volt-n2.volt);
@@ -387,7 +433,8 @@ public class project {
             System.out.println();
         }
     }
-    //KCL soloution
+
+
     static double calcGii(int i){
         double gii=0;
         for(int k=0;k<R.size();k++){
@@ -430,12 +477,12 @@ public class project {
         int j=searchNode(n2VName);
         for(int k=0;k<R.size();k++){
             if(R.get(k).n1.name.equals(n2VName)){
-                currentSource csV=new currentSource("IV"+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
-                System.out.println("IV"+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("I"+VS.get(i).NameV+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
             else if(R.get(k).n2.name.equals(n2VName)){
-                currentSource csV=new currentSource("IV"+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
         }
@@ -450,6 +497,13 @@ public class project {
         N.remove(j);
 
     }
+    public static void replaceC(int i){
+        String n2VName=new String(C.get(i).n2.name);
+        String n1VName=new String(C.get(i).n1.name);
+        int j1=searchNode(n1VName), j2=searchNode(n2VName);
+        voltageSource vc=new voltageSource("VC"+Integer.toString(i)+" "+n1VName+" "+n2VName+" "+ Double.toString(C.get(i).n2.volt-C.get(i).n1.volt)+" 0 0 0");
+        VS.add(vc);
+    }
 
 
 
@@ -459,6 +513,7 @@ public class project {
         capacitor c;
         currentSource cs;
         voltageSource vs;
+        double T=1, dT=1;
         Scanner sc=new Scanner(System.in);
         String s=sc.nextLine();
         s=s.trim();
@@ -478,37 +533,93 @@ public class project {
                 VS.add(vs);
             }
             else if(s.charAt(0)=='C') {
-                //c=new capacitor(s);
-                // C.add(c);
+                c=new capacitor(s);
+                C.add(c);
             }
+            else if(s.indexOf(".tran")!=-1){
+                s=s.substring(s.indexOf(" ")+1);
+                s=s.replaceAll("k", "000");
+                s=s.replaceAll("M", "000000");
+                s=s.replaceAll("G", "000000000");
+                if(s.indexOf("m")!=-1){
+                    T=0.001;
+                    s=s.replaceAll("m","");
+                }
+                if(s.indexOf("u")!=-1){
+                    T=0.000001;
+                    s=s.replaceAll("u", "");
+                }
+                else if(s.indexOf("n")!=-1){
+                    T=0.000000001;
+                    s=s.replaceAll("n", "");
+                }
+                else if(s.indexOf("p")!=-1){
+                    T=0.000000000001;
+                    s=s.replaceAll("p", "");
+                }
+                else {
+                    T=1;
+                }
+                T*=Double.parseDouble(s);
+            }
+            else if(s.indexOf("dT")!=-1){
+                s=s.substring(s.indexOf(" ")+1);
+                s=s.replaceAll("k", "000");
+                s=s.replaceAll("M", "000000");
+                s=s.replaceAll("G", "000000000");
+                if(s.indexOf("m")!=-1){
+                    dT=0.001;
+                    s=s.replaceAll("m","");
+                }
+                if(s.indexOf("u")!=-1){
+                    dT=0.000001;
+                    s=s.replaceAll("u", "");
+                }
+                else if(s.indexOf("n")!=-1){
+                    dT=0.000000001;
+                    s=s.replaceAll("n", "");
+                }
+                else if(s.indexOf("p")!=-1){
+                    dT=0.000000000001;
+                    s=s.replaceAll("p", "");
+                }
+                else {
+                    dT=1;
+                }
+                dT*=Double.parseDouble(s);
+            }
+
 
             s=sc.nextLine();
             s=s.trim();
             s=s.replaceAll("( )+", " ");
         }
 
-
+        for(int i=0;i<C.size();i++) {
+            replaceC(i);
+        }
         for(int i=0;i<VS.size();i++) {
             replaceVS(i);
         }
 
-
-        int n = N.size()-1;
-        double [][]mat = new double[n][n];
-        double []constants = new double[n];
-        if(CS.size()>0) {
-
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (i == j) {
-                        mat[i][j] = calcGii(i);
-                    } else {
-                        mat[i][j] = calcGij(i, j);
+        for(int t=0;t<T/dT;t++) {
+            if (CS.size() > 0) {
+                int n = N.size() - 1;
+                double[][] mat = new double[n][n];
+                double[] constants = new double[n];
+                for (int i = 0; i < n; i++) {
+                    for (int j = 0; j < n; j++) {
+                        if (i == j) {
+                            mat[i][j] = calcGii(i);
+                        } else {
+                            mat[i][j] = calcGij(i, j);
+                        }
                     }
+                    constants[i] = calcJi(i);
                 }
-                constants[i] = calcJi(i);
+                Gauss_Jordan_Elimination.test(mat, constants);
             }
-            Gauss_Jordan_Elimination.test(mat, constants);
+            //updateMadar();
         }
 
     }
