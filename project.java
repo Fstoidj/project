@@ -454,6 +454,7 @@ public class project {
 
 
     public static void main(String[] args) {
+
         resistor r;
         capacitor c;
         currentSource cs;
@@ -509,5 +510,6 @@ public class project {
             }
             Gauss_Jordan_Elimination.test(mat, constants);
         }
+
     }
 }
