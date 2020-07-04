@@ -481,26 +481,20 @@ public class project {
 
         for(int i=0;i<C.size();i++) {
             a=0;
-
             for(int j=0;j<CS.size();j++) {
-
                 if(CS.get(j).NameI.contains("IVC"+Integer.toString(i))){
-                    if (a==0)
-                    for (int k=0;k<CS.size();k++){
-                        if (CS.get(k).NameI.contains("IVC"+Integer.toString(i)))
-                        {
-                            I0+=CS.get(k).I;
-                            a=1;
+                    if (a==0) {
+                        for (int k = 0; k < CS.size(); k++) {
+                            if (CS.get(k).NameI.contains("IVC" + Integer.toString(i))) {
+                                I0 += CS.get(k).I;
+                                a = 1;
+                            }
                         }
-                        
-
                     }
                     matcher1=pattern.matcher(CS.get(j).NameI);
                     matcher1.find();
-
                     CS.get(j).I+=(deltat/C.get(i).C/Double.parseDouble(matcher1.group(2)))*I0;
                 }
-
             }
         }
     }
