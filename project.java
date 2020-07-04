@@ -22,14 +22,14 @@ public class project {
 
     public static class node{
         String name;
-        double volt;
+        double volt[];
         node(String s){
             name=s;
         }
     }
     abstract public static class branch{
         node n1, n2;
-        double I;
+        double I[];
     }
     public static class resistor extends branch {
         String NameR;
@@ -81,27 +81,27 @@ public class project {
             }
             R*=Double.parseDouble(s);
         }
-        void calc_I(){
-            I=(n1.volt-n2.volt)/R;
+        void calc_I(int t){
+            I[t]=(n1.volt[t]-n2.volt[t])/R;
         }
-        void calc_v1(){
-            n1.volt=n2.volt+I*R;
+        void calc_v1(int t){
+            n1.volt[t]=n2.volt[t]+I[t]*R;
         }
-        void calc_v2(){
-            n2.volt=n1.volt-I*R;
+        void calc_v2(int t){
+            n2.volt[t]=n1.volt[t]-I[t]*R;
         }
     }
     public class capacitor extends branch {
         String NameC;
-        double C, Q=0, Q0=0;
-        void calc_QwithV(double dt){
-            Q0=Q;
-            Q=C*(n1.volt-n2.volt);
-            I=(Q-Q0)/dt;
+        double C, Q[]={}, Q0[]={};
+        void calc_QwithV(double dT, int t){
+            Q0[t]=Q[t];
+            Q[t]=C*(n1.volt[t]-n2.volt[t]);
+            I[t]=(Q[t]-Q0[t])/dT;
         }
-        void calc_Q1withI(double dt){
-            Q0=Q;
-            Q=Q0+dt*I;
+        void calc_Q1withI(double dT, int t){
+            Q0[t]=Q[t];
+            Q[t]=Q0[t]+d*I;
             n1.volt=(Q-Q0)/C+n2.volt;
         }
         void calc_Q2withI(double dt){
@@ -508,5 +508,7 @@ public class project {
             }
             Gauss_Jordan_Elimination.test(mat, constants);
         }
+
+
     }
 }
