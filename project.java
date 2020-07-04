@@ -477,12 +477,12 @@ public class project {
         int j=searchNode(n2VName);
         for(int k=0;k<R.size();k++){
             if(R.get(k).n1.name.equals(n2VName)){
-                currentSource csV=new currentSource("I"+VS.get(i).NameV+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
-                System.out.println("I"+VS.get(i).NameV+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+"-"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("I"+VS.get(i).NameV+"-"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
             else if(R.get(k).n2.name.equals(n2VName)){
-                currentSource csV=new currentSource("I"+VS.get(i).NameV+Integer.toString(i)+Integer.toString(k)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+"-"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
         }
