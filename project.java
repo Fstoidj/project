@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class project {
 
@@ -471,18 +473,49 @@ public class project {
     }
 
 
+    public static void updateMadar(double deltat){
+        Pattern pattern=Pattern.compile("(.+)_(.+)");
+        Matcher matcher1;
+        double I0=0;
+        int a=0;
+
+        for(int i=0;i<C.size();i++) {
+
+            for(int j=0;j<CS.size();j++) {
+
+                if(CS.get(j).NameI.contains("IVC"+Integer.toString(i))){
+                    for (int k=0;k<CS.size()&&a==0;k++){
+                        if (CS.get(k).NameI.contains("IVC"+Integer.toString(i)))
+                        {
+                            I0+=CS.get(k).I;
+                            a=1;
+                        }
+
+                    }
+                    matcher1=pattern.matcher(CS.get(j).NameI);
+                    matcher1.find();
+
+                    CS.get(j).I+=(deltat/C.get(i).C/Double.parseDouble(matcher1.group(2)))*I0;
+                }
+
+            }
+        }
+    }
+
+
     public static void replaceVS(int i){
         String n2VName=new String(VS.get(i).n2.name);
         String n1VName=new String(VS.get(i).n1.name);
         int j=searchNode(n2VName);
         for(int k=0;k<R.size();k++){
             if(R.get(k).n1.name.equals(n2VName)){
-                currentSource csV=new currentSource("I"+VS.get(i).NameV+"-"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
-                System.out.println("I"+VS.get(i).NameV+"-"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
             else if(R.get(k).n2.name.equals(n2VName)){
-                currentSource csV=new currentSource("I"+VS.get(i).NameV+"-"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
         }
@@ -619,7 +652,7 @@ public class project {
                 }
                 Gauss_Jordan_Elimination.test(mat, constants);
             }
-            //updateMadar();
+            updateMadar(dT);
         }
 
     }
