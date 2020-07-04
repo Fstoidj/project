@@ -480,16 +480,19 @@ public class project {
         int a=0;
 
         for(int i=0;i<C.size();i++) {
+            a=0;
 
             for(int j=0;j<CS.size();j++) {
 
                 if(CS.get(j).NameI.contains("IVC"+Integer.toString(i))){
-                    for (int k=0;k<CS.size()&&a==0;k++){
+                    if (a==0)
+                    for (int k=0;k<CS.size();k++){
                         if (CS.get(k).NameI.contains("IVC"+Integer.toString(i)))
                         {
                             I0+=CS.get(k).I;
                             a=1;
                         }
+                        
 
                     }
                     matcher1=pattern.matcher(CS.get(j).NameI);
