@@ -492,7 +492,7 @@ public class project {
                             I0+=CS.get(k).I;
                             a=1;
                         }
-                        
+
 
                     }
                     matcher1=pattern.matcher(CS.get(j).NameI);
