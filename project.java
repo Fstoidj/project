@@ -482,12 +482,10 @@ public class project {
 
 
     public static void updateMadar(double deltat){
-
         Pattern pattern=Pattern.compile("(.+)_(.+)");
         Matcher matcher1;
         double I0=0;
         int a=0;
-
         for(int i=0;i<C.size();i++) {
             a=0;
             I0=0;
@@ -505,7 +503,7 @@ public class project {
                     matcher1.find();
                     CS.get(j).I+=(deltat/C.get(i).C/Double.parseDouble(matcher1.group(2)))*I0;
                     System.out.println(CS.get(j).NameI);
-                    System.out.print(CS.get(j).I);
+                    System.out.println(CS.get(j).I);
                 }
             }
         }
@@ -518,13 +516,15 @@ public class project {
         int j=searchNode(n2VName);
         for(int k=0;k<R.size();k++){
             if(R.get(k).n1.name.equals(n2VName)){
+                System.out.println(n2VName);
                 currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
-                System.out.println("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("1 "+R.get(k).NameR+" I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
             else if(R.get(k).n2.name.equals(n2VName)){
+                System.out.println(n2VName);
                 currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
-                System.out.println("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("2 "+R.get(k).NameR+" I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
         }
@@ -537,10 +537,8 @@ public class project {
             }
         }
         N.remove(j);
-
     }
     public static void replaceC(int i){
-
         String n2VName=new String(C.get(i).n2.name);
         String n1VName=new String(C.get(i).n1.name);
         int j1=searchNode(n1VName), j2=searchNode(n2VName);
@@ -551,7 +549,6 @@ public class project {
 
 
     public static void main(String[] args) {
-
         resistor r;
         capacitor c;
         currentSource cs;
@@ -607,7 +604,6 @@ public class project {
             }
             else if(s.indexOf("dT")!=-1){
                 s=s.substring(s.indexOf(" ")+1);
-
                 s=s.replaceAll("k", "000");
                 s=s.replaceAll("M", "000000");
                 s=s.replaceAll("G", "000000000");
@@ -643,7 +639,7 @@ public class project {
         for(int i=0;i<C.size();i++) {
             replaceC(i);
         }
-        for(int i=0;i<VS.size();i++) {
+        for(int i=VS.size()-1;i>-1;i--) {
             replaceVS(i);
         }
 
@@ -666,8 +662,9 @@ public class project {
                 Gauss_Jordan_Elimination.test(mat, constants);
             }
 
-            if (dT!=1)
+            if (dT!=1) {
                 updateMadar(dT);
+            }
         }
 
     }
