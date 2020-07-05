@@ -370,7 +370,7 @@ public class project {
             return primal() != null;
         }
         private static void show() {
-            /*for (int i = 0; i < N; i++) {
+            for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
                     System.out.print(a[i][j]+"  ");
                 }
@@ -381,10 +381,6 @@ public class project {
                 System.out.println("| "+a[i][N+N]);
             }
             System.out.println();
-            */
-            for(int i=0;i<a.length;i++){
-                System.out.println(Arrays.toString(a[i]));
-            }
         }
         private boolean check(double[][] A, double[] b) {
             if (isFeasible()) {
@@ -505,24 +501,21 @@ public class project {
                 matcher1=pattern.matcher(CS.get(j).NameI);
                 matcher1.find();
                 if(CS.get(j).NameI.contains("IVC"+Integer.toString(i))){
-
                     if (a==0) {
                         for (int k = 0; k < CS.size(); k++) {
-
                             if (CS.get(k).NameI.contains("IVC" + Integer.toString(i))) {
                                 I0 += CS.get(k).I;
                                 if(R.get(Integer.parseInt(matcher1.group(2))).n1.name.equals(CS.get(k).n1.name)){
-                                    I0+=(R.get(Integer.parseInt(matcher1.group(2))).n1.volt-R.get(Integer.parseInt(matcher1.group(2))).n2.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
+                                    I0+=2*(R.get(Integer.parseInt(matcher1.group(2))).n1.volt-R.get(Integer.parseInt(matcher1.group(2))).n2.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
                                 }
-                                else if(R.get(Integer.parseInt(matcher1.group(2))).n2.name.equals(CS.get(k).n1.name))
-                                    I0+=(R.get(Integer.parseInt(matcher1.group(2))).n2.volt-R.get(Integer.parseInt(matcher1.group(2))).n1.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
-
+                                else if(R.get(Integer.parseInt(matcher1.group(2))).n2.name.equals(CS.get(k).n1.name)) {
+                                    I0+=2*(R.get(Integer.parseInt(matcher1.group(2))).n2.volt - R.get(Integer.parseInt(matcher1.group(2))).n1.volt) / R.get(Integer.parseInt(matcher1.group(2))).R;
+                                }
                                 a = 1;
                             }
                         }
                     }
-
-                    CS.get(j).I+=(deltat/C.get(i).C/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
+                    CS.get(j).I+=((deltat/C.get(i).C)/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
                     System.out.println(CS.get(j).NameI);
                     System.out.println(CS.get(j).I);
                 }
@@ -673,20 +666,21 @@ public class project {
                     for (int j = 0; j < n; j++) {
                         if (i == j) {
                             mat[i][j] = calcGii(i);
-                        }
-                        else {
+                        } else {
                             mat[i][j] = calcGij(i, j);
                         }
                     }
                     constants[i] = calcJi(i);
                 }
                 Gauss_Jordan_Elimination.test(mat, constants);
+                for(int x=0;x<N.size();x++){
+                    System.out.println(N.get(x).name+"  "+N.get(x).volt);
+                }
             }
 
-            if (dT!=1) {
+            if (dT != 1) {
                 updateMadar(dT);
             }
         }
-
     }
 }
