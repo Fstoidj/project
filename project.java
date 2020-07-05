@@ -481,6 +481,7 @@ public class project {
 
         for(int i=0;i<C.size();i++) {
             a=0;
+            I0=0;
             for(int j=0;j<CS.size();j++) {
                 if(CS.get(j).NameI.contains("IVC"+Integer.toString(i))){
                     if (a==0) {
