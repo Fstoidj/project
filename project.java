@@ -730,8 +730,6 @@ public class project {
         for(int i=0;i<L.size();i++) {
             replaceL(i);
         }
-
-
         for(int i=0;i<C.size();i++) {
             replaceC(i);
         }
