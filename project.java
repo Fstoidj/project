@@ -65,7 +65,7 @@ public class project {
                 R=0.001;
                 s=s.replaceAll("m","");
             }
-            if(s.indexOf("u")!=-1){
+            else if(s.indexOf("u")!=-1){
                 R=0.000001;
                 s=s.replaceAll("u", "");
             }
@@ -125,7 +125,7 @@ public class project {
                 C=0.001;
                 s=s.replaceAll("m","");
             }
-            if(s.indexOf("u")!=-1){
+            else if(s.indexOf("u")!=-1){
                 C=0.000001;
                 s=s.replaceAll("u", "");
             }
@@ -201,17 +201,21 @@ public class project {
             s=s.replaceAll("k", "000");
             s=s.replaceAll("M", "000000");
             s=s.replaceAll("G", "000000000");
-            if(s.indexOf("u")!=-1){
+            if(s.indexOf("m")!=-1){
                 V=0.001;
-                s=s.replaceAll("u", "");
+                s=s.replaceAll("m", "");
             }
-            else if(s.indexOf("n")!=-1){
+            else if(s.indexOf("u")!=-1){
                 V=0.000001;
                 s=s.replaceAll("u", "");
             }
-            else if(s.indexOf("p")!=-1){
+            else if(s.indexOf("n")!=-1){
                 V=0.000000001;
-                s=s.replaceAll("u", "");
+                s=s.replaceAll("n", "");
+            }
+            else if(s.indexOf("p")!=-1){
+                V=0.000000000001;
+                s=s.replaceAll("p", "");
             }
             else {
                 V=1;
@@ -254,17 +258,21 @@ public class project {
             s=s.replaceAll("k", "000");
             s=s.replaceAll("M", "000000");
             s=s.replaceAll("G", "000000000");
-            if(s.indexOf("u")!=-1){
+            if(s.indexOf("m")!=-1){
                 I=0.001;
-                s=s.replaceAll("u", "");
+                s=s.replaceAll("m", "");
             }
-            else if(s.indexOf("n")!=-1){
+            else if(s.indexOf("u")!=-1){
                 I=0.000001;
                 s=s.replaceAll("u", "");
             }
-            else if(s.indexOf("p")!=-1){
+            else if(s.indexOf("n")!=-1){
                 I=0.000000001;
-                s=s.replaceAll("u", "");
+                s=s.replaceAll("n", "");
+            }
+            else if(s.indexOf("p")!=-1){
+                I=0.000000000001;
+                s=s.replaceAll("p", "");
             }
             else {
                 I=1;
@@ -474,6 +482,7 @@ public class project {
 
 
     public static void updateMadar(double deltat){
+
         Pattern pattern=Pattern.compile("(.+)_(.+)");
         Matcher matcher1;
         double I0=0;
@@ -495,6 +504,8 @@ public class project {
                     matcher1=pattern.matcher(CS.get(j).NameI);
                     matcher1.find();
                     CS.get(j).I+=(deltat/C.get(i).C/Double.parseDouble(matcher1.group(2)))*I0;
+                    System.out.println(CS.get(j).NameI);
+                    System.out.print(CS.get(j).I);
                 }
             }
         }
@@ -529,6 +540,7 @@ public class project {
 
     }
     public static void replaceC(int i){
+
         String n2VName=new String(C.get(i).n2.name);
         String n1VName=new String(C.get(i).n1.name);
         int j1=searchNode(n1VName), j2=searchNode(n2VName);
@@ -576,7 +588,7 @@ public class project {
                     T=0.001;
                     s=s.replaceAll("m","");
                 }
-                if(s.indexOf("u")!=-1){
+                else if(s.indexOf("u")!=-1){
                     T=0.000001;
                     s=s.replaceAll("u", "");
                 }
@@ -595,6 +607,7 @@ public class project {
             }
             else if(s.indexOf("dT")!=-1){
                 s=s.substring(s.indexOf(" ")+1);
+
                 s=s.replaceAll("k", "000");
                 s=s.replaceAll("M", "000000");
                 s=s.replaceAll("G", "000000000");
@@ -602,7 +615,7 @@ public class project {
                     dT=0.001;
                     s=s.replaceAll("m","");
                 }
-                if(s.indexOf("u")!=-1){
+                else if(s.indexOf("u")!=-1){
                     dT=0.000001;
                     s=s.replaceAll("u", "");
                 }
@@ -618,6 +631,7 @@ public class project {
                     dT=1;
                 }
                 dT*=Double.parseDouble(s);
+
             }
 
 
@@ -642,7 +656,8 @@ public class project {
                     for (int j = 0; j < n; j++) {
                         if (i == j) {
                             mat[i][j] = calcGii(i);
-                        } else {
+                        }
+                        else {
                             mat[i][j] = calcGij(i, j);
                         }
                     }
@@ -650,7 +665,9 @@ public class project {
                 }
                 Gauss_Jordan_Elimination.test(mat, constants);
             }
-            updateMadar(dT);
+
+            if (dT!=1)
+                updateMadar(dT);
         }
 
     }
