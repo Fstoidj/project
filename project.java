@@ -490,18 +490,27 @@ public class project {
             a=0;
             I0=0;
             for(int j=0;j<CS.size();j++) {
+                matcher1=pattern.matcher(CS.get(j).NameI);
+                matcher1.find();
                 if(CS.get(j).NameI.contains("IVC"+Integer.toString(i))){
+
                     if (a==0) {
                         for (int k = 0; k < CS.size(); k++) {
+
                             if (CS.get(k).NameI.contains("IVC" + Integer.toString(i))) {
                                 I0 += CS.get(k).I;
+                                if(R.get(Integer.parseInt(matcher1.group(2))).n1.name.equals(CS.get(k).n1.name)){
+                                    I0+=(R.get(Integer.parseInt(matcher1.group(2))).n1.volt-R.get(Integer.parseInt(matcher1.group(2))).n2.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
+                                }
+                                else if(R.get(Integer.parseInt(matcher1.group(2))).n2.name.equals(CS.get(k).n1.name))
+                                    I0+=(R.get(Integer.parseInt(matcher1.group(2))).n2.volt-R.get(Integer.parseInt(matcher1.group(2))).n1.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
+
                                 a = 1;
                             }
                         }
                     }
-                    matcher1=pattern.matcher(CS.get(j).NameI);
-                    matcher1.find();
-                    CS.get(j).I+=(deltat/C.get(i).C/Double.parseDouble(matcher1.group(2)))*I0;
+
+                    CS.get(j).I+=(deltat/C.get(i).C/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
                     System.out.println(CS.get(j).NameI);
                     System.out.println(CS.get(j).I);
                 }
@@ -517,14 +526,14 @@ public class project {
         for(int k=0;k<R.size();k++){
             if(R.get(k).n1.name.equals(n2VName)){
                 System.out.println(n2VName);
-                currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
-                System.out.println("1 "+R.get(k).NameR+" I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("1 "+R.get(k).NameR+" I"+VS.get(i).NameV+"_"+Integer.toString(k)+" "+n1VName+" "+R.get(k).n2.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
             else if(R.get(k).n2.name.equals(n2VName)){
                 System.out.println(n2VName);
-                currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
-                System.out.println("2 "+R.get(k).NameR+" I"+VS.get(i).NameV+"_"+Double.toString(R.get(k).R)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                currentSource csV=new currentSource("I"+VS.get(i).NameV+"_"+Integer.toString(k)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
+                System.out.println("2 "+R.get(k).NameR+" I"+VS.get(i).NameV+"_"+Integer.toString(k)+" "+n1VName+" "+R.get(k).n1.name+" "+Double.toString(VS.get(i).V/R.get(k).R)+" 0 0 0");
                 CS.add(csV);
             }
         }
