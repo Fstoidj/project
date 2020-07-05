@@ -12,6 +12,7 @@ public class project {
     static ArrayList<currentSource> CS=new ArrayList<currentSource>(0);
     static ArrayList<voltageSource> VS=new ArrayList<voltageSource>(0);
     static ArrayList<capacitor> C=new ArrayList<capacitor>(0);
+    static ArrayList<inductor> L=new ArrayList<inductor>(0);
 
     public static int searchNode(String s){
         for(int i=0;i<N.size();i++){
@@ -160,10 +161,57 @@ public class project {
             n2.volt=n1.volt-(Q-Q0)/C;
         }
     }
-    public class inductor extends branch {
+    public static class inductor extends branch {
         String NameL;
         double L, I0=0;
-        void calcI(double dt){
+        inductor(String s){
+            NameL=s.substring(0,s.indexOf(" "));
+            s=s.substring(s.indexOf(" ")+1);
+            node n=new node(s.substring(0, s.indexOf(" ")));
+            int i=searchNode(s.substring(0,s.indexOf(" ")));
+            if(i==-1){
+                N.add(n);
+                n1=n;
+            }
+            else{
+                n1=N.get(i);
+            }
+            s=s.substring(s.indexOf(" ")+1);
+            n=new node(s.substring(0, s.indexOf(" ")));
+            i=searchNode(s.substring(0,s.indexOf(" ")));
+            if(i==-1){
+                N.add(n);
+                n2=n;
+            }
+            else{
+                n2=N.get(i);
+            }
+            s=s.substring(s.indexOf(" ")+1);
+            s=s.replaceAll("k", "000");
+            s=s.replaceAll("M", "000000");
+            s=s.replaceAll("G", "000000000");
+            if(s.indexOf("m")!=-1){
+                L=0.001;
+                s=s.replaceAll("m","");
+            }
+            else if(s.indexOf("u")!=-1){
+                L=0.000001;
+                s=s.replaceAll("u", "");
+            }
+            else if(s.indexOf("n")!=-1){
+                L=0.000000001;
+                s=s.replaceAll("n", "");
+            }
+            else if(s.indexOf("p")!=-1){
+                L=0.000000000001;
+                s=s.replaceAll("p", "");
+            }
+            else {
+                L=1;
+            }
+            L*=Double.parseDouble(s);
+        }
+        /*void calcI(double dt){
             I0=I;
             I=I0+dt*(n1.volt-n2.volt)/L;
         }
@@ -172,7 +220,7 @@ public class project {
         }
         void calcV2(double dt){
             n2.volt=n1.volt-L*(I-I0)/dt;
-        }
+        }*/
     }
     public static class voltageSource extends branch {
         String NameV;
@@ -489,9 +537,13 @@ public class project {
     }
 
 
+
+
     public static void updateMadar(double deltat){
         Pattern pattern=Pattern.compile("(.+)_(.+)");
+        Pattern pattern1=Pattern.compile("IL(.+)");
         Matcher matcher1;
+        Matcher matcher2;
         double I0=0;
         int a=0;
         for(int i=0;i<C.size();i++) {
@@ -521,9 +573,27 @@ public class project {
                 }
             }
         }
+        for(int i=0;i<CS.size();i++){
+            if(CS.get(i).NameI.contains("L"))
+            {
+                matcher2=pattern1.matcher(CS.get(i).NameI);
+                matcher2.find();
+                CS.get(i).I+=(deltat/L.get(Integer.parseInt(matcher2.group(1))).L)*(CS.get(i).n1.volt-CS.get(i).n2.volt);
+            }
+
+
+        }
     }
 
 
+    public static void replaceL(int i){
+        String n2VName=new String(L.get(i).n2.name);
+        String n1VName=new String(L.get(i).n1.name);
+        int j1=searchNode(n1VName), j2=searchNode(n2VName);
+        currentSource cs=new currentSource("IL"+Integer.toString(i)+" "+n1VName+" "+n2VName+" "+ Double.toString(L.get(i).I)+" 0 0 0");
+        CS.add(cs);
+
+    }
     public static void replaceVS(int i){
         String n2VName=new String(VS.get(i).n2.name);
         String n1VName=new String(VS.get(i).n1.name);
@@ -563,10 +633,12 @@ public class project {
 
 
     public static void main(String[] args) {
+
         resistor r;
         capacitor c;
         currentSource cs;
         voltageSource vs;
+        inductor l;
         double T=1, dT=1;
         Scanner sc=new Scanner(System.in);
         String s=sc.nextLine();
@@ -577,6 +649,10 @@ public class project {
             if(s.charAt(0)=='R'){
                 r=new resistor(s);
                 R.add(r);
+            }
+            else if(s.charAt(0)=='L'){
+                l=new inductor(s);
+                L.add(l);
             }
             else if(s.charAt(0)=='I'){
                 cs=new currentSource(s);
@@ -649,6 +725,12 @@ public class project {
             s=s.trim();
             s=s.replaceAll("( )+", " ");
         }
+
+
+        for(int i=0;i<L.size();i++) {
+            replaceL(i);
+        }
+
 
         for(int i=0;i<C.size();i++) {
             replaceC(i);
