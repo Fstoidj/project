@@ -1,4 +1,6 @@
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -368,7 +370,7 @@ public class project {
             return primal() != null;
         }
         private static void show() {
-            for (int i = 0; i < N; i++) {
+            /*for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
                     System.out.print(a[i][j]+"  ");
                 }
@@ -379,6 +381,10 @@ public class project {
                 System.out.println("| "+a[i][N+N]);
             }
             System.out.println();
+            */
+            for(int i=0;i<a.length;i++){
+                System.out.println(Arrays.toString(a[i]));
+            }
         }
         private boolean check(double[][] A, double[] b) {
             if (isFeasible()) {
@@ -439,8 +445,14 @@ public class project {
                 }
 
             }
+            updateNodeVolts();
             show();
             System.out.println();
+        }
+        public static void updateNodeVolts(){
+            for(int i=0;i<a.length;i++){
+                project.N.get(i).volt=a[i][a[i].length-1];
+            }
         }
     }
 
