@@ -37,17 +37,12 @@ public class project {
     }
     public static class removedNode extends node{
         String n1name;
-
-        removedNode(String s)
-        {
+        removedNode(String s) {
             super(s);
-
         }
         public void update(){
-            int i=searchNode(n1name)
-
+            
         }
-
     }
     abstract public static class branch{
         node n1, n2;
@@ -618,21 +613,23 @@ public class project {
                     if (a==0) {
                         for (int k = 0; k < CS.size(); k++) {
                             if (CS.get(k).NameI.contains("IVC" + Integer.toString(i))) {
-                                I0 += CS.get(k).I;
+                                I0 = CS.get(k).I;
                                 if(R.get(Integer.parseInt(matcher1.group(2))).n1.name.equals(CS.get(k).n1.name)){
-                                    I0+=2*(R.get(Integer.parseInt(matcher1.group(2))).n1.volt-R.get(Integer.parseInt(matcher1.group(2))).n2.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
+                                    I0+=(R.get(Integer.parseInt(matcher1.group(2))).n1.volt-R.get(Integer.parseInt(matcher1.group(2))).n2.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
                                 }
                                 else if(R.get(Integer.parseInt(matcher1.group(2))).n2.name.equals(CS.get(k).n1.name)) {
-                                    I0+=2*(R.get(Integer.parseInt(matcher1.group(2))).n2.volt - R.get(Integer.parseInt(matcher1.group(2))).n1.volt) / R.get(Integer.parseInt(matcher1.group(2))).R;
+                                    I0+=(R.get(Integer.parseInt(matcher1.group(2))).n2.volt - R.get(Integer.parseInt(matcher1.group(2))).n1.volt) / R.get(Integer.parseInt(matcher1.group(2))).R;
                                 }
                                 a = 1;
                             }
                         }
                     }
-                    C.get(i).n2.volt=I0*deltat/C.get(i).C+CS.get(j).n1.volt;
+                    C.get(i).n2.volt+=I0*deltat/C.get(i).C;
                     CS.get(j).I+=((deltat/C.get(i).C)/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
+
                     System.out.println(CS.get(j).NameI);
                     System.out.println(CS.get(j).I);
+                    System.out.println("I0: "+I0);
                 }
             }
             C.get(i).I=I0;
@@ -651,7 +648,7 @@ public class project {
                 for (int j=0;j<VS.size();j++){
                     if(CS.get(i).NameI.equals("I"+VS.get(j).NameV)){
                         CS.get(i).I/=(VS.get(j).V);
-                        VS.get(j).V+=VS.get(j).A*Math.sin(VS.get(j).A*(t+deltat)+VS.get(j).p)-VS.get(j).A*Math.sin(VS.get(j).A*(t)+VS.get(j).p);
+                        //VS.get(j).V+=VS.get(j).A*Math.sin(VS.get(j).A*(t+deltat)+VS.get(j).p)-VS.get(j).A*Math.sin(VS.get(j).A*(t)+VS.get(j).p);
                         CS.get(i).I*=(VS.get(j).V);
                     }
                 }
@@ -672,7 +669,6 @@ public class project {
         int j1=searchNode(n1VName), j2=searchNode(n2VName);
         currentSource cs=new currentSource("IL"+Integer.toString(i)+" "+n1VName+" "+n2VName+" "+ Double.toString(L.get(i).I)+" 0 0 0");
         CS.add(cs);
-
     }
     public static void replaceVS(int i){
         String n2VName=new String(VS.get(i).n2.name);
@@ -845,6 +841,9 @@ public class project {
                 Gauss_Jordan_Elimination.test(mat, constants);
                 for(int x=0;x<N.size();x++){
                     System.out.println(N.get(x).name+"  "+N.get(x).volt);
+                }
+                for (int x=0;x<RemovedNode.size();x++){
+                    System.out.println(RemovedNode.get(x).name+"  "+RemovedNode.get(x).volt+N.get(searchNode(RemovedNode.get(x).n1name)).volt);
                 }
             }
 
