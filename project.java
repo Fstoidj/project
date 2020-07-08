@@ -37,10 +37,14 @@ public class project {
     }
     public static class removedNode extends node{
         String n1name;
-        removedNode(String s) {
+
+        removedNode(String s)
+        {
             super(s);
+
         }
         public void update(){
+            int i=searchNode(n1name)
 
         }
 
@@ -625,6 +629,7 @@ public class project {
                             }
                         }
                     }
+                    C.get(i).n2.volt=I0*deltat/C.get(i).C+CS.get(j).n1.volt;
                     CS.get(j).I+=((deltat/C.get(i).C)/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
                     System.out.println(CS.get(j).NameI);
                     System.out.println(CS.get(j).I);
@@ -696,7 +701,9 @@ public class project {
             }
         }
 
-        RemovedNode.add(N.get(j));
+        removedNode rn=new removedNode(N.get(j).name);
+        rn.n1name=n1VName;
+        rn.volt=VS.get(i).V+N.get(searchNode(n1VName)).volt;
 
         N.remove(j);
     }
