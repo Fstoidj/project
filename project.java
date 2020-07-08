@@ -13,6 +13,7 @@ public class project {
     static ArrayList<voltageSource> VS=new ArrayList<voltageSource>(0);
     static ArrayList<capacitor> C=new ArrayList<capacitor>(0);
     static ArrayList<inductor> L=new ArrayList<inductor>(0);
+    static ArrayList<currentControledCurrentSource> CCCS=new ArrayList<currentControledCurrentSource>(0);
 
     public static int searchNode(String s){
         for(int i=0;i<N.size();i++){
@@ -85,7 +86,7 @@ public class project {
             }
             R*=Double.parseDouble(s);
         }
-        void calc_I(int t){
+        void calc_I(){
             I=(n1.volt-n2.volt)/R;
         }
         void calc_v1(int t){
@@ -324,6 +325,69 @@ public class project {
             }
         }
     }
+    public static class currentControledCurrentSource extends branch {
+        String NameI;
+
+        currentControledCurrentSource(String s) {
+            NameI = s.substring(0, s.indexOf(" "));
+            s = s.substring(s.indexOf(" ") + 1);
+            node n = new node(s.substring(0, s.indexOf(" ")));
+            int i = searchNode(s.substring(0, s.indexOf(" ")));
+            if (i == -1) {
+                N.add(n);
+                n1 = n;
+            } else {
+                n1 = N.get(i);
+            }
+            s = s.substring(s.indexOf(" ") + 1);
+            n = new node(s.substring(0, s.indexOf(" ")));
+            i = searchNode(s.substring(0, s.indexOf(" ")));
+            if (i == -1) {
+                N.add(n);
+                n2 = n;
+            } else {
+                n2 = N.get(i);
+            }
+            s = s.substring(s.indexOf(" ") + 1);
+            if (s.substring(0, s.indexOf(" ")).contains("C")) {
+                for (int j = 0; j < C.size(); j++) {
+                    if (C.get(j).NameC.equals(s.substring(0, s.indexOf(" ")))) {
+                        s = s.substring(s.indexOf(" ") + 1);
+                        I = Double.parseDouble(s) * C.get(j).I;
+                    }
+                }
+            }
+            if (s.substring(0, s.indexOf(" ")).equals("R")) {
+                for (int j = 0; j < R.size(); j++) {
+                    if (R.get(j).NameR.equals(s.substring(0, s.indexOf(" ")))) {
+                        s = s.substring(s.indexOf(" ") + 1);
+                        I = Double.parseDouble(s) * R.get(j).I;
+                    }
+                }
+            }
+            if (s.substring(0, s.indexOf(" ")).equals("I")) {
+                for (int j = 0; j < CS.size(); j++) {
+                    if (CS.get(j).NameI.equals(s.substring(0, s.indexOf(" ")))) {
+                        s = s.substring(s.indexOf(" ") + 1);
+                        I = Double.parseDouble(s) * CS.get(j).I;
+                    }
+
+                }
+            }
+            if (s.substring(0, s.indexOf(" ")).equals("L")) {
+                for (int j = 0; j < L.size(); j++){
+                    if (L.get(j).NameL.equals(s.substring(0, s.indexOf(" ")))) {
+                        s = s.substring(s.indexOf(" ") + 1);
+                        I = Double.parseDouble(s) * L.get(j).I;
+                    }
+
+                }
+
+            }
+
+
+        }
+    }
 
     static class Gauss_Jordan_Elimination {
         private static final double EPSILON = 1e-8;
@@ -555,12 +619,15 @@ public class project {
                     System.out.println(CS.get(j).I);
                 }
             }
+            C.get(i).I=I0;
         }
+
         for(int i=0;i<CS.size();i++){
             if(CS.get(i).NameI.contains("IL")) {
                 matcher2=pattern1.matcher(CS.get(i).NameI);
                 matcher2.find();
                 CS.get(i).I+=(deltat/L.get(Integer.parseInt(matcher2.group(1))).L)*(CS.get(i).n1.volt-CS.get(i).n2.volt);
+                L.get(Integer.parseInt(matcher2.group(1))).I=CS.get(i).I;
             }
             else if(CS.get(i).A!=0){
                 CS.get(i).I+=CS.get(i).A*(Math.sin(CS.get(i).w*(t+deltat)+CS.get(i).p))-CS.get(i).A*(Math.sin(CS.get(i).w*(t)+CS.get(i).p));
@@ -575,6 +642,10 @@ public class project {
                 }
             }
         }
+        for(int i=0;i<R.size();i++){
+            R.get(i).calc_I();
+        }
+
     }
 
 
