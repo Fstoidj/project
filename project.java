@@ -15,6 +15,8 @@ public class project {
     static ArrayList<inductor> L=new ArrayList<inductor>(0);
     static ArrayList<currentControledCurrentSource> CCCS=new ArrayList<currentControledCurrentSource>(0);
 
+
+
     public static int searchNode(String s){
         for(int i=0;i<N.size();i++){
             if(N.get(i).name.equals(s)){
@@ -326,8 +328,8 @@ public class project {
         }
     }
     public static class currentControledCurrentSource extends branch {
-        String NameI;
-
+        String NameI, NameEleman;
+        double a;
         currentControledCurrentSource(String s) {
             NameI = s.substring(0, s.indexOf(" "));
             s = s.substring(s.indexOf(" ") + 1);
@@ -336,7 +338,8 @@ public class project {
             if (i == -1) {
                 N.add(n);
                 n1 = n;
-            } else {
+            }
+            else {
                 n1 = N.get(i);
             }
             s = s.substring(s.indexOf(" ") + 1);
@@ -345,47 +348,44 @@ public class project {
             if (i == -1) {
                 N.add(n);
                 n2 = n;
-            } else {
+            }
+            else {
                 n2 = N.get(i);
             }
             s = s.substring(s.indexOf(" ") + 1);
-            if (s.substring(0, s.indexOf(" ")).contains("C")) {
+            NameEleman=s.substring(0, s.indexOf(" "));
+            s=s.substring(s.indexOf(" ")+1);
+            a=Double.parseDouble(s);
+        }
+        public void update(){
+            if (NameEleman.contains("C")) {
                 for (int j = 0; j < C.size(); j++) {
-                    if (C.get(j).NameC.equals(s.substring(0, s.indexOf(" ")))) {
-                        s = s.substring(s.indexOf(" ") + 1);
-                        I = Double.parseDouble(s) * C.get(j).I;
+                    if (C.get(j).NameC.equals(NameEleman)) {
+                        I = a * C.get(j).I;
                     }
                 }
             }
-            if (s.substring(0, s.indexOf(" ")).equals("R")) {
+            else if (NameEleman.contains("R")) {
                 for (int j = 0; j < R.size(); j++) {
-                    if (R.get(j).NameR.equals(s.substring(0, s.indexOf(" ")))) {
-                        s = s.substring(s.indexOf(" ") + 1);
-                        I = Double.parseDouble(s) * R.get(j).I;
+                    if (R.get(j).NameR.equals(NameEleman)) {
+                        I = a* R.get(j).I;
                     }
                 }
             }
-            if (s.substring(0, s.indexOf(" ")).equals("I")) {
+            else if (NameEleman.contains("I")) {
                 for (int j = 0; j < CS.size(); j++) {
-                    if (CS.get(j).NameI.equals(s.substring(0, s.indexOf(" ")))) {
-                        s = s.substring(s.indexOf(" ") + 1);
-                        I = Double.parseDouble(s) * CS.get(j).I;
+                    if (CS.get(j).NameI.equals(NameEleman)) {
+                        I =a*CS.get(j).I;
                     }
-
                 }
             }
-            if (s.substring(0, s.indexOf(" ")).equals("L")) {
+            else if (NameEleman.contains("L")) {
                 for (int j = 0; j < L.size(); j++){
-                    if (L.get(j).NameL.equals(s.substring(0, s.indexOf(" ")))) {
-                        s = s.substring(s.indexOf(" ") + 1);
-                        I = Double.parseDouble(s) * L.get(j).I;
+                    if (L.get(j).NameL.equals(NameEleman)) {
+                        I = a* L.get(j).I;
                     }
-
                 }
-
-            }
-
-
+        }
         }
     }
 
@@ -621,7 +621,6 @@ public class project {
             }
             C.get(i).I=I0;
         }
-
         for(int i=0;i<CS.size();i++){
             if(CS.get(i).NameI.contains("IL")) {
                 matcher2=pattern1.matcher(CS.get(i).NameI);
@@ -645,7 +644,9 @@ public class project {
         for(int i=0;i<R.size();i++){
             R.get(i).calc_I();
         }
-
+        for(int i=0;i<CCCS.size();i++){
+            CCCS.get(i).update();
+        }
     }
 
 
@@ -696,12 +697,12 @@ public class project {
 
 
     public static void main(String[] args) {
-
         resistor r;
-        capacitor c;
         currentSource cs;
         voltageSource vs;
+        capacitor c;
         inductor l;
+        currentControledCurrentSource cccs;
         double T=1, dT=1;
         Scanner sc=new Scanner(System.in);
         String s=sc.nextLine();
@@ -728,6 +729,10 @@ public class project {
             else if(s.charAt(0)=='C') {
                 c=new capacitor(s);
                 C.add(c);
+            }
+            else if(s.charAt(0)=='F'){
+                cccs=new currentControledCurrentSource(s);
+                CCCS.add(cccs);
             }
             else if(s.indexOf(".tran")!=-1){
                 s=s.substring(s.indexOf(" ")+1);
