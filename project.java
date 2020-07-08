@@ -266,7 +266,7 @@ public class project {
             s=s.substring(s.indexOf(" ")+1, s.length());
             w=2*Math.PI*Double.parseDouble(s.substring(0,s.indexOf(" ")));
             s=s.substring(s.indexOf(" ")+1, s.length());
-            p=Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            p=Double.parseDouble(s);
             V+=A*Math.sin(p);
         }
     }
@@ -324,7 +324,7 @@ public class project {
             s=s.substring(s.indexOf(" ")+1, s.length());
             w=2*Math.PI*Double.parseDouble(s.substring(0,s.indexOf(" ")));
             s=s.substring(s.indexOf(" ")+1, s.length());
-            p=Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            p=Double.parseDouble(s);
             I+=A*Math.sin(p);
         }
     }
