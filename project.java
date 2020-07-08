@@ -97,7 +97,7 @@ public class project {
     }
     public static class capacitor extends branch {
         String NameC;
-        double C, Q=0, Q0=0;
+        double C;
         capacitor(String s){
             NameC=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
@@ -145,25 +145,10 @@ public class project {
             }
             C*=Double.parseDouble(s);
         }
-        void calc_QwithV(double dt){
-            Q0=Q;
-            Q=C*(n1.volt-n2.volt);
-            I=(Q-Q0)/dt;
-        }
-        void calc_Q1withI(double dt){
-            Q0=Q;
-            Q=Q0+dt*I;
-            n1.volt=(Q-Q0)/C+n2.volt;
-        }
-        void calc_Q2withI(double dt){
-            Q0=Q;
-            Q=Q0+dt*I;
-            n2.volt=n1.volt-(Q-Q0)/C;
-        }
     }
     public static class inductor extends branch {
         String NameL;
-        double L, I0=0;
+        double L;
         inductor(String s){
             NameL=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
@@ -211,20 +196,10 @@ public class project {
             }
             L*=Double.parseDouble(s);
         }
-        /*void calcI(double dt){
-            I0=I;
-            I=I0+dt*(n1.volt-n2.volt)/L;
-        }
-        void calcV1(double dt){
-            n1.volt=L*(I-I0)/dt+n2.volt;
-        }
-        void calcV2(double dt){
-            n2.volt=n1.volt-L*(I-I0)/dt;
-        }*/
     }
     public static class voltageSource extends branch {
         String NameV;
-        double V, freq;
+        double V, A, w, p;
         voltageSource(String s){
             NameV=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
@@ -271,17 +246,18 @@ public class project {
                 V=1;
             }
             V*=Double.parseDouble(s.substring(0, s.indexOf(" ")));
-        }
-        void calcV1(){
-            n1.volt=V+n2.volt;
-        }
-        void calcV2(){
-            n2.volt=n1.volt-V;
+            s=s.substring(s.indexOf(" ")+1, s.length());
+            A=Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            s=s.substring(s.indexOf(" ")+1, s.length());
+            w=2*Math.PI*Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            s=s.substring(s.indexOf(" ")+1, s.length());
+            p=Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            V+=A*Math.sin(p);
         }
     }
     public static class currentSource extends branch {
         String NameI;
-        double freq;
+        double A, w, p;
         currentSource(String s){
             NameI=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
@@ -328,6 +304,13 @@ public class project {
                 I=1;
             }
             I*=Double.parseDouble(s.substring(0, s.indexOf(" ")));
+            s=s.substring(s.indexOf(" ")+1, s.length());
+            A=Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            s=s.substring(s.indexOf(" ")+1, s.length());
+            w=2*Math.PI*Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            s=s.substring(s.indexOf(" ")+1, s.length());
+            p=Double.parseDouble(s.substring(0,s.indexOf(" ")));
+            I+=A*Math.sin(p);
         }
     }
     public class diode extends branch {
@@ -539,7 +522,7 @@ public class project {
 
 
 
-    public static void updateMadar(double deltat){
+    public static void updateMadar(double deltat, double t){
         Pattern pattern=Pattern.compile("(.+)_(.+)");
         Pattern pattern1=Pattern.compile("IL(.+)");
         Matcher matcher1;
@@ -574,14 +557,23 @@ public class project {
             }
         }
         for(int i=0;i<CS.size();i++){
-            if(CS.get(i).NameI.contains("L"))
-            {
+            if(CS.get(i).NameI.contains("IL")) {
                 matcher2=pattern1.matcher(CS.get(i).NameI);
                 matcher2.find();
                 CS.get(i).I+=(deltat/L.get(Integer.parseInt(matcher2.group(1))).L)*(CS.get(i).n1.volt-CS.get(i).n2.volt);
             }
-
-
+            else if(CS.get(i).A!=0){
+                CS.get(i).I+=CS.get(i).A*(Math.sin(CS.get(i).w*(t+deltat)+CS.get(i).p))-CS.get(i).A*(Math.sin(CS.get(i).w*(t)+CS.get(i).p));
+            }
+            else if(CS.get(i).NameI.contains("IV")){
+                for (int j=0;j<VS.size();j++){
+                    if(CS.get(i).NameI.equals("I"+VS.get(j).NameV)){
+                        CS.get(i).I/=(VS.get(j).V);
+                        VS.get(j).V+=VS.get(j).A*Math.sin(VS.get(j).A*(t+deltat)+VS.get(j).p)-VS.get(j).A*Math.sin(VS.get(j).A*(t)+VS.get(j).p);
+                        CS.get(i).I*=(VS.get(j).V);
+                    }
+                }
+            }
         }
     }
 
@@ -746,7 +738,8 @@ public class project {
                     for (int j = 0; j < n; j++) {
                         if (i == j) {
                             mat[i][j] = calcGii(i);
-                        } else {
+                        }
+                        else {
                             mat[i][j] = calcGij(i, j);
                         }
                     }
@@ -759,7 +752,7 @@ public class project {
             }
 
             if (dT != 1) {
-                updateMadar(dT);
+                updateMadar(dT, t);
             }
         }
     }
