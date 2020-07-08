@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.xml.soap.Node;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -14,6 +15,7 @@ public class project {
     static ArrayList<capacitor> C=new ArrayList<capacitor>(0);
     static ArrayList<inductor> L=new ArrayList<inductor>(0);
     static ArrayList<currentControledCurrentSource> CCCS=new ArrayList<currentControledCurrentSource>(0);
+    static ArrayList<removedNode> RemovedNode=new ArrayList<removedNode>(0);
 
 
 
@@ -33,6 +35,16 @@ public class project {
         node(String s){
             name=s;
         }
+    }
+    public static class removedNode extends node{
+        String n1name;
+        removedNode(String s) {
+            super(s);
+        }
+        public void update(){
+
+        }
+
     }
     abstract public static class branch{
         node n1, n2;
@@ -684,6 +696,9 @@ public class project {
                 R.get(k).n2.name=n1VName;
             }
         }
+
+        RemovedNode.add(N.get(j));
+
         N.remove(j);
     }
     public static void replaceC(int i){
