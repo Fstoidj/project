@@ -626,6 +626,29 @@ public class project {
                     }
                     C.get(i).n2.volt+=I0*deltat/C.get(i).C;
                     CS.get(j).I+=((deltat/C.get(i).C)/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
+                    removedNode RN;
+               /*   for(int k=0;k<VS.size();k++){
+                        if(VS.get(k).NameV.contains("C")){
+                            for(int g=0;g<RemovedNode.size();g++){
+                                if (VS.get(k).n2.name.equals(RemovedNode.get(g).name)){
+                                    for(int m=0;m<C.size();m++){
+                                        if(VS.get(k).NameV.contains(C.get(m).NameC))
+                                        RemovedNode.get(g).volt=C.get(m).n2.volt+C.get(m).n1.volt;
+                                    }
+
+                            }
+                            }
+                        }
+                        else{
+                            for (int g=0;g<RemovedNode.size();g++){
+                                if (VS.get(k).n2.name.equals(RemovedNode.get(g).name)){
+                                    RemovedNode.get(g).volt=VS.get(k).n1.volt+VS.get(k).V;
+                                }
+                            }
+
+                        }
+                    }*/
+
 
                     System.out.println(CS.get(j).NameI);
                     System.out.println(CS.get(j).I);
