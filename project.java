@@ -725,6 +725,24 @@ public class project {
                 R.get(k).n2.name=n1VName;
             }
         }
+
+        for (int k=0;k<CS.size();k++){
+            if(CS.get(k).n1.name.equals(n2VName)){
+                CS.get(k).n1.name=n1VName;
+            }
+            else if(CS.get(k).n2.name.equals(n2VName)){
+                CS.get(k).n2.name=n1VName;
+            }
+        }
+        for (int k=0;k<VS.size();k++){
+            if(VS.get(k).n1.name.equals(n2VName)){
+                VS.get(k).n1.name=n1VName;
+            }
+            else if(VS.get(k).n2.name.equals(n2VName)){
+                VS.get(k).n2.name=n1VName;
+            }
+        }
+
         removedNode rn=new removedNode(n2VName);
         rn.n1name=n1VName;
         rn.volt=VS.get(i).V+N.get(searchNode(n1VName)).volt;
