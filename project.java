@@ -26,6 +26,14 @@ public class project {
         }
         return -1;
     }
+    public static int searchRemovedNode(String s){
+        for(int i=0;i<RemovedNode.size();i++){
+            if(RemovedNode.get(i).name.equals(s)){
+                return i;
+            }
+        }
+        return -1;
+    }
 
 
     public static class node{
@@ -624,9 +632,7 @@ public class project {
                     }
                     C.get(i).n2.volt+=I0*deltat/C.get(i).C;
                     CS.get(j).I+=((deltat/C.get(i).C)/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
-                    System.out.println(CS.get(j).NameI);
-                    System.out.println(CS.get(j).I);
-                    System.out.println("I0: "+I0);
+                    System.out.println("Cvoltage : "+C.get(i).n2.name+" : "+C.get(i).n2.volt);
                 }
             }
             C.get(i).I=I0;
@@ -635,8 +641,10 @@ public class project {
             if(CS.get(i).NameI.contains("IL")) {
                 matcher2=pattern1.matcher(CS.get(i).NameI);
                 matcher2.find();
+                System.out.println(L.get(Integer.parseInt(matcher2.group(1))).n1.name+"->"+L.get(Integer.parseInt(matcher2.group(1))).n2.name);
                 CS.get(i).I+=(deltat/L.get(Integer.parseInt(matcher2.group(1))).L)*(CS.get(i).n1.volt-CS.get(i).n2.volt);
                 L.get(Integer.parseInt(matcher2.group(1))).I=CS.get(i).I;
+
             }
             else if(CS.get(i).A!=0){
                 CS.get(i).I += CS.get(i).A * (Math.sin(CS.get(i).w * ((t+1) * deltat) + CS.get(i).p)) - CS.get(i).A * (Math.sin(CS.get(i).w * (t*deltat) + CS.get(i).p));
@@ -647,7 +655,9 @@ public class project {
                 for (int j=0, k=searchNode(VS.get(j).n2.name);j<VS.size();j++){
                     if(CS.get(i).NameI.contains("I"+VS.get(j).NameV)){
                         CS.get(i).I/=(VS.get(j).V);
-                        RemovedNode.get(k).volt+=VS.get(j).A * Math.sin(VS.get(j).w * ((t+1) * deltat) + VS.get(j).p) - VS.get(j).A * Math.sin(VS.get(j).w * (t * deltat) + VS.get(j).p);
+                        if(VS.get(j).A!=0) {
+                            RemovedNode.get(k).volt += VS.get(j).A * Math.sin(VS.get(j).w * ((t + 1) * deltat) + VS.get(j).p) - VS.get(j).A * Math.sin(VS.get(j).w * (t * deltat) + VS.get(j).p);
+                        }
                         VS.get(j).V += VS.get(j).A * Math.sin(VS.get(j).w * ((t+1) * deltat) + VS.get(j).p) - VS.get(j).A * Math.sin(VS.get(j).w * (t * deltat) + VS.get(j).p);
                         CS.get(i).I*=(VS.get(j).V);
                     }
