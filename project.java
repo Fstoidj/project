@@ -42,6 +42,10 @@ public class project {
         node(String s){
             name=s;
         }
+        node(node n){
+            name=n.name.intern();
+            volt=n.volt;
+        }
     }
     public static class removedNode extends node{
         String n1name;
@@ -64,7 +68,7 @@ public class project {
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n1=n;
+                n1=new node(n);
             }
             else{
                 n1=N.get(i);
@@ -74,7 +78,7 @@ public class project {
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n2=n;
+                n2=new node(n);
             }
             else{
                 n2=N.get(i);
@@ -124,7 +128,7 @@ public class project {
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n1=n;
+                n1=new node(n);
             }
             else{
                 n1=N.get(i);
@@ -134,7 +138,7 @@ public class project {
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n2=n;
+                n2=new node(n);
             }
             else{
                 n2=N.get(i);
@@ -175,7 +179,7 @@ public class project {
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n1=n;
+                n1=new node(n);
             }
             else{
                 n1=N.get(i);
@@ -185,7 +189,7 @@ public class project {
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n2=n;
+                n2=new node(n);
             }
             else{
                 n2=N.get(i);
@@ -226,7 +230,7 @@ public class project {
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n1=n;
+                n1=new node(n);
             }
             else{
                 n1=N.get(i);
@@ -236,7 +240,7 @@ public class project {
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n2=n;
+                n2=new node(n);
             }
             else{
                 n2=N.get(i);
@@ -284,7 +288,7 @@ public class project {
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n1=n;
+                n1=new node(n);
             }
             else{
                 n1=N.get(i);
@@ -294,7 +298,7 @@ public class project {
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 N.add(n);
-                n2=n;
+                n2=new node(n);
             }
             else{
                 n2=N.get(i);
@@ -641,7 +645,10 @@ public class project {
             if(CS.get(i).NameI.contains("IL")) {
                 matcher2=pattern1.matcher(CS.get(i).NameI);
                 matcher2.find();
-                System.out.println(L.get(Integer.parseInt(matcher2.group(1))).n1.name+"->"+L.get(Integer.parseInt(matcher2.group(1))).n2.name);
+                //System.out.println(L.get(Integer.parseInt(matcher2.group(1))).n1.name+"->"+L.get(Integer.parseInt(matcher2.group(1))).n2.name);
+                for(int l=0;l<RemovedNode.size();l++){
+                    //if(CS.get(i).n1.name.equals(RemovedNode.get(l)))
+                }
                 CS.get(i).I+=(deltat/L.get(Integer.parseInt(matcher2.group(1))).L)*(CS.get(i).n1.volt-CS.get(i).n2.volt);
                 L.get(Integer.parseInt(matcher2.group(1))).I=CS.get(i).I;
 
@@ -693,8 +700,8 @@ public class project {
 
 
     public static void replaceL(int i){
-        String n2VName=new String(L.get(i).n2.name);
-        String n1VName=new String(L.get(i).n1.name);
+        String n2VName=new String(L.get(i).n2.name.intern());
+        String n1VName=new String(L.get(i).n1.name.intern());
         int j1=searchNode(n1VName), j2=searchNode(n2VName);
         currentSource cs=new currentSource("IL"+Integer.toString(i)+" "+n1VName+" "+n2VName+" "+ Double.toString(L.get(i).I)+" 0 0 0");
         CS.add(cs);
@@ -726,9 +733,20 @@ public class project {
             }
         }
 
-        for (int k=0;k<CS.size();k++){
+        for (int k=0, l=0;k<CS.size();k++){
             if(CS.get(k).n1.name.equals(n2VName)){
-                CS.get(k).n1.name=n1VName;
+                System.out.println(CS.get(k).n1.name);
+                CS.get(k).n1.name=n1VName.intern();
+                for (l=0;l<L.size();l++) {
+                    if(CS.get(k).NameI.contains("IL"+l)){
+                        L.get(l).n1.name="Asghar";
+                        L.get(l).n2.name="Akbar";
+                        System.out.println("LNAME: "+L.get(l).n1.name+"->"+L.get(l).n2.name);
+                        System.out.println("CS NAME: "+CS.get(k).n1.name+"->"+CS.get(k).n2.name);
+                        break;
+                    }
+                }
+
             }
             else if(CS.get(k).n2.name.equals(n2VName)){
                 CS.get(k).n2.name=n1VName;
