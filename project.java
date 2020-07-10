@@ -127,6 +127,7 @@ public class project {
     public static class capacitor extends branch {
         String NameC;
         double C;
+        ArrayList<currentSource> connectedToN2Currents=new ArrayList<currentSource>(0);
         capacitor(String s){
             NameC=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
@@ -692,14 +693,29 @@ public class project {
                             }
                         }
                     }
-                    C.get(i).n2.volt+=I0*deltat/C.get(i).C;
-
-                    CS.get(j).I+=((deltat/C.get(i).C)/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
+                    C.get(i).n2.volt-=I0*deltat/C.get(i).C;
+                    System.out.println("I0 is: "+ I0);
+                    CS.get(j).I-=((deltat/C.get(i).C)/R.get(Integer.parseInt(matcher1.group(2))).R)*I0;
                 }
             }
             C.get(i).I=I0;
         }
-        for(int i=0;i<CS.size();i++){
+        for(int i=0, I1=0;i<CS.size();i++){
+            for (int j=0;j<C.size();j++){
+                for (int k=0;k<C.get(j).connectedToN2Currents.size();k++)
+                if(CS.get(i).NameI.equals(C.get(j).connectedToN2Currents.get(k).NameI)){
+                    if(CS.get(i).n1.name.equals(C.get(j).n1.name)){
+                        I1+=CS.get(i).I;
+                        C.get(j).n2.volt-=I1*deltat/C.get(j).C;
+                        C.get(i).I+=I1;
+                    }
+                    else {
+                        I1-=CS.get(i).I;
+                        C.get(j).n2.volt-=I1*deltat/C.get(j).C;
+                        C.get(i).I+=I1;
+                    }
+                }
+            }
             if(CS.get(i).NameI.contains("IL")) {
                 matcher2=pattern1.matcher(CS.get(i).NameI);
                 matcher2.find();
@@ -741,7 +757,7 @@ public class project {
                     if (VS.get(k).n2.name.equals(RemovedNode.get(g).name)){
                         for(int m=0;m<C.size();m++){
                             if(VS.get(k).NameV.contains("C"+m)) {
-                                RemovedNode.get(g).volt = C.get(m).n2.volt + C.get(m).n1.volt;
+                                RemovedNode.get(g).volt = C.get(m).n2.volt ;
                             }
                         }
                     }
@@ -794,7 +810,14 @@ public class project {
 
         for (int k=0, l=0;k<CS.size();k++){
             if(CS.get(k).n1.name.equals(n2VName)){
-                System.out.println(CS.get(k).n1.name);
+                if(VS.get(i).NameV.contains("VC")){
+                    l=Integer.parseInt(VS.get(i).NameV.replaceAll("VC", ""));
+                    C.get(l).connectedToN2Currents.add(CS.get(k));
+                }
+                VS.get(i).I=-CS.get(k).I;
+                if(CS.get(k).A!=0){
+                    VS.get(i).I+=CS.get(k).A*Math.sin(CS.get(k).p);
+                }
                 CS.get(k).n1.name=n1VName.intern();
                 for (l=0;l<L.size();l++) {
                     if(CS.get(k).NameI.contains("IL"+l)){
@@ -807,10 +830,27 @@ public class project {
                 }
             }
             else if(CS.get(k).n2.name.equals(n2VName)){
+                if(VS.get(i).NameV.contains("VC")){
+                    l=Integer.parseInt(VS.get(i).NameV.replaceAll("VC", ""));
+                    C.get(l).connectedToN2Currents.add(CS.get(k));
+                }
+                VS.get(i).I=CS.get(k).I;
+                if(CS.get(k).A!=0){
+                    VS.get(i).I+=CS.get(k).A*Math.sin(CS.get(k).p);
+                }
                 CS.get(k).n2.name=n1VName.intern();
             }
         }
         for (int k=0;k<VS.size();k++){
+            if(VS.get(k).I!=0){
+                if(VS.get(k).NameV.contains("VC")){
+                    for(int l=0;l<C.size();l++){
+                        if(VS.get(k).NameV.equals("VC"+Integer.toString(l))){
+                            C.get(l).I=VS.get(k).I;
+                        }
+                    }
+                }
+            }
             if(i!=k&&VS.get(k).n1.name.equals(n2VName)){
                 VS.get(k).n1.name=n1VName.intern();
             }
@@ -818,10 +858,9 @@ public class project {
                 VS.get(k).n2.name=n1VName.intern();
             }
         }
-
         removedNode rn=new removedNode(n2VName.intern());
         rn.n1name=n1VName.intern();
-        rn.volt=VS.get(i).V+N.get(searchNode(n1VName)).volt;
+        rn.volt=-VS.get(i).V+N.get(searchNode(n1VName)).volt;
         RemovedNode.add(rn);
         N.remove(j);
     }
@@ -943,7 +982,8 @@ public class project {
         for(int i=VS.size()-1;i>-1;i--) {
             replaceVS(i);
         }
-        for(int t=0;t<T/dT;t++) {
+
+        for(int t=0;t<=T/dT;t++) {
             if (CS.size() > 0) {
                 int n = N.size() - 1;
                 double[][] mat = new double[n][n];
@@ -966,7 +1006,6 @@ public class project {
                 for (int x=0;x<RemovedNode.size();x++){
                     System.out.println(RemovedNode.get(x).name+"  "+Double.toString(RemovedNode.get(x).volt+N.get(searchNode(RemovedNode.get(x).n1name)).volt));
                 }
-
             }
 
             if (dT != 1) {
