@@ -71,7 +71,7 @@ public class project {
                 n1=new node(n);
             }
             else{
-                n1=N.get(i);
+                n1=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
@@ -81,7 +81,7 @@ public class project {
                 n2=new node(n);
             }
             else{
-                n2=N.get(i);
+                n2=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
@@ -131,7 +131,7 @@ public class project {
                 n1=new node(n);
             }
             else{
-                n1=N.get(i);
+                n1=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
@@ -141,7 +141,7 @@ public class project {
                 n2=new node(n);
             }
             else{
-                n2=N.get(i);
+                n2=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
@@ -182,7 +182,7 @@ public class project {
                 n1=new node(n);
             }
             else{
-                n1=N.get(i);
+                n1=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
@@ -192,7 +192,7 @@ public class project {
                 n2=new node(n);
             }
             else{
-                n2=N.get(i);
+                n2=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
@@ -233,7 +233,7 @@ public class project {
                 n1=new node(n);
             }
             else{
-                n1=N.get(i);
+                n1=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
@@ -243,7 +243,7 @@ public class project {
                 n2=new node(n);
             }
             else{
-                n2=N.get(i);
+                n2=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
@@ -291,7 +291,7 @@ public class project {
                 n1=new node(n);
             }
             else{
-                n1=N.get(i);
+                n1=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
@@ -301,7 +301,7 @@ public class project {
                 n2=new node(n);
             }
             else{
-                n2=N.get(i);
+                n2=new node(N.get(i));
             }
             s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
@@ -703,7 +703,7 @@ public class project {
         String n2VName=new String(L.get(i).n2.name.intern());
         String n1VName=new String(L.get(i).n1.name.intern());
         int j1=searchNode(n1VName), j2=searchNode(n2VName);
-        currentSource cs=new currentSource("IL"+Integer.toString(i)+" "+n1VName+" "+n2VName+" "+ Double.toString(L.get(i).I)+" 0 0 0");
+        currentSource cs=new currentSource("IL"+Integer.toString(i)+" "+n1VName.intern()+" "+n2VName.intern()+" "+ Double.toString(L.get(i).I)+" 0 0 0");
         CS.add(cs);
     }
     public static void replaceVS(int i){
