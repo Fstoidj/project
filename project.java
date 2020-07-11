@@ -663,6 +663,10 @@ public class project {
     }
 
 
+    public static class graphProject extends JFrame{
+
+
+    }
 
 
     public static void updateMadar(double deltat, double t){
