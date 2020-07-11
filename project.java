@@ -860,7 +860,12 @@ public class project {
         }
         removedNode rn=new removedNode(n2VName.intern());
         rn.n1name=n1VName.intern();
-        rn.volt=-VS.get(i).V+N.get(searchNode(n1VName)).volt;
+        if(VS.get(i).NameV.contains("VC")){
+            rn.volt=-VS.get(i).V+N.get(searchNode(n1VName)).volt;
+        }
+        else {
+            rn.volt = VS.get(i).V + N.get(searchNode(n1VName)).volt;
+        }
         RemovedNode.add(rn);
         N.remove(j);
     }
@@ -1003,8 +1008,22 @@ public class project {
                 for(int x=0;x<N.size();x++){
                     System.out.println(N.get(x).name+"  "+N.get(x).volt);
                 }
-                for (int x=0;x<RemovedNode.size();x++){
-                    System.out.println(RemovedNode.get(x).name+"  "+Double.toString(RemovedNode.get(x).volt+N.get(searchNode(RemovedNode.get(x).n1name)).volt));
+                for (int x=0, y=x;x<RemovedNode.size();x++){
+                    y=x;
+                    double v=0;
+                    if(searchRemovedNode(RemovedNode.get(x).n1name)!=-1) {
+                        y = searchRemovedNode(RemovedNode.get(x).n1name);
+                        while (y != -1) {
+                            v += RemovedNode.get(y).volt;
+                            if (searchRemovedNode(RemovedNode.get(y).n1name) != -1) {
+                                y = searchRemovedNode(RemovedNode.get(y).n1name);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    System.out.println(RemovedNode.get(x).name + "  " + Double.toString(RemovedNode.get(x).volt + v+N.get(searchNode(RemovedNode.get(y).n1name)).volt));
+                    v=0;
                 }
             }
 
