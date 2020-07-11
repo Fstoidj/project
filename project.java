@@ -623,7 +623,7 @@ public class project {
                     if (a==0) {
                         for (int k = 0; k < CS.size(); k++) {
                             if (CS.get(k).NameI.contains("IVC" + Integer.toString(i))) {
-                                I0 = CS.get(k).I;
+                                I0 += CS.get(k).I;
                                 if(R.get(Integer.parseInt(matcher1.group(2))).n1.name.equals(CS.get(k).n1.name)){
                                     I0+=(R.get(Integer.parseInt(matcher1.group(2))).n1.volt-R.get(Integer.parseInt(matcher1.group(2))).n2.volt)/R.get(Integer.parseInt(matcher1.group(2))).R;
                                 }
