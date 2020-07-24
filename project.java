@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-public class Project {
+public class project {
 
 
     static ArrayList<node> N=new ArrayList<node>(0);
