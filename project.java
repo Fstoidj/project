@@ -410,6 +410,14 @@ public class project {
                         i1-=(R.get(k).n2.volt1-R.get(k).n1.volt1)/R.get(k).R;
                     }
                 }
+                for(int k=0; k<CS.size();k++){
+                    if(CS.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i1+=CS.get(k).I1;
+                    }
+                    else if(CS.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i1-=CS.get(k).I1;
+                    }
+                }
             }
 
             for(int j=0;j<U.get(i).n.size();j++){
@@ -421,10 +429,20 @@ public class project {
                         i2-=((R.get(k).n2.volt1+dV)-R.get(k).n1.volt1)/R.get(k).R;
                     }
                 }
+                for(int k=0; k<CS.size();k++){
+                    if(CS.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i2+=CS.get(k).I1;
+                    }
+                    else if(CS.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i2-=CS.get(k).I1;
+                    }
+                }
             }
-
-            U.get(i).n.get(0).volt2+=(Math.abs(i1)-Math.abs(i2))*dV/dI;
+            U.get(i).n.get(0).volt2+=((Math.abs(i1)-Math.abs(i2))*dV)/dI;
+            i1=0;
+            i2=0;
         }
+
 
         for(int i=0;i<U.size();i++){
             U.get(i).n.get(0).volt1=U.get(i).n.get(0).volt2;
@@ -573,10 +591,10 @@ public class project {
         }
 
         //testing union merging in VS
-        /*System.out.println("\n");
+        System.out.println("\n");
         for (int j = 0; j < U.size(); j++) {
             System.out.println(U.get(j).n.get(0).name+" : "+U.get(j).n.get(0).union+" in: "+U.get(j).union);
-        }*/
+        }
 
 
         if(dT>0&&T>0&&dI>0&&dV>0){
