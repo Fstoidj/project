@@ -1,4 +1,7 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -420,7 +423,17 @@ public class project {
 
 
     public static class graphProject extends JFrame{
+        Image imageR=new javax.swing.ImageIcon("").getImage();
+        Image imageL=new javax.swing.ImageIcon("").getImage();
+        Image imageC=new javax.swing.ImageIcon("").getImage();
+        Image imageV=new javax.swing.ImageIcon("").getImage();
 
+
+        graphProject() {
+            setSize(2000, 1000);
+            setLayout(null);
+            setVisible(true);
+        }
 
     }
 
