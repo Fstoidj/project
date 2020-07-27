@@ -8,12 +8,12 @@ public class project {
 
 
     static ArrayList<node> N=new ArrayList<node>(0);
+    static ArrayList<nodes> U=new ArrayList<nodes>(0);
     static ArrayList<resistor> R=new ArrayList<resistor>(0);
     static ArrayList<currentSource> CS=new ArrayList<currentSource>(0);
     static ArrayList<voltageSource> VS=new ArrayList<voltageSource>(0);
     static ArrayList<capacitor> C=new ArrayList<capacitor>(0);
     static ArrayList<inductor> L=new ArrayList<inductor>(0);
-
 
 
     public static int searchNode(String s){
@@ -24,12 +24,20 @@ public class project {
         }
         return -1;
     }
+    public static int searchUnion(int u){
+        for(int i=0;i<U.size();i++){
+            if(U.get(i).union==u){
+                return i;
+            }
+        }
+        return -1;
+    }
 
 
     public static class node{
         String name, output;
-        double volt;
-        String union;
+        double volt=0;
+        int union;
         node(String s){
             name=s;
         }
@@ -39,6 +47,10 @@ public class project {
             }
             return -1;
         }
+    }
+    public static class nodes{
+        int union;
+        ArrayList<node> n=new ArrayList<node>(0);
     }
     abstract public static class branch{
         String output;
@@ -53,25 +65,30 @@ public class project {
             s=s.substring(s.indexOf(" ")+1);
             node n=new node(s.substring(0, s.indexOf(" ")));
             int i=searchNode(s.substring(0,s.indexOf(" ")));
+            nodes nodz =new nodes();
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n1=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n1=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n2=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n2=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
@@ -118,26 +135,31 @@ public class project {
             NameC=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
             node n=new node(s.substring(0, s.indexOf(" ")));
+            nodes nodz =new nodes();
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n1=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n1=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n2=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n2=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
@@ -173,26 +195,31 @@ public class project {
             NameL=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
             node n=new node(s.substring(0, s.indexOf(" ")));
+            nodes nodz =new nodes();
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n1=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n1=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n2=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n2=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
@@ -228,32 +255,37 @@ public class project {
             NameV=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
             node n=new node(s.substring(0, s.indexOf(" ")));
+            nodes nodz =new nodes();
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                U.add(nodz);
                 N.add(n);
                 n1=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n1=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
+            int j=searchUnion(n1.union);
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=n1.union;
+                U.get(j).n.add(n);
                 N.add(n);
                 n2=n;
             }
             else{
-                n.union=Integer.toString(i);
+                int k=searchUnion(N.get(i).union);
+                for(int l=0;l<U.get(k).n.size();l++){
+                    U.get(k).n.get(k).union=U.get(j).union;
+                    U.get(j).n.add(U.get(k).n.get(k));
+                }
+                U.remove(k);
                 n2=N.get(i);
             }
-            n2.union=n1.union;
-            n1.union="Asghar";
-            System.out.println(n2.union);
-            //updateUnion(n2);
             s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
             s=s.replaceAll("M", "000000");
@@ -294,26 +326,31 @@ public class project {
             NameI=s.substring(0,s.indexOf(" "));
             s=s.substring(s.indexOf(" ")+1);
             node n=new node(s.substring(0, s.indexOf(" ")));
+            nodes nodz=new nodes();
             int i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n1=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n1=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
-                n.union=Integer.toString(N.size());
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
                 N.add(n);
                 n2=n;
             }
             else{
-                n.union=Integer.toString(i);
                 n2=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
@@ -362,13 +399,15 @@ public class project {
     }
 
 
-    public void updateUnion(node n){
-        for(int j=0;j<VS.size();j++){
-            if(n.union.equals(VS.get(j).n2.union)){
 
-            }
+
+    public static void calcNodeVolts(){
+        double i1=0, i2=0;
+        for(int i=0;i<U.size();i++){
+            
         }
     }
+
 
 
     public static class graphProject extends JFrame{
@@ -383,7 +422,7 @@ public class project {
         voltageSource vs;
         capacitor c;
         inductor l;
-        double T = 1, dT = 1;
+        double T = -1, dT = -1, dV=-1, dI=-1;
         Scanner sc = new Scanner(System.in);
         String s = sc.nextLine();
         s = s.trim();
@@ -468,12 +507,16 @@ public class project {
 
         }
 
-        System.out.println("\n");
+        //testing union merging in VS
+        /*System.out.println("\n");
         for (int j = 0; j < N.size(); j++) {
             System.out.println(N.get(j).name+" : "+N.get(j).union);
+        }*/
+
+
+        if(dT>0&&T>0&&dI>0&&dV>0){
+            calcNodeVolts();
         }
-
-
 
 
     }
