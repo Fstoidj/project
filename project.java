@@ -36,7 +36,7 @@ public class project {
 
     public static class node{
         String name, output;
-        double volt=0;
+        double volt2=0, volt1=0;
         int union;
         node(String s){
             name=s;
@@ -55,7 +55,7 @@ public class project {
     abstract public static class branch{
         String output;
         node n1, n2;
-        double I;
+        double I2=0, I1=0;
     }
     public static class resistor extends branch {
         String NameR;
@@ -78,6 +78,7 @@ public class project {
                 n1=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
+            nodz =new nodes();
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
@@ -116,15 +117,6 @@ public class project {
             }
             R*=Double.parseDouble(s);
         }
-        void calc_I(){
-            I=(n1.volt-n2.volt)/R;
-        }
-        void calc_v1(int t){
-            n1.volt=n2.volt+I*R;
-        }
-        void calc_v2(int t){
-            n2.volt=n1.volt-I*R;
-        }
     }
     public static class capacitor extends branch {
         String NameC;
@@ -149,6 +141,7 @@ public class project {
                 n1=N.get(i);
             }
             s=s.substring(s.indexOf(" ")+1);
+            nodz =new nodes();
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
@@ -211,6 +204,7 @@ public class project {
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
+            nodz =new nodes();
             if(i==-1){
                 n.union=N.size();
                 nodz.n.add(n);
@@ -341,6 +335,7 @@ public class project {
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
+            nodz =new nodes();
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
                 n.union=N.size();
@@ -358,42 +353,43 @@ public class project {
             s=s.replaceAll("M", "000000");
             s=s.replaceAll("G", "000000000");
             if(s.indexOf("m")!=-1){
-                I=0.001;
+                I1=0.001;
                 s=s.replaceAll("m", "");
             }
             else if(s.indexOf("u")!=-1){
-                I=0.000001;
+                I1=0.000001;
                 s=s.replaceAll("u", "");
             }
             else if(s.indexOf("n")!=-1){
-                I=0.000000001;
+                I1=0.000000001;
                 s=s.replaceAll("n", "");
             }
             else if(s.indexOf("p")!=-1){
-                I=0.000000000001;
+                I1=0.000000000001;
                 s=s.replaceAll("p", "");
             }
             else {
-                I=1;
+                I1=1;
             }
-            I*=Double.parseDouble(s.substring(0, s.indexOf(" ")));
+            I1*=Double.parseDouble(s.substring(0, s.indexOf(" ")));
             s=s.substring(s.indexOf(" ")+1, s.length());
             A=Double.parseDouble(s.substring(0,s.indexOf(" ")));
             s=s.substring(s.indexOf(" ")+1, s.length());
             w=2*Math.PI*Double.parseDouble(s.substring(0,s.indexOf(" ")));
             s=s.substring(s.indexOf(" ")+1, s.length());
             p=Double.parseDouble(s);
-            I+=A*Math.sin(p);
+            I1+=A*Math.sin(p);
+            I2=I1;
         }
     }
     public class diode extends branch {
         String NameD;
         void checdiod(){
-            if(I<0){
-                I=0;
+            if(I1<0){
+                I1=0;
             }
-            else if(n1.volt-n2.volt>0){
-                n1.volt=n2.volt;
+            else if(n1.volt1-n2.volt1>0){
+                n1.volt1=n2.volt1;
             }
         }
     }
@@ -401,10 +397,38 @@ public class project {
 
 
 
-    public static void calcNodeVolts(){
+    public static void calcNodeVolts(double dT, double dV, double dI){
         double i1=0, i2=0;
+
+        for(int i=1;i<U.size();i++){
+            for(int j=0;j<U.get(i).n.size();j++){
+                for(int k=0; k<R.size();k++){
+                    if(R.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i1+=(R.get(k).n2.volt1-R.get(k).n1.volt1)/R.get(k).R;
+                    }
+                    else if(R.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i1-=(R.get(k).n2.volt1-R.get(k).n1.volt1)/R.get(k).R;
+                    }
+                }
+            }
+
+            for(int j=0;j<U.get(i).n.size();j++){
+                for(int k=0; k<R.size();k++){
+                    if(R.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i2+=(R.get(k).n2.volt1-(R.get(k).n1.volt1+dV))/R.get(k).R;
+                    }
+                    else if(R.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i2-=((R.get(k).n2.volt1+dV)-R.get(k).n1.volt1)/R.get(k).R;
+                    }
+                }
+            }
+
+            U.get(i).n.get(0).volt2+=(Math.abs(i1)-Math.abs(i2))*dV/dI;
+        }
+
         for(int i=0;i<U.size();i++){
-            
+            U.get(i).n.get(0).volt1=U.get(i).n.get(0).volt2;
+            System.out.println("Node: "+U.get(i).n.get(0).name+" Volt is: "+U.get(i).n.get(0).volt1);
         }
     }
 
@@ -495,10 +519,51 @@ public class project {
                 dT *= Double.parseDouble(s);
 
             }
+            else if (s.indexOf("dV") != -1) {
+                s = s.substring(s.indexOf(" ") + 1);
+                s = s.replaceAll("k", "000");
+                s = s.replaceAll("M", "000000");
+                s = s.replaceAll("G", "000000000");
+                if (s.indexOf("m") != -1) {
+                    dV = 0.001;
+                    s = s.replaceAll("m", "");
+                } else if (s.indexOf("u") != -1) {
+                    dV = 0.000001;
+                    s = s.replaceAll("u", "");
+                } else if (s.indexOf("n") != -1) {
+                    dV = 0.000000001;
+                    s = s.replaceAll("n", "");
+                } else if (s.indexOf("p") != -1) {
+                    dV = 0.000000000001;
+                    s = s.replaceAll("p", "");
+                } else {
+                    dV = 1;
+                }
+                dV *= Double.parseDouble(s);
 
-            System.out.println("\n");
-            for (int j = 0; j < N.size(); j++) {
-                System.out.println(N.get(j).name+" : "+N.get(j).union);
+            }
+            else if (s.indexOf("dI") != -1) {
+                s = s.substring(s.indexOf(" ") + 1);
+                s = s.replaceAll("k", "000");
+                s = s.replaceAll("M", "000000");
+                s = s.replaceAll("G", "000000000");
+                if (s.indexOf("m") != -1) {
+                    dI = 0.001;
+                    s = s.replaceAll("m", "");
+                } else if (s.indexOf("u") != -1) {
+                    dI = 0.000001;
+                    s = s.replaceAll("u", "");
+                } else if (s.indexOf("n") != -1) {
+                    dI = 0.000000001;
+                    s = s.replaceAll("n", "");
+                } else if (s.indexOf("p") != -1) {
+                    dI = 0.000000000001;
+                    s = s.replaceAll("p", "");
+                } else {
+                    dI = 1;
+                }
+                dI *= Double.parseDouble(s);
+
             }
 
             s = sc.nextLine();
@@ -509,13 +574,17 @@ public class project {
 
         //testing union merging in VS
         /*System.out.println("\n");
-        for (int j = 0; j < N.size(); j++) {
-            System.out.println(N.get(j).name+" : "+N.get(j).union);
+        for (int j = 0; j < U.size(); j++) {
+            System.out.println(U.get(j).n.get(0).name+" : "+U.get(j).n.get(0).union+" in: "+U.get(j).union);
         }*/
 
 
         if(dT>0&&T>0&&dI>0&&dV>0){
-            calcNodeVolts();
+            for(int i=0;i<T/dT;i++) {
+                System.out.println("iteration number: "+i);
+                calcNodeVolts(dT, dV, dI);
+                System.out.println("\n");
+            }
         }
 
 
