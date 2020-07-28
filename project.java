@@ -438,13 +438,13 @@ public class project {
 
 
     public static class graphProject extends JFrame{
-        Image imageR=new javax.swing.ImageIcon("").getImage();
-        Image imageL=new javax.swing.ImageIcon("").getImage();
-        Image imageC=new javax.swing.ImageIcon("").getImage();
-        Image imageV=new javax.swing.ImageIcon("").getImage();
-
 
         graphProject() {
+            JLabel label=new JLabel(new ImageIcon("7878.png"));
+            label.setBounds(500,500,180,140);
+            add(label);
+
+            setTitle("Circuit Graph");
             setSize(2000, 1000);
             setLayout(null);
             setVisible(true);
@@ -453,6 +453,8 @@ public class project {
     }
 
     public static void main(String[] args) {
+        graphProject GraphProject=new graphProject();
+
         node n;
         resistor r;
         currentSource cs;
@@ -464,7 +466,6 @@ public class project {
         String s = sc.nextLine();
         s = s.trim();
         s = s.replaceAll("( )+", " ");
-
         while (!s.equals(".end")) {
             if (s.charAt(0) == 'R') {
                 r = new resistor(s);
