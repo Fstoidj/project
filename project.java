@@ -575,6 +575,7 @@ public class project {
             else{
                 n4=N.get(i);
             }
+            s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
             s=s.replaceAll("M", "000000");
             s=s.replaceAll("G", "000000000");
@@ -598,7 +599,7 @@ public class project {
                 a=1;
             }
             a*=Double.parseDouble(s);
-            I=n3.outputVolt.get(0)-n4.outputVolt.get(0);
+            I=0;
             I*=a;
             outputCurrent.add(I);
         }
@@ -706,7 +707,6 @@ public class project {
                         i1+=CS.get(k).outputCurrent.get(iteraroin);
                     }
                     else if(CS.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        //System.out.println("I : "+CS.get(k).outputCurrent.size()+"iteration: "+iteraroin);
                         i1-=CS.get(k).outputCurrent.get(iteraroin);
                     }
                 }
@@ -1164,6 +1164,8 @@ public class project {
             U.get(j).n.get(0).outputVolt.add(0.0);
             //System.out.println(U.get(j).n.get(0).name+" : "+U.get(j).n.get(0).union+" in: "+U.get(j).union);
         }
+
+        System.out.println(" I: "+ CS.get(0).I+" A: "+ CS.get(0).A+" w: "+ CS.get(0).w+" p: "+ CS.get(0).p);
 
         if(dT>0&&T>0&&dI>0&&dV>0){
             for(int i=0;i<T/dT;i+=1) {
