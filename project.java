@@ -1,5 +1,7 @@
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.util.ArrayList;
@@ -514,20 +516,119 @@ public class project {
     public static class graphProject extends JFrame{
 
         graphProject() {
-            JLabel label=new JLabel(new ImageIcon("7878.png"));
-            label.setBounds(500,500,180,140);
-            add(label);
-
+            //JLabel label=new JLabel(new ImageIcon("7878.png"));
+            //label.setBounds(200,350,180,100);
+            //add(label);
             setTitle("Circuit Graph");
             setSize(2000, 1000);
             setLayout(null);
             setVisible(true);
         }
 
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            g.setColor(Color.BLACK);
+            g.drawLine(0,0,30,1000);
+            for (resistor resistor1: R) {
+                drawResistor(resistor1);
+            }
+            for (currentSource currentSource1: CS){
+                drawCS(currentSource1);
+            }
+            for (voltageSource voltageSource1: VS){
+                drawVS(voltageSource1);
+            }
+            for (capacitor capacitor1: C){
+                drawC(capacitor1);
+            }
+            for (inductor inductor1: L){
+                drawL(inductor1);
+            }
+        }
+
+        private void drawC(capacitor capacitor1) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(capacitor1.n1.name);
+            int node2Num = Integer.parseInt(capacitor1.n2.name);
+            x1 = node1Num % 6;
+            y1  = node1Num / 6;
+            x2 = node2Num % 6;
+            y2 = node2Num / 6;
+        }
+
+        private void drawVS(voltageSource voltageSource1) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(voltageSource1.n1.name);
+            int node2Num = Integer.parseInt(voltageSource1.n2.name);
+            x1 = node1Num % 6;
+            y1  = node1Num / 6;
+            x2 = node2Num % 6;
+            y2 = node2Num / 6;
+        }
+
+        private void drawL(inductor inductor1) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(inductor1.n1.name);
+            int node2Num = Integer.parseInt(inductor1.n2.name);
+            x1 = node1Num % 6;
+            y1  = node1Num / 6;
+            x2 = node2Num % 6;
+            y2 = node2Num / 6;
+        }
+
+        private void drawCS(currentSource currentSource1) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(currentSource1.n1.name);
+            int node2Num = Integer.parseInt(currentSource1.n2.name);
+            x1 = node1Num % 6;
+            y1  = node1Num / 6;
+            x2 = node2Num % 6;
+            y2 = node2Num / 6;
+        }
+
+        private void drawResistor(resistor resistor1) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(resistor1.n1.name) - 1;
+            int node2Num = Integer.parseInt(resistor1.n2.name) - 1;
+            x1 = node1Num % 6;
+            y1 = node1Num / 6;
+            x2 = node2Num % 6;
+            y2 = node2Num / 6;
+            System.out.println(x1);
+            System.out.println(x2);
+            System.out.println(y1);
+            System.out.println(y2);
+            if (x1 == x2) {
+                drawVertical(x1, y1, x2, y2, "Resistor.png");
+            }
+            else if (y1 == y2) {
+                drawHorizontal(x1, y1, x2, y2, "Resistor.png");
+            }
+        }
+
+        private void drawHorizontal(int x1, int y1, int x2, int y2, String address) {
+            JLabel jLabel = new JLabel(new ImageIcon(address));
+            jLabel.setBounds((x1 + x2) / 2 * (2000 / 6) + 120 + 50, (y1 + y2) / 2 * (1000 / 6), 180, 100);
+            add(jLabel);
+
+            super.paint(getGraphics());
+//            getGraphics().drawLine(20, 200, 200, 200);
+//            getGraphics().drawLine(20, 50, 1200, 50);
+//            getGraphics().drawLine(1320, 50, 1500, 50);
+
+            Rectangle line1 = new Rectangle(x1 * 2000 / 6 + 50, y1 * 1000 / 6 + 90, (x1 + x2) / 2 * (2000 / 6) + 130 - x1 * 2000 / 6, 25);
+            Rectangle line2 = new Rectangle((x1 + x2) / 2 * (2000 / 6) + 290 + 50, y2 * 1000 / 6 + 90, x2 * 2000 / 6 - (x1 + x2) / 2 * (2000 / 6) - 290, 25);
+//            jPanel.add(line1);
+//            add(line2);
+        }
+
+        private void drawVertical(int x1, int y1, int x2, int y2, String address) {
+        }
+
     }
 
     public static void main(String[] args) {
-        graphProject GraphProject=new graphProject();
 
         node n;
         resistor r;
@@ -680,6 +781,8 @@ public class project {
         }
 
         chapOutput();
+
+        graphProject GraphProject = new graphProject();
 
     }
 }
