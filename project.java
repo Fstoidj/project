@@ -450,6 +450,14 @@ public class project {
                         i1 += C.get(k).C * (C.get(k).n1.moshtaghVolt(dT, iteraroin) - C.get(k).n2.moshtaghVolt(dT, iteraroin));
                     }
                 }
+                for(int k=0; k<L.size();k++){
+                    if(L.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i1+=L.get(k).outputCurrent.get(L.get(k).outputCurrent.size() - 1);
+                    }
+                    else if(L.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i1-=L.get(k).outputCurrent.get(L.get(k).outputCurrent.size() - 1);
+                    }
+                }
             }
 
             for(int j=0;j<U.get(i).n.size();j++){
@@ -477,6 +485,14 @@ public class project {
                         i2 += C.get(k).C * (C.get(k).n1.moshtaghVolt(dT, iteraroin) - C.get(k).n2.moshtaghVolt(dT, iteraroin)-dV/dT);
                     }
                 }
+                for(int k=0; k<L.size();k++){
+                    if(L.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i1+=L.get(k).outputCurrent.get(L.get(k).outputCurrent.size() - 1)+dV*dT/L.get(k).L;
+                    }
+                    else if(L.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i1-=L.get(k).outputCurrent.get(L.get(k).outputCurrent.size() - 1)-dV*dT/L.get(k).L;
+                    }
+                }
             }
             //System.out.println("U: "+i+" i1: "+i1+" i2: "+i2+" CV1dot: "+C.get(0).C * (C.get(0).n1.moshtaghVolt(dT, iteraroin))+" CV2dot"+ C.get(0).C *(- C.get(0).n2.moshtaghVolt(dT, iteraroin))+" CdV/dT: "+C.get(0).C *(-dV/dT));
             U.get(i).n.get(0).outputVolt.add(U.get(i).n.get(0).volt+((Math.abs(i1)-Math.abs(i2))*dV)/dI);
@@ -490,6 +506,7 @@ public class project {
         }
     }
     public static void calcBranchCurrents(double dT, double dV, double dI, int iteration){
+        double I=0;
         for(int i=0;i<R.size();i++){
             R.get(i).outputCurrent.add((R.get(i).n1.volt-R.get(i).n2.volt)/R.get(i).R);
         }
@@ -498,6 +515,10 @@ public class project {
         }
         for (int i=0; i<C.size();i++){
             C.get(i).outputCurrent.add(C.get(i).C * (C.get(i).n1.moshtaghVolt(dT, iteration) - C.get(i).n2.moshtaghVolt(dT, iteration)));
+        }
+        for (int i=0; i<L.size();i++){
+            I=L.get(i).outputCurrent.get(L.get(i).outputCurrent.size()-1);
+            L.get(i).outputCurrent.add(I+(dT*(L.get(i).n2.outputVolt.get(L.get(i).n2.outputVolt.size()-1)-L.get(i).n1.outputVolt.get(L.get(i).n1.outputVolt.size()-1)))/L.get(i).L);
         }
     }
 
