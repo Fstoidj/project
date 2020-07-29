@@ -52,6 +52,19 @@ public class project {
             }
             return -1;
         }
+        public double moshtaghVolt(double dT, int iteration){
+            double VDot=0;
+            /*if(outputVolt.size()>iteration+2) {
+                System.out.println(iteration);
+                VDot = (outputVolt.get(iteration+1) - outputVolt.get(iteration)) / dT;
+                return VDot;
+            }*/
+            if(iteration>0){
+                VDot = (outputVolt.get(iteration) - outputVolt.get(iteration-1)) / dT;
+                return VDot;
+            }
+            return 0;
+        }
     }
     public static class nodes{
         int union;
@@ -407,7 +420,7 @@ public class project {
 
 
 
-    public static void calcNodeVolts(double dT, double dV, double dI){
+    public static void calcNodeVolts(double dT, double dV, double dI, int iteraroin){
         double i1=0, i2=0;
 
         U.get(0).n.get(0).outputVolt.add(0.0);
@@ -429,6 +442,14 @@ public class project {
                         i1-=CS.get(k).I;
                     }
                 }
+                for(int k=0; k<C.size();k++){
+                    if(C.get(k).n1.name.equals(U.get(i).n.get(j).name)) {
+                        i1 -= C.get(k).C * (C.get(k).n1.moshtaghVolt(dT,iteraroin) - C.get(k).n2.moshtaghVolt(dT,iteraroin));
+                    }
+                    else if(C.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i1 += C.get(k).C * (C.get(k).n1.moshtaghVolt(dT, iteraroin) - C.get(k).n2.moshtaghVolt(dT, iteraroin));
+                    }
+                }
             }
 
             for(int j=0;j<U.get(i).n.size();j++){
@@ -448,7 +469,16 @@ public class project {
                         i2-=CS.get(k).I;
                     }
                 }
+                for(int k=0; k<C.size();k++){
+                    if(C.get(k).n1.name.equals(U.get(i).n.get(j).name)) {
+                        i2 -= C.get(k).C * (C.get(k).n1.moshtaghVolt(dT, iteraroin)+dV/dT - C.get(k).n2.moshtaghVolt(dT, iteraroin));
+                    }
+                    else if(C.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i2 += C.get(k).C * (C.get(k).n1.moshtaghVolt(dT, iteraroin) - C.get(k).n2.moshtaghVolt(dT, iteraroin)-dV/dT);
+                    }
+                }
             }
+            //System.out.println("U: "+i+" i1: "+i1+" i2: "+i2+" CV1dot: "+C.get(0).C * (C.get(0).n1.moshtaghVolt(dT, iteraroin))+" CV2dot"+ C.get(0).C *(- C.get(0).n2.moshtaghVolt(dT, iteraroin))+" CdV/dT: "+C.get(0).C *(-dV/dT));
             U.get(i).n.get(0).outputVolt.add(U.get(i).n.get(0).volt+((Math.abs(i1)-Math.abs(i2))*dV)/dI);
             i1=0;
             i2=0;
@@ -459,14 +489,18 @@ public class project {
             U.get(i).n.get(0).volt=U.get(i).n.get(0).outputVolt.get(j);
         }
     }
-    public static void calcBranchCurrents(double dT, double dV, double dI){
+    public static void calcBranchCurrents(double dT, double dV, double dI, int iteration){
         for(int i=0;i<R.size();i++){
             R.get(i).outputCurrent.add((R.get(i).n1.volt-R.get(i).n2.volt)/R.get(i).R);
         }
         for (int i=0;i<CS.size();i++){
             CS.get(i).outputCurrent.add(CS.get(i).I);
         }
+        for (int i=0; i<C.size();i++){
+            C.get(i).outputCurrent.add(C.get(i).C * (C.get(i).n1.moshtaghVolt(dT, iteration) - C.get(i).n2.moshtaghVolt(dT, iteration)));
+        }
     }
+
 
     public static void chapOutput(){
         for(int i=0;i<N.size();i++){
@@ -505,6 +539,7 @@ public class project {
             }
             System.out.println();
         }
+
     }
 
 
@@ -535,6 +570,7 @@ public class project {
             }
             else if (s.charAt(0) == 'L') {
                 l = new inductor(s);
+                l.outputCurrent.add(0.0);
                 L.add(l);
                 input.add("L");
             }
@@ -545,11 +581,13 @@ public class project {
             }
             else if (s.charAt(0) == 'V') {
                 vs = new voltageSource(s);
+                vs.outputCurrent.add(0.0);
                 VS.add(vs);
                 input.add("V");
             }
             else if (s.charAt(0) == 'C') {
                 c = new capacitor(s);
+                c.outputCurrent.add(0.0);
                 C.add(c);
                 input.add("C");
             }
@@ -660,8 +698,8 @@ public class project {
 
         if(dT>0&&T>0&&dI>0&&dV>0){
             for(int i=0;i<T/dT;i+=1) {
-                calcNodeVolts(dT, dV, dI);
-                calcBranchCurrents(dT, dV, dI);
+                calcNodeVolts(dT, dV, dI, i);
+                calcBranchCurrents(dT, dV, dI, i);
             }
         }
 
