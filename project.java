@@ -138,7 +138,7 @@ public class project {
         double I=0;
         public void output(){
             for(int i=0;i<n1.outputVolt.size();i++){
-                System.out.print(" "+(n1.outputVolt.get(i)-n2.outputVolt.get(i))+" "+outputCurrent.get(i)+" "+(outputCurrent.get(i)*(n1.outputVolt.get(i)-n2.outputVolt.get(i))));
+                System.out.print(" "+(n1.outputVolt.get(i)-n2.outputVolt.get(i))+"|"+outputCurrent.get(i)+"|"+(outputCurrent.get(i)*(n1.outputVolt.get(i)-n2.outputVolt.get(i))));
             }
         }
     }
@@ -703,10 +703,11 @@ public class project {
                 }
                 for(int k=0; k<CS.size();k++){
                     if(CS.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i1+=CS.get(k).outputCurrent.get(iteraroin+1);
+                        i1+=CS.get(k).outputCurrent.get(iteraroin);
                     }
                     else if(CS.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i1-=CS.get(k).outputCurrent.get(iteraroin+1);
+                        //System.out.println("I : "+CS.get(k).outputCurrent.size()+"iteration: "+iteraroin);
+                        i1-=CS.get(k).outputCurrent.get(iteraroin);
                     }
                 }
                 for(int k=0; k<C.size();k++){
@@ -719,26 +720,26 @@ public class project {
                 }
                 for(int k=0; k<L.size();k++){
                     if(L.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i1+=L.get(k).outputCurrent.get(iteraroin+1);
+                        i1-=L.get(k).outputCurrent.get(iteraroin);
                     }
                     else if(L.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i1-=L.get(k).outputCurrent.get(iteraroin+1);
+                        i1+=L.get(k).outputCurrent.get(iteraroin);
                     }
                 }
                 for(int k=0; k<G.size();k++){
                     if(G.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i1+=G.get(k).outputCurrent.get(iteraroin+1);
+                        i1+=G.get(k).outputCurrent.get(iteraroin);
                     }
                     else if(G.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i1-=G.get(k).outputCurrent.get(iteraroin+ 1);
+                        i1-=G.get(k).outputCurrent.get(iteraroin);
                     }
                 }
                 for(int k=0; k<F.size();k++){
                     if(F.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i1+=F.get(k).outputCurrent.get(iteraroin+ 1);
+                        i1+=F.get(k).outputCurrent.get(iteraroin);
                     }
                     else if(F.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i1-=F.get(k).outputCurrent.get(iteraroin+ 1);
+                        i1-=F.get(k).outputCurrent.get(iteraroin);
                     }
                 }
             }
@@ -754,10 +755,10 @@ public class project {
                 }
                 for(int k=0; k<CS.size();k++){
                     if(CS.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i2+=CS.get(k).outputCurrent.get(iteraroin+1);
+                        i2+=CS.get(k).outputCurrent.get(iteraroin);
                     }
                     else if(CS.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i2-=CS.get(k).outputCurrent.get(iteraroin+1);
+                        i2-=CS.get(k).outputCurrent.get(iteraroin);
                     }
                 }
                 for(int k=0; k<C.size();k++){
@@ -770,15 +771,15 @@ public class project {
                 }
                 for(int k=0; k<L.size();k++){
                     if(L.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i2+=L.get(k).outputCurrent.get(iteraroin+1)+dV*dT/L.get(k).L;
+                        i2-=L.get(k).outputCurrent.get(iteraroin)+dV*dT/L.get(k).L;
                     }
                     else if(L.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i2-=L.get(k).outputCurrent.get(iteraroin+ 1)-dV*dT/L.get(k).L;
+                        i2+=L.get(k).outputCurrent.get(iteraroin)-dV*dT/L.get(k).L;
                     }
                 }
                 for(int k=0; k<G.size();k++){
                     if(G.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i2+=G.get(k).outputCurrent.get(iteraroin+1);
+                        i2+=G.get(k).outputCurrent.get(iteraroin);
                         if(G.get(k).n3.name.equals(U.get(i).n.get(j).name)){
                             i2+=G.get(k).a*dV;
                         }
@@ -787,7 +788,7 @@ public class project {
                         }
                     }
                     else if(G.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i2-=G.get(k).outputCurrent.get(iteraroin+ 1);
+                        i2-=G.get(k).outputCurrent.get(iteraroin);
                         if(G.get(k).n3.name.equals(U.get(i).n.get(j).name)){
                             i2+=G.get(k).a*dV;
                         }
@@ -798,10 +799,10 @@ public class project {
                 }
                 for(int k=0; k<F.size();k++){
                     if(F.get(k).n1.name.equals(U.get(i).n.get(j).name)){
-                        i2+=F.get(k).outputCurrent.get(iteraroin+1);
+                        i2+=F.get(k).outputCurrent.get(iteraroin);
                     }
                     else if(F.get(k).n2.name.equals(U.get(i).n.get(j).name)){
-                        i2-=F.get(k).outputCurrent.get(iteraroin+ 1);
+                        i2-=F.get(k).outputCurrent.get(iteraroin);
                     }
                 }
             }
@@ -821,20 +822,20 @@ public class project {
             R.get(i).outputCurrent.add((R.get(i).n1.volt-R.get(i).n2.volt)/R.get(i).R);
         }
         for (int i=0;i<CS.size();i++){
-            CS.get(i).outputCurrent.add(CS.get(i).I+CS.get(i).A*Math.sin(CS.get(i).p+CS.get(i).w*(iteration+1)*dT));
+            CS.get(i).outputCurrent.add(CS.get(i).I+CS.get(i).A*Math.sin(CS.get(i).p+CS.get(i).w*(iteration)*dT));
         }
         for (int i=0; i<C.size();i++){
             C.get(i).outputCurrent.add(C.get(i).C * (C.get(i).n1.moshtaghVolt(dT, iteration) - C.get(i).n2.moshtaghVolt(dT, iteration)));
         }
         for (int i=0; i<L.size();i++){
-            I=L.get(i).outputCurrent.get(L.get(i).outputCurrent.size()-1);
-            L.get(i).outputCurrent.add(I+(dT*(L.get(i).n2.outputVolt.get(L.get(i).n2.outputVolt.size()-1)-L.get(i).n1.outputVolt.get(L.get(i).n1.outputVolt.size()-1)))/L.get(i).L);
+            I=L.get(i).outputCurrent.get(iteration);
+            L.get(i).outputCurrent.add(I+(dT*(L.get(i).n1.outputVolt.get(iteration)-L.get(i).n2.outputVolt.get(iteration)))/L.get(i).L);
         }
         for (int i=0;i<G.size();i++){
-            G.get(i).outputCurrent.add((G.get(i).n3.outputVolt.get(0)-G.get(i).n4.outputVolt.get(0))*G.get(i).a);
+            G.get(i).outputCurrent.add((G.get(i).n3.outputVolt.get(iteration)-G.get(i).n4.outputVolt.get(iteration))*G.get(i).a);
         }
         for (int i=0;i<F.size();i++){
-            F.get(i).outputCurrent.add(F.get(i).inputCurrent.get(iteration+1));
+            F.get(i).outputCurrent.add(F.get(i).inputCurrent.get(iteration));
         }
     }
 
@@ -889,7 +890,7 @@ public class project {
 
     }
 
-
+/*
     public static class graphProject extends JFrame{
 
         graphProject() {
@@ -1004,7 +1005,7 @@ public class project {
         }
 
     }
-
+*/
     public static void main(String[] args) {
 
         node n;
@@ -1173,7 +1174,7 @@ public class project {
 
         chapOutput();
 
-        graphProject GraphProject = new graphProject();
+        //graphProject GraphProject = new graphProject();
 
     }
 }
