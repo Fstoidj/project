@@ -131,6 +131,15 @@ public class project {
     public static class nodes{
         int union;
         ArrayList<node> n=new ArrayList<node>(0);
+        public void addInputUnionVolts(){
+
+        }
+        public void updateUnionVolts(double dT, double dV, double dI, int iteraroin){
+
+        }
+        public void updateUnionOutputVolts(double dT, double dV, double dI, int iteraroin){
+
+        }
     }
     abstract public static class branch{
         ArrayList<Double> outputCurrent=new ArrayList<Double>(0);
@@ -327,6 +336,7 @@ public class project {
             L*=Double.parseDouble(s);
         }
     }
+    //VS-AC needs to be fixed like CS-AC!
     public static class voltageSource extends branch {
         String NameV;
         double V, A, w, p;
@@ -359,8 +369,8 @@ public class project {
             else{
                 int k=searchUnion(N.get(i).union);
                 for(int l=0;l<U.get(k).n.size();l++){
-                    U.get(k).n.get(k).union=U.get(j).union;
-                    U.get(j).n.add(U.get(k).n.get(k));
+                    U.get(k).n.get(l).union=U.get(j).union;
+                    U.get(j).n.add(U.get(k).n.get(l));
                 }
                 U.remove(k);
                 n2=N.get(i);
@@ -807,6 +817,7 @@ public class project {
                 }
             }
             U.get(i).n.get(0).outputVolt.add(U.get(i).n.get(0).volt+((Math.abs(i1)-Math.abs(i2))*dV)/dI);
+            U.get(i).updateUnionOutputVolts(dT, dV, dI, iteraroin);
             i1=0;
             i2=0;
         }
@@ -814,6 +825,7 @@ public class project {
         for(int i=0, j;i<U.size();i++){
             j=U.get(i).n.get(0).outputVolt.size()-1;
             U.get(i).n.get(0).volt=U.get(i).n.get(0).outputVolt.get(j);
+            U.get(i).updateUnionVolts(dT, dV, dI, iteraroin);
         }
     }
     public static void calcBranchCurrents(double dT, double dV, double dI, int iteration){
@@ -841,7 +853,7 @@ public class project {
 
 
     public static void chapOutput(){
-        for(int i=0;i<N.size();i++){
+        for(int i=0;i<U.size();i++){
             System.out.print(U.get(i).n.get(0).name+" :");
             for (int j=0;j<U.get(0).n.get(0).outputVolt.size();j++){
                 System.out.print(" "+U.get(i).n.get(0).outputVolt.get(j));
@@ -1159,13 +1171,16 @@ public class project {
 
         }
 
-        //testing union merging in VS
+        
         for (int j = 0; j < U.size(); j++) {
             U.get(j).n.get(0).outputVolt.add(0.0);
-            //System.out.println(U.get(j).n.get(0).name+" : "+U.get(j).n.get(0).union+" in: "+U.get(j).union);
+            U.get(j).addInputUnionVolts();
+            /*
+            for(int x=0;x<U.get(j).n.size();x++) {
+                System.out.println(U.get(j).n.get(x).name + " : " + U.get(j).n.get(x).union + " in: " + U.get(j).union);
+            }
+            */
         }
-
-        System.out.println(" I: "+ CS.get(0).I+" A: "+ CS.get(0).A+" w: "+ CS.get(0).w+" p: "+ CS.get(0).p);
 
         if(dT>0&&T>0&&dI>0&&dV>0){
             for(int i=0;i<T/dT;i+=1) {
