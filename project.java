@@ -1,11 +1,16 @@
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -892,6 +897,9 @@ public class project {
 
     public static class graphProject extends JFrame{
 
+        ArrayList<Line2D> lines = new ArrayList<>();
+        HashMap<String, Integer> paralel = new HashMap<>();
+
         graphProject() {
             //JLabel label=new JLabel(new ImageIcon("7878.png"));
             //label.setBounds(200,350,180,100);
@@ -922,85 +930,257 @@ public class project {
             for (inductor inductor1: L){
                 drawL(inductor1);
             }
+            drawLines();
+        }
+
+        private void drawLines() {
+            Graphics2D graphics2D = (Graphics2D) getGraphics();
+            for (Line2D line: lines){
+                graphics2D.draw(line);
+            }
         }
 
         private void drawC(capacitor capacitor1) {
             int x1, y1, x2, y2;
-            int node1Num = Integer.parseInt(capacitor1.n1.name);
-            int node2Num = Integer.parseInt(capacitor1.n2.name);
-            x1 = node1Num % 6;
-            y1  = node1Num / 6;
-            x2 = node2Num % 6;
-            y2 = node2Num / 6;
+            int node1Num = Integer.parseInt(capacitor1.n1.name) - 1;
+            int node2Num = Integer.parseInt(capacitor1.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "CapacitorV.png", capacitor1.NameC);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "CapacitorV.png", capacitor1.NameC);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    drawVertical(x1, y1, x2, y2, "CapacitorV.png", capacitor1.NameC);
+                } else if (y1 == y2) {
+                    drawHorizontal(x1, y1, x2, y2, "CapacitorH.png", capacitor1.NameC);
+                }
+            }
         }
-
         private void drawVS(voltageSource voltageSource1) {
             int x1, y1, x2, y2;
-            int node1Num = Integer.parseInt(voltageSource1.n1.name);
-            int node2Num = Integer.parseInt(voltageSource1.n2.name);
-            x1 = node1Num % 6;
-            y1  = node1Num / 6;
-            x2 = node2Num % 6;
-            y2 = node2Num / 6;
+            int node1Num = Integer.parseInt(voltageSource1.n1.name) - 1;
+            int node2Num = Integer.parseInt(voltageSource1.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "VoltageU.png", voltageSource1.NameV);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "VoltageD.png", voltageSource1.NameV);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    if (y1 > y2)
+                        drawVertical(x1, y1, x2, y2, "VoltageU.png", voltageSource1.NameV);
+                    else
+                        drawVertical(x1, y1, x2, y2, "VoltageD.png", voltageSource1.NameV);
+                } else if (y1 == y2) {
+                    if (x1 > x2)
+                        drawHorizontal(x1, y1, x2, y2, "VoltageL.png", voltageSource1.NameV);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "VoltageR.png", voltageSource1.NameV);
+                }
+            }
         }
 
         private void drawL(inductor inductor1) {
             int x1, y1, x2, y2;
-            int node1Num = Integer.parseInt(inductor1.n1.name);
-            int node2Num = Integer.parseInt(inductor1.n2.name);
-            x1 = node1Num % 6;
-            y1  = node1Num / 6;
-            x2 = node2Num % 6;
-            y2 = node2Num / 6;
+            int node1Num = Integer.parseInt(inductor1.n1.name) - 1;
+            int node2Num = Integer.parseInt(inductor1.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "InductorV.png", inductor1.NameL);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "InductorV.png", inductor1.NameL);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    drawVertical(x1, y1, x2, y2, "InductorV.png", inductor1.NameL);
+                } else if (y1 == y2) {
+                    drawHorizontal(x1, y1, x2, y2, "InductorH.png", inductor1.NameL);
+                }
+            }
         }
 
         private void drawCS(currentSource currentSource1) {
             int x1, y1, x2, y2;
-            int node1Num = Integer.parseInt(currentSource1.n1.name);
-            int node2Num = Integer.parseInt(currentSource1.n2.name);
-            x1 = node1Num % 6;
-            y1  = node1Num / 6;
-            x2 = node2Num % 6;
-            y2 = node2Num / 6;
+            int node1Num = Integer.parseInt(currentSource1.n1.name) - 1;
+            int node2Num = Integer.parseInt(currentSource1.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "CurrentU.png", currentSource1.NameI);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "CurrentD.png", currentSource1.NameI);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    if (y1 > y2)
+                        drawVertical(x1, y1, x2, y2, "CurrentU.png", currentSource1.NameI);
+                    else
+                        drawVertical(x1, y1, x2, y2, "CurrentD.png", currentSource1.NameI);
+                } else if (y1 == y2) {
+                    if (x1 > x2)
+                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", currentSource1.NameI);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "CurrentR.png", currentSource1.NameI);
+                }
+            }
         }
-
         private void drawResistor(resistor resistor1) {
             int x1, y1, x2, y2;
             int node1Num = Integer.parseInt(resistor1.n1.name) - 1;
             int node2Num = Integer.parseInt(resistor1.n2.name) - 1;
-            x1 = node1Num % 6;
-            y1 = node1Num / 6;
-            x2 = node2Num % 6;
-            y2 = node2Num / 6;
-            System.out.println(x1);
-            System.out.println(x2);
-            System.out.println(y1);
-            System.out.println(y2);
-            if (x1 == x2) {
-                drawVertical(x1, y1, x2, y2, "Resistor.png");
-            }
-            else if (y1 == y2) {
-                drawHorizontal(x1, y1, x2, y2, "Resistor.png");
+            if (node1Num == -1)
+                connectToEarth(node2Num, "ResistorV.png", resistor1.NameR);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "ResistorV.png", resistor1.NameR);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
+                if (x1 == x2) {
+                    drawVertical(x1, y1, x2, y2, "ResistorV.png", resistor1.NameR);
+                } else if (y1 == y2) {
+                    drawHorizontal(x1, y1, x2, y2, "ResistorH.png", resistor1.NameR);
+                }
             }
         }
+        private void connectToEarth(int nodeNum, String address, String name) {
+            int x1, x2, y1, y2;
+            x1 = nodeNum % 6;
+            y1 = 5;
+            y2 = 4 - nodeNum / 6;
+            drawVertical(x1, y1, x1, y2, address, name);
+        }
 
-        private void drawHorizontal(int x1, int y1, int x2, int y2, String address) {
-            JLabel jLabel = new JLabel(new ImageIcon(address));
-            jLabel.setBounds((x1 + x2) / 2 * (2000 / 6) + 120 + 50, (y1 + y2) / 2 * (1000 / 6), 180, 100);
+        private void drawHorizontal(int x1, int y1, int x2, int y2, String address, String name) {
+            if (x1 > x2){
+                int temp = x2;
+                x2 = x1;
+                x1 = temp;
+            }
+            String string = x1 + "" + y1 + "" + x2 + "" + y2;
+            int count = 0;
+            if (paralel.keySet().contains(string))
+                count = paralel.get(string);
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File(address));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            JLabel jLabel = new JLabel();
+            if (address.contains("Inductor"))
+                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40 + 12, 70, 25);
+            else if (address.contains("Current"))
+                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40 + 10, 70, 32);
+            else
+                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40, 70, 50);
+            Image image;
+            image = img.getScaledInstance(jLabel.getWidth(), jLabel.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(image);
+            jLabel.setIcon(imageIcon);
+            add(jLabel);
+            super.paint(getGraphics());
+
+            int additionalX = 0, additionalY = 0;
+            if (address.contains("Capacitor"))
+            {
+                additionalX += 3;
+                additionalY -= 2;
+            }
+            if (address.contains("Inductor")){
+                additionalY -= 4;
+            }
+            if (address.contains("Current"))
+            {
+                additionalX += 3;
+                additionalY += 9;
+            }
+            if (address.contains("Voltage")){
+                additionalX -= 10;
+            }
+            JLabel jLabel1 = new JLabel(name);
+            jLabel1.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 60 + additionalX, y1 * 800 / 6 + count * 40 - 15 + additionalY, 70, 50);
+
+            add(jLabel1);
+            super.paint(getGraphics());
+
+            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, (int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 45, y1 * 800 / 6 + count * 40 + 55+8);
+            Line2D line2 = new Line2D.Float((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 110, y1 * 800 / 6 + count * 40 + 55+8, x2 * 1200 / 6 + 100, y1 * 800 / 6 + 80);
+            lines.add(line1);
+            lines.add(line2);
+            paralel.put(string, count + 1);
+
+        }
+
+        private void drawVertical(int x1, int y1, int x2, int y2, String address, String name) {
+            if (y1 > y2) {
+                int temp = y1;
+                y1 = y2;
+                y2 = temp;
+            }
+            String string = x1 + "" + y1 + "" + x2 + "" + y2;
+            int count = 0;
+            if (paralel.keySet().contains(string))
+                count = paralel.get(string);
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File(address));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            JLabel jLabel = new JLabel();
+            if (address.contains("Inductor"))
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 22, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 25, 45);
+            else if (address.contains("Current"))
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 15, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 40, 50);
+            else if (address.contains("Voltage"))
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 17, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 35, 50);
+            else
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 70, 50);
+            Image image = img.getScaledInstance(jLabel.getWidth(), jLabel.getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(image);
+            jLabel.setIcon(imageIcon);
             add(jLabel);
 
             super.paint(getGraphics());
-//            getGraphics().drawLine(20, 200, 200, 200);
-//            getGraphics().drawLine(20, 50, 1200, 50);
-//            getGraphics().drawLine(1320, 50, 1500, 50);
 
-            Rectangle line1 = new Rectangle(x1 * 2000 / 6 + 50, y1 * 1000 / 6 + 90, (x1 + x2) / 2 * (2000 / 6) + 130 - x1 * 2000 / 6, 25);
-            Rectangle line2 = new Rectangle((x1 + x2) / 2 * (2000 / 6) + 290 + 50, y2 * 1000 / 6 + 90, x2 * 2000 / 6 - (x1 + x2) / 2 * (2000 / 6) - 290, 25);
-//            jPanel.add(line1);
-//            add(line2);
-        }
+            int additionalX = 0, additionalY = 0;
+            if (address.contains("Capacitor"))
+            {
+                additionalX += 15;
+            }
+            if (address.contains("Current"))
+            {
+                additionalX += 13;
+            }
+            if (address.contains("Voltage")){
+                additionalX += 7;
+                additionalY -= 11;
+            }
+            JLabel jLabel1 = new JLabel(name);
+            jLabel1.setBounds(x1 * 1200 / 6 + count * 40 + 8 + additionalX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5 + additionalY, 70, 50);
 
-        private void drawVertical(int x1, int y1, int x2, int y2, String address) {
+            add(jLabel1);
+            super.paint(getGraphics());
+            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 27+8);
+            lines.add(line1);
+            Line2D line2 = new Line2D.Float(x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 71+8, x2 * 1200 / 6 + 100, y2 * 800 / 6 + 80);
+            lines.add(line2);
+
+            paralel.put(string, count + 1);
         }
 
     }
