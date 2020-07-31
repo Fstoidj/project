@@ -1001,7 +1001,7 @@ public class project {
 
     }
 
-/*
+
     public static class graphProject extends JFrame{
 
         ArrayList<Line2D> lines = new ArrayList<>();
@@ -1154,7 +1154,6 @@ public class project {
                 y1 = 4 - node1Num / 6;
                 x2 = node2Num % 6;
                 y2 = 4 - node2Num / 6;
-                System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
                 if (x1 == x2) {
                     drawVertical(x1, y1, x2, y2, "ResistorV.png", resistor1.NameR);
                 } else if (y1 == y2) {
@@ -1223,8 +1222,8 @@ public class project {
             add(jLabel1);
             super.paint(getGraphics());
 
-            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, (int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 45, y1 * 800 / 6 + count * 40 + 55+8);
-            Line2D line2 = new Line2D.Float((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 110, y1 * 800 / 6 + count * 40 + 55+8, x2 * 1200 / 6 + 100, y1 * 800 / 6 + 80);
+            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, (int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 45, y1 * 800 / 6 + count * 40 + 55);
+            Line2D line2 = new Line2D.Float((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 110, y1 * 800 / 6 + count * 40 + 55, x2 * 1200 / 6 + 100, y1 * 800 / 6 + 80);
             lines.add(line1);
             lines.add(line2);
             paralel.put(string, count + 1);
@@ -1282,16 +1281,16 @@ public class project {
 
             add(jLabel1);
             super.paint(getGraphics());
-            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 27+8);
+            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 27);
             lines.add(line1);
-            Line2D line2 = new Line2D.Float(x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 71+8, x2 * 1200 / 6 + 100, y2 * 800 / 6 + 80);
+            Line2D line2 = new Line2D.Float(x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 71, x2 * 1200 / 6 + 100, y2 * 800 / 6 + 80);
             lines.add(line2);
 
             paralel.put(string, count + 1);
         }
 
     }
-*/
+
     public static void main(String[] args) {
 
         node n;
@@ -1465,7 +1464,7 @@ public class project {
 
         chapOutput();
 
-        //graphProject GraphProject = new graphProject();
+        graphProject GraphProject = new graphProject();
 
     }
 }
