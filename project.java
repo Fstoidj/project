@@ -1001,7 +1001,7 @@ public class project {
 
     }
 
-/*
+
     public static class graphProject extends JFrame{
 
         ArrayList<Line2D> lines = new ArrayList<>();
@@ -1291,7 +1291,22 @@ public class project {
         }
 
     }
-*/
+    public static class chartPainter extends JFrame{
+        chartPainter() {
+            setTitle("Chart");
+            setSize(2000, 1000);
+            setLayout(null);
+            setVisible(true);
+        }
+        public int AndisMinFinder(){
+            return 0;
+        }
+        public int AndisMaxFinder(){
+            return 0;
+
+        }
+    }
+
     public static void main(String[] args) {
 
         node n;
@@ -1465,7 +1480,7 @@ public class project {
 
         chapOutput();
 
-        //graphProject GraphProject = new graphProject();
+        graphProject GraphProject = new graphProject();
 
     }
 }
