@@ -36,10 +36,7 @@ public class project {
     static ArrayList<VCVS> E=new ArrayList<VCVS>(0);
     static ArrayList<CCVS> H=new ArrayList<CCVS>(0);
     static ArrayList<diode> D=new ArrayList<diode>(0);
-
-    public project() throws IOException {
-    }
-
+    
 
     public static int searchNode(String s){
         for(int i=0;i<N.size();i++){
@@ -1042,7 +1039,7 @@ public class project {
             return I;
         }
         public void updateV(int iteration){
-            V=n3.outputVolt.get(iteration+1)-n4.outputVolt.get(iteration+1);
+            V=n3.outputVolt.get(iteration)-n4.outputVolt.get(iteration);
             V*=a;
         }
     }
@@ -2664,12 +2661,14 @@ public class project {
 
             for (int j = 0; j < U.size(); j++) {
                 U.get(j).n.get(0).outputVolt.add(0.0);
-                U.get(j).addInputUnionVolts(0, 0, 0, dT);
                 /*
                 for (int x = 0; x < U.get(j).n.size(); x++) {
                     System.out.println(U.get(j).n.get(x).name + " : " + U.get(j).n.get(x).union + " in: " + U.get(j).union + " Volt: " + U.get(j).n.get(x).outputVolt);
                 }
                 */
+            }
+            for (int j = 0; j < U.size(); j++) {
+                U.get(j).addInputUnionVolts(0, 0, 0, dT);
             }
 
             if (dT > 0 && T > 0 && dI > 0 && dV > 0) {
@@ -2720,7 +2719,7 @@ public class project {
             }
         }
         catch (Exception e){
-            //System.out.println(e);
+            System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
