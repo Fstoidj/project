@@ -1980,184 +1980,244 @@ public class project {
         CCVS ccvs;
 
         double T = -1, dT = -1, dV=-1, dI=-1;
-        Scanner sc = new Scanner(System.in);
-        String s = sc.nextLine();
-        s = s.trim();
-        s = s.replaceAll("( )+", " ");
-        while (!s.equals(".end")) {
-            if (s.charAt(0) == 'R') {
-                r = new resistor(s);
-                r.outputCurrent.add(0.0);
-                R.add(r);
-                input.add("R");
-            }
-            else if (s.charAt(0) == 'L') {
-                l = new inductor(s);
-                l.outputCurrent.add(0.0);
-                L.add(l);
-                input.add("L");
-            }
-            else if (s.charAt(0) == 'I') {
-                cs = new currentSource(s);
-                CS.add(cs);
-                input.add("I");
-            }
-            else if (s.charAt(0) == 'V') {
-                vs = new voltageSource(s);
-                vs.outputCurrent.add(0.0);
-                VS.add(vs);
-                input.add("V");
-            }
-            else if (s.charAt(0) == 'C') {
-                c = new capacitor(s);
-                c.outputCurrent.add(0.0);
-                C.add(c);
-                input.add("C");
-            }
-            else if (s.charAt(0) == 'G') {
-                vccs = new VCCS(s);
-                G.add(vccs);
-                input.add("G");
-            }
-            else if (s.charAt(0) == 'F') {
-                cccs = new CCCS(s);
-                F.add(cccs);
-                input.add("F");
-            }
-            else if (s.charAt(0) == 'E') {
-                vcvs = new VCVS(s);
-                E.add(vcvs);
-                input.add("E");
-            }
-            else if (s.charAt(0) == 'H') {
-                ccvs = new CCVS(s);
-                H.add(ccvs);
-                input.add("H");
-            }
-            else if (s.charAt(0) == 'D') {
-                d = new diode(s);
-                D.add(d);
-                input.add("D");
-            }
-            else if (s.indexOf(".tran") != -1) {
-                s = s.substring(s.indexOf(" ") + 1);
-                s = s.replaceAll("k", "000");
-                s = s.replaceAll("M", "000000");
-                s = s.replaceAll("G", "000000000");
-                if (s.indexOf("m") != -1) {
-                    T = 0.001;
-                    s = s.replaceAll("m", "");
-                } else if (s.indexOf("u") != -1) {
-                    T = 0.000001;
-                    s = s.replaceAll("u", "");
-                } else if (s.indexOf("n") != -1) {
-                    T = 0.000000001;
-                    s = s.replaceAll("n", "");
-                } else if (s.indexOf("p") != -1) {
-                    T = 0.000000000001;
-                    s = s.replaceAll("p", "");
-                } else {
-                    T = 1;
-                }
-                T *= Double.parseDouble(s);
-            }
-            else if (s.indexOf("dT") != -1) {
-                s = s.substring(s.indexOf(" ") + 1);
-                s = s.replaceAll("k", "000");
-                s = s.replaceAll("M", "000000");
-                s = s.replaceAll("G", "000000000");
-                if (s.indexOf("m") != -1) {
-                    dT = 0.001;
-                    s = s.replaceAll("m", "");
-                } else if (s.indexOf("u") != -1) {
-                    dT = 0.000001;
-                    s = s.replaceAll("u", "");
-                } else if (s.indexOf("n") != -1) {
-                    dT = 0.000000001;
-                    s = s.replaceAll("n", "");
-                } else if (s.indexOf("p") != -1) {
-                    dT = 0.000000000001;
-                    s = s.replaceAll("p", "");
-                } else {
-                    dT = 1;
-                }
-                dT *= Double.parseDouble(s);
+        int lineNumber=1, errorType=0;
+        try {
 
-            }
-            else if (s.indexOf("dV") != -1) {
-                s = s.substring(s.indexOf(" ") + 1);
-                s = s.replaceAll("k", "000");
-                s = s.replaceAll("M", "000000");
-                s = s.replaceAll("G", "000000000");
-                if (s.indexOf("m") != -1) {
-                    dV = 0.001;
-                    s = s.replaceAll("m", "");
-                } else if (s.indexOf("u") != -1) {
-                    dV = 0.000001;
-                    s = s.replaceAll("u", "");
-                } else if (s.indexOf("n") != -1) {
-                    dV = 0.000000001;
-                    s = s.replaceAll("n", "");
-                } else if (s.indexOf("p") != -1) {
-                    dV = 0.000000000001;
-                    s = s.replaceAll("p", "");
-                } else {
-                    dV = 1;
-                }
-                dV *= Double.parseDouble(s);
-
-            }
-            else if (s.indexOf("dI") != -1) {
-                s = s.substring(s.indexOf(" ") + 1);
-                s = s.replaceAll("k", "000");
-                s = s.replaceAll("M", "000000");
-                s = s.replaceAll("G", "000000000");
-                if (s.indexOf("m") != -1) {
-                    dI = 0.001;
-                    s = s.replaceAll("m", "");
-                } else if (s.indexOf("u") != -1) {
-                    dI = 0.000001;
-                    s = s.replaceAll("u", "");
-                } else if (s.indexOf("n") != -1) {
-                    dI = 0.000000001;
-                    s = s.replaceAll("n", "");
-                } else if (s.indexOf("p") != -1) {
-                    dI = 0.000000000001;
-                    s = s.replaceAll("p", "");
-                } else {
-                    dI = 1;
-                }
-                dI *= Double.parseDouble(s);
-
-            }
-
-            s = sc.nextLine();
+            File file = new File("test1.txt");
+            Scanner sc= new Scanner(file);
+            String s = sc.nextLine();
             s = s.trim();
             s = s.replaceAll("( )+", " ");
 
-        }
+            while (!s.equals(".end")) {
+                if (s.charAt(0) == '*') { }
+                else if (s.charAt(0) == 'R') {
+                    r = new resistor(s);
+                    r.outputCurrent.add(0.0);
+                    R.add(r);
+                    input.add("R");
+                    if(r.R<0){
+                        s+=0/0;
+                    }
+                }
+                else if (s.charAt(0) == 'L') {
+                    l = new inductor(s);
+                    l.outputCurrent.add(0.0);
+                    L.add(l);
+                    input.add("L");
+                    if(l.L<0){
+                        s+=0/0;
+                    }
+                }
+                else if (s.charAt(0) == 'I') {
+                    cs = new currentSource(s);
+                    CS.add(cs);
+                    input.add("I");
+                }
+                else if (s.charAt(0) == 'V') {
+                    vs = new voltageSource(s);
+                    vs.outputCurrent.add(0.0);
+                    VS.add(vs);
+                    input.add("V");
+                }
+                else if (s.charAt(0) == 'C') {
+                    c = new capacitor(s);
+                    c.outputCurrent.add(0.0);
+                    C.add(c);
+                    input.add("C");
+                    if(c.C<0){
+                        s+=0/0;
+                    }
+                }
+                else if (s.charAt(0) == 'G') {
+                    vccs = new VCCS(s);
+                    G.add(vccs);
+                    input.add("G");
+                }
+                else if (s.charAt(0) == 'F') {
+                    cccs = new CCCS(s);
+                    F.add(cccs);
+                    input.add("F");
+                }
+                else if (s.charAt(0) == 'E') {
+                    vcvs = new VCVS(s);
+                    E.add(vcvs);
+                    input.add("E");
+                }
+                else if (s.charAt(0) == 'H') {
+                    ccvs = new CCVS(s);
+                    H.add(ccvs);
+                    input.add("H");
+                }
+                else if (s.charAt(0) == 'D') {
+                    d = new diode(s);
+                    D.add(d);
+                    input.add("D");
+                }
+                else if (s.indexOf(".tran") != -1) {
+                    s = s.substring(s.indexOf(" ") + 1);
+                    s = s.replaceAll("k", "000");
+                    s = s.replaceAll("M", "000000");
+                    s = s.replaceAll("G", "000000000");
+                    if (s.indexOf("m") != -1) {
+                        T = 0.001;
+                        s = s.replaceAll("m", "");
+                    }
+                    else if (s.indexOf("u") != -1) {
+                        T = 0.000001;
+                        s = s.replaceAll("u", "");
+                    }
+                    else if (s.indexOf("n") != -1) {
+                        T = 0.000000001;
+                        s = s.replaceAll("n", "");
+                    }
+                    else if (s.indexOf("p") != -1) {
+                        T = 0.000000000001;
+                        s = s.replaceAll("p", "");
+                    }
+                    else {
+                        T = 1;
+                    }
+                    T *= Double.parseDouble(s);
+                    if(T<=0){
+                        s+=0/0;
+                    }
+                }
+                else if (s.indexOf("dT") != -1) {
+                    s = s.substring(s.indexOf(" ") + 1);
+                    s = s.replaceAll("k", "000");
+                    s = s.replaceAll("M", "000000");
+                    s = s.replaceAll("G", "000000000");
+                    if (s.indexOf("m") != -1) {
+                        dT = 0.001;
+                        s = s.replaceAll("m", "");
+                    }
+                    else if (s.indexOf("u") != -1) {
+                        dT = 0.000001;
+                        s = s.replaceAll("u", "");
+                    }
+                    else if (s.indexOf("n") != -1) {
+                        dT = 0.000000001;
+                        s = s.replaceAll("n", "");
+                    }
+                    else if (s.indexOf("p") != -1) {
+                        dT = 0.000000000001;
+                        s = s.replaceAll("p", "");
+                    }
+                    else {
+                        dT = 1;
+                    }
+                    dT *= Double.parseDouble(s);
+                    if(dT<=0){
+                        s+=0/0;
+                    }
+                }
+                else if (s.indexOf("dV") != -1) {
+                    s = s.substring(s.indexOf(" ") + 1);
+                    s = s.replaceAll("k", "000");
+                    s = s.replaceAll("M", "000000");
+                    s = s.replaceAll("G", "000000000");
+                    if (s.indexOf("m") != -1) {
+                        dV = 0.001;
+                        s = s.replaceAll("m", "");
+                    }
+                    else if (s.indexOf("u") != -1) {
+                        dV = 0.000001;
+                        s = s.replaceAll("u", "");
+                    }
+                    else if (s.indexOf("n") != -1) {
+                        dV = 0.000000001;
+                        s = s.replaceAll("n", "");
+                    }
+                    else if (s.indexOf("p") != -1) {
+                        dV = 0.000000000001;
+                        s = s.replaceAll("p", "");
+                    }
+                    else {
+                        dV = 1;
+                    }
+                    dV *= Double.parseDouble(s);
+                    if(dV<=0){
+                        s+=0/0;
+                    }
+                }
+                else if (s.indexOf("dI") != -1) {
+                    s = s.substring(s.indexOf(" ") + 1);
+                    s = s.replaceAll("k", "000");
+                    s = s.replaceAll("M", "000000");
+                    s = s.replaceAll("G", "000000000");
+                    if (s.indexOf("m") != -1) {
+                        dI = 0.001;
+                        s = s.replaceAll("m", "");
+                    }
+                    else if (s.indexOf("u") != -1) {
+                        dI = 0.000001;
+                        s = s.replaceAll("u", "");
+                    }
+                    else if (s.indexOf("n") != -1) {
+                        dI = 0.000000001;
+                        s = s.replaceAll("n", "");
+                    }
+                    else if (s.indexOf("p") != -1) {
+                        dI = 0.000000000001;
+                        s = s.replaceAll("p", "");
+                    }
+                    else {
+                        dI = 1;
+                    }
+                    dI *= Double.parseDouble(s);
+                    if(dI<=0){
+                        s+=0/0;
+                    }
+                }
+                else {
+                    s += 0 / 0;
+                }
+                lineNumber++;
+                s = sc.nextLine();
+                s = s.trim();
+                s = s.replaceAll("( )+", " ");
 
-
-        for (int j = 0; j < U.size(); j++) {
-            U.get(j).n.get(0).outputVolt.add(0.0);
-            U.get(j).addInputUnionVolts(0, 0, 0, dT);
-
-            for(int x=0;x<U.get(j).n.size();x++) {
-                System.out.println(U.get(j).n.get(x).name + " : " + U.get(j).n.get(x).union + " in: " + U.get(j).union+" Volt: "+U.get(j).n.get(x).outputVolt);
             }
 
-        }
 
-        if(dT>0&&T>0&&dI>0&&dV>0){
-            for(int i=0;i<T/dT;i+=1) {
-                calcNodeVolts(dT, dV, dI, i);
-                calcBranchCurrents(dT, dV, dI, i);
+            for (int j = 0; j < U.size(); j++) {
+                U.get(j).n.get(0).outputVolt.add(0.0);
+                U.get(j).addInputUnionVolts(0, 0, 0, dT);
+                /*
+                for (int x = 0; x < U.get(j).n.size(); x++) {
+                    System.out.println(U.get(j).n.get(x).name + " : " + U.get(j).n.get(x).union + " in: " + U.get(j).union + " Volt: " + U.get(j).n.get(x).outputVolt);
+                }
+                */
             }
-        }
 
-        chapOutput();
+            if (dT > 0 && T > 0 && dI > 0 && dV > 0) {
+                for (int i = 0; i < T / dT; i += 1) {
+                    calcNodeVolts(dT, dV, dI, i);
+                    calcBranchCurrents(dT, dV, dI, i);
+                }
+            }
+            else {
+                errorType=-1;
+                s+=0/0;
+            }
 
+<<<<<<< HEAD
         graphProject GraphProject = new graphProject();
+=======
+            chapOutput();
+>>>>>>> 92e83eb4f7674ccca9f6023441e0300960226175
 
+            graphProject GraphProject = new graphProject();
+        }
+        catch (Exception e){
+            System.out.println(e);
+            if(errorType==0) {
+                System.out.println("Error on line: " + lineNumber);
+            }
+            else{
+                System.out.println("Error : "+errorType);
+            }
+        }
     }
 }
