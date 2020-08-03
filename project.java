@@ -1907,16 +1907,25 @@ public class project {
         }
     }
     public static class chartPainterCurrent extends JFrame{
+        branch x;
         chartPainterCurrent(branch b) {
+            x=b;
             setTitle("Current Chart");
             setSize(2000, 1000);
             setLayout(null);
             setVisible(true);
         }
-        public void Rasm(branch b){
-            if (b.outputCurrent.get(this.AndisMinFinder(b.outputCurrent))<0&&b.outputCurrent.get(this.AndisMaxFinder(b.outputCurrent))>0){
+        @Override
+        public void paint(Graphics g){
+            for(int j=0;j<x.outputCurrent.size()-1;j++){
+                g.drawLine(100+j*1800/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent)))/(x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent))-x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent)))),100+(j+1)*1800/x.outputCurrent.size(), (int)(800 - ((600 * (x.outputCurrent.get(j + 1) - x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent)))) / (x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent)) - x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent))))));
 
             }
+            if (x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent))<0&&x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent))>0){
+
+
+            }
+
         }
         public int AndisMinFinder(ArrayList<Double> A){
             int i=0;
@@ -1969,7 +1978,6 @@ public class project {
         VCCS vccs;
         VCVS vcvs;
         CCVS ccvs;
-        diode d;
 
         double T = -1, dT = -1, dV=-1, dI=-1;
         Scanner sc = new Scanner(System.in);
@@ -2149,7 +2157,7 @@ public class project {
 
         chapOutput();
 
-        //graphProject GraphProject = new graphProject();
+        graphProject GraphProject = new graphProject();
 
     }
 }
