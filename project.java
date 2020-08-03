@@ -2385,12 +2385,23 @@ public class project {
                     s = scanner.nextLine();
                     s = s.trim();
                     s = s.replaceAll("( )+", " ");
+                    s=scanner.nextLine();
+                    s = s.trim();
+                    s = s.replaceAll("( )+", " ");
+                    if(s.equals("END")){
+                        break;
+                    }
                 }
                 catch (Exception e){
                     System.out.println("ERROR");
+                    s=scanner.nextLine();
+                    s = s.trim();
+                    s = s.replaceAll("( )+", " ");
+                    if(s.equals("END")){
+                        break;
+                    }
                 }
             }
-
         }
         catch (Exception e){
             //System.out.println(e);
