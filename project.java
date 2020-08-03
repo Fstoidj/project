@@ -124,6 +124,7 @@ public class project {
                 }
             }
         }
+        s+=0/0;
         return a;
     }
 
@@ -769,6 +770,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n3=N.get(i);
@@ -777,6 +779,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n4=N.get(i);
@@ -920,6 +923,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n3=N.get(i);
@@ -928,6 +932,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n4=N.get(i);
@@ -2372,6 +2377,7 @@ public class project {
             chapOutput(fileWriter);
             fileWriter.close();
             graphProject GraphProject = new graphProject();
+
 
             int error=1;
             Scanner scanner =new Scanner(System.in);
