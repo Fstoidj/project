@@ -2,6 +2,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -1467,7 +1469,7 @@ public class project {
         }
 
     }
-    
+
     public static class graphProject extends JFrame{
 
         ArrayList<Line2D> lines = new ArrayList<>();
@@ -1477,6 +1479,95 @@ public class project {
             //JLabel label=new JLabel(new ImageIcon("7878.png"));
             //label.setBounds(200,350,180,100);
             //add(label);
+            JLabel Error=new JLabel("This element is not available.Please try again.");
+            Error.setBounds(1600,0,400,50);
+
+            JButton draw=new JButton("DRAW");
+            draw.setBounds(0,0,200,100);
+            add(draw);
+
+            draw.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String element =JOptionPane.showInputDialog(draw.getParent(),"Enter element name","Choose element",JOptionPane.PLAIN_MESSAGE);
+                    int tayid=0;
+                    for(int j=0;j<R.size()&&tayid==0;j++)
+                        if(R.get(j).NameR.equals(element)){
+                            new chartPainterVoltage(R.get(j));
+                            new chartPainterCurrent(R.get(j));
+                            new chartPainterPower(R.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<C.size()&&tayid==0;j++)
+                        if(C.get(j).NameC.equals(element)){
+                            new chartPainterVoltage(C.get(j));
+                            new chartPainterCurrent(C.get(j));
+                            new chartPainterPower(C.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<L.size()&&tayid==0;j++)
+                        if(L.get(j).NameL.equals(element)){
+                            new chartPainterVoltage(L.get(j));
+                            new chartPainterCurrent(L.get(j));
+                            new chartPainterPower(L.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<CS.size()&&tayid==0;j++)
+                        if(CS.get(j).NameI.equals(element)){
+                            new chartPainterVoltage(CS.get(j));
+                            new chartPainterCurrent(CS.get(j));
+                            new chartPainterPower(CS.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<VS.size()&&tayid==0;j++)
+                        if(VS.get(j).NameV.equals(element)){
+                            new chartPainterVoltage(VS.get(j));
+                            new chartPainterCurrent(VS.get(j));
+                            new chartPainterPower(VS.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<G.size()&&tayid==0;j++)
+                        if(G.get(j).NameG.equals(element)){
+                            new chartPainterVoltage(G.get(j));
+                            new chartPainterCurrent(G.get(j));
+                            new chartPainterPower(G.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<F.size()&&tayid==0;j++)
+                        if(F.get(j).NameF.equals(element)){
+                            new chartPainterVoltage(F.get(j));
+                            new chartPainterCurrent(F.get(j));
+                            new chartPainterPower(F.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<E.size()&&tayid==0;j++)
+                        if(E.get(j).NameE.equals(element)){
+                            new chartPainterVoltage(E.get(j));
+                            new chartPainterCurrent(E.get(j));
+                            new chartPainterPower(E.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<H.size()&&tayid==0;j++)
+                        if(H.get(j).NameH.equals(element)){
+                            new chartPainterVoltage(H.get(j));
+                            new chartPainterCurrent(H.get(j));
+                            new chartPainterPower(H.get(j));
+                            tayid=1;
+                        }
+                    for(int j=0;j<D.size()&&tayid==0;j++)
+                        if(D.get(j).NameD.equals(element)){
+                            new chartPainterVoltage(D.get(j));
+                            new chartPainterCurrent(D.get(j));
+                            new chartPainterPower(D.get(j));
+                            tayid=1;
+                        }
+                    if(tayid==0)
+                        add(Error);
+
+
+
+                }
+            });
             setTitle("Circuit Graph");
             setSize(2000, 1000);
             setLayout(null);
@@ -1757,19 +1848,78 @@ public class project {
 
     }
 
-    public static class chartPainter extends JFrame{
-        chartPainter() {
-            setTitle("Chart");
+    public static class chartPainterVoltage extends JFrame{
+        chartPainterVoltage(branch b) {
+            setTitle("Voltage Chart");
             setSize(2000, 1000);
             setLayout(null);
             setVisible(true);
         }
-        public int AndisMinFinder(){
-            return 0;
-        }
-        public int AndisMaxFinder(){
-            return 0;
+        public void Rasm(){
 
+        }
+        public int AndisMinFinder(ArrayList<Double> A){
+            int i=0;
+            for(int j=0;j<A.size();j++)
+                if(A.get(j)<A.get(i))
+                    i=j;
+            return i;
+        }
+        public int AndisMaxFinder(ArrayList<Double> A){
+            int i=0;
+            for(int j=0;j<A.size();j++)
+                if(A.get(j)>A.get(i))
+                    i=j;
+            return i;
+        }
+    }
+    public static class chartPainterCurrent extends JFrame{
+        chartPainterCurrent(branch b) {
+            setTitle("Current Chart");
+            setSize(2000, 1000);
+            setLayout(null);
+            setVisible(true);
+        }
+        public void Rasm(branch b){
+            if (b.outputCurrent.get(this.AndisMinFinder(b.outputCurrent))<0&&b.outputCurrent.get(this.AndisMaxFinder(b.outputCurrent))>0){
+
+            }
+        }
+        public int AndisMinFinder(ArrayList<Double> A){
+            int i=0;
+            for(int j=0;j<A.size();j++)
+                if(A.get(j)<A.get(i))
+                    i=j;
+            return i;
+        }
+        public int AndisMaxFinder(ArrayList<Double> A){
+            int i=0;
+            for(int j=0;j<A.size();j++)
+                if(A.get(j)>A.get(i))
+                    i=j;
+            return i;
+        }
+    }
+    public static class chartPainterPower extends JFrame{
+        chartPainterPower(branch b) {
+            setTitle("Power Chart");
+            setSize(2000, 1000);
+            setLayout(null);
+            setVisible(true);
+        }
+        public int AndisMinFinder(ArrayList<Double> A){
+            int i=0;
+            for(int j=0;j<A.size();j++)
+                if(A.get(j)<A.get(i))
+                    i=j;
+            return i;
+        }
+        public int AndisMaxFinder(ArrayList<Double> A){
+            int i=0;
+            for(int j=0;j<A.size();j++)
+                if(A.get(j)>A.get(i))
+                    i=j;
+            return i;
         }
     }
 
@@ -1785,6 +1935,7 @@ public class project {
         VCCS vccs;
         VCVS vcvs;
         CCVS ccvs;
+        diode d;
 
         double T = -1, dT = -1, dV=-1, dI=-1;
         Scanner sc = new Scanner(System.in);
