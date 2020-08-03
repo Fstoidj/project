@@ -1181,8 +1181,41 @@ public class project {
             V*=a;
         }
     }
-    public class diode extends branch {
+    public static class diode extends branch {
         String NameD;
+        diode(String s){
+            NameD=s.substring(0,s.indexOf(" "));
+            s=s.substring(s.indexOf(" ")+1);
+            node n=new node(s.substring(0, s.indexOf(" ")));
+            int i=searchNode(s.substring(0,s.indexOf(" ")));
+            nodes nodz =new nodes();
+            if(i==-1){
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
+                N.add(n);
+                n1=n;
+            }
+            else{
+                n1=N.get(i);
+            }
+            s=s.substring(s.indexOf(" ")+1);
+            nodz =new nodes();
+            n=new node(s.substring(0, s.indexOf(" ")));
+            i=searchNode(s.substring(0,s.indexOf(" ")));
+            if(i==-1){
+                n.union=N.size();
+                nodz.n.add(n);
+                nodz.union=n.union;
+                U.add(nodz);
+                N.add(n);
+                n2=n;
+            }
+            else{
+                n2=N.get(i);
+            }
+        }
         void checdiod(){
             if(I<0){
                 I=0;
@@ -1931,6 +1964,7 @@ public class project {
         voltageSource vs;
         capacitor c;
         inductor l;
+        diode d;
         CCCS cccs;
         VCCS vccs;
         VCVS vcvs;
@@ -1991,6 +2025,11 @@ public class project {
                 ccvs = new CCVS(s);
                 H.add(ccvs);
                 input.add("H");
+            }
+            else if (s.charAt(0) == 'D') {
+                d = new diode(s);
+                D.add(d);
+                input.add("D");
             }
             else if (s.indexOf(".tran") != -1) {
                 s = s.substring(s.indexOf(" ") + 1);
@@ -2110,7 +2149,7 @@ public class project {
 
         chapOutput();
 
-        graphProject GraphProject = new graphProject();
+        //graphProject GraphProject = new graphProject();
 
     }
 }
