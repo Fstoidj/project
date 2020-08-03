@@ -1565,7 +1565,7 @@ public class project {
             //label.setBounds(200,350,180,100);
             //add(label);
             JLabel Error=new JLabel("This element is not available.Please try again.");
-            Error.setBounds(1600,0,400,50);
+            Error.setBounds(500,0,400,50);
 
             JButton draw=new JButton("DRAW");
             draw.setBounds(0,0,200,100);
@@ -1647,7 +1647,7 @@ public class project {
                             tayid=1;
                         }
                     if(tayid==0)
-                        add(Error);
+                        JOptionPane.showMessageDialog(draw.getParent(),"This element is not available.Please try again.","Show Error",JOptionPane.INFORMATION_MESSAGE);
 
 
 
