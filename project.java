@@ -1556,6 +1556,7 @@ public class project {
 
         ArrayList<Line2D> lines = new ArrayList<>();
         HashMap<String, Integer> paralel = new HashMap<>();
+        HashMap<String, Integer> paralel2 = new HashMap<>();
 
         graphProject() {
             //JLabel label=new JLabel(new ImageIcon("7878.png"));
@@ -1660,15 +1661,56 @@ public class project {
         public void paint(Graphics g) {
             super.paint(g);
             g.setColor(Color.BLACK);
-            g.drawLine(0,0,30,1000);
+            for (resistor resistor1: R) {
+                fillHash2(resistor1.n1.name, resistor1.n2.name);
+            }
+            for (currentSource currentSource1: CS){
+                fillHash2(currentSource1.n1.name, currentSource1.n2.name);
+            }
+            for (VCCS vccs: G){
+                fillHash2(vccs.n1.name, vccs.n2.name);
+            }
+            for (CCCS cccs: F){
+                fillHash2(cccs.n1.name, cccs.n2.name);
+            }
+            for (VCVS vcvs: E){
+                fillHash2(vcvs.n1.name, vcvs.n2.name);
+            }
+            for (CCVS ccvs: H){
+                fillHash2(ccvs.n1.name, ccvs.n2.name);
+            }
+            for (voltageSource voltageSource1: VS){
+                fillHash2(voltageSource1.n1.name, voltageSource1.n2.name);
+            }
+            for (capacitor capacitor1: C){
+                fillHash2(capacitor1.n1.name, capacitor1.n2.name);
+            }
+            for (inductor inductor1: L){
+                fillHash2(inductor1.n1.name, inductor1.n2.name);
+            }
+            for (diode diode1: D){
+                fillHash2(diode1.n1.name, diode1.n2.name);
+            }
             for (resistor resistor1: R) {
                 drawResistor(resistor1);
             }
             for (currentSource currentSource1: CS){
                 drawCS(currentSource1);
             }
+            for (VCCS vccs: G){
+                drawVCCS(vccs);
+            }
+            for (CCCS cccs: F){
+                drawCCCS(cccs);
+            }
             for (voltageSource voltageSource1: VS){
                 drawVS(voltageSource1);
+            }
+            for (VCVS vcvs: E){
+                drawVCVS(vcvs);
+            }
+            for (CCVS ccvs: H){
+                drawCCVS(ccvs);
             }
             for (capacitor capacitor1: C){
                 drawC(capacitor1);
@@ -1676,14 +1718,75 @@ public class project {
             for (inductor inductor1: L){
                 drawL(inductor1);
             }
+            for (diode diode1: D){
+                drawD(diode1);
+            }
             drawLines();
         }
 
+        private void fillHash2(String name1, String name2) {
+            int x1, y1, x2, y2;
+            String string = "";
+            int node1Num = Integer.parseInt(name1) - 1;
+            int node2Num = Integer.parseInt(name2) - 1;
+            if (node1Num == -1) {
+                x1 = node2Num % 6;
+                y1 = 5;
+            }
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+            }
+            if (node2Num == -1){
+                x2 = node1Num % 6;
+                y2 = 5;
+            }
+            else {
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+            }if (x1 == x2) {
+                if (y1 > y2)
+                    string = x2 + "" + y2 + "" + x1 + "" + y1;
+                else
+                    string = x1 + "" + y1 + "" + x2 + "" + y2;
+            } else if (y1 == y2) {
+                if (x1 > x2)
+                    string = x2 + "" + y2 + "" + x1 + "" + y1;
+                else
+                    string = x1 + "" + y1 + "" + x2 + "" + y2;
+            }
+            if (!paralel2.keySet().contains(string))
+                paralel2.put(string, 1);
+            else
+                paralel2.put(string, paralel2.get(string) + 1);
+        }
+
         private void drawLines() {
+            int min=-2,max=-2;
+            for(int j=0;j<6;j++){
+                for (String string:paralel2.keySet()){
+                    if(Pattern.matches("\\d\\d"+j+"5",string)){
+                        max=j;
+                        if (min==-2){
+                            min=j;
+                        }
+                    }
+                }
+
+            }
+            for (int i = min; i < max; i++){
+                Line2D line1 = new Line2D.Float(i * 1200 / 6 + 100, 5 * 800 / 6 + 80, (i+1) * 1200 / 6 + 100, 5 * (800 / 6) + 80);
+                lines.add(line1);
+            }
+            JLabel jLabel = new JLabel("Ground");
+            jLabel.setBounds((min+max)/2 * 1200 / 6 + 100, 5 * 800 / 6, 60, 40);
+            add(jLabel);
+            super.paint(getGraphics());
             Graphics2D graphics2D = (Graphics2D) getGraphics();
             for (Line2D line: lines){
                 graphics2D.draw(line);
             }
+
         }
 
         private void drawC(capacitor capacitor1) {
@@ -1706,10 +1809,143 @@ public class project {
                 }
             }
         }
+
+        private void drawCCVS(CCVS ccvs) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(ccvs.n1.name) - 1;
+            int node2Num = Integer.parseInt(ccvs.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "VoltageCircleU.png", ccvs.NameH);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "VoltageCircleD.png", ccvs.NameH);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    if (y1 > y2)
+                        drawVertical(x1, y1, x2, y2, "VoltageCircleU.png", ccvs.NameH);
+                    else
+                        drawVertical(x1, y1, x2, y2, "VoltageCircleD.png", ccvs.NameH);
+                } else if (y1 == y2) {
+                    if (x1 > x2)
+                        drawHorizontal(x1, y1, x2, y2, "VoltageCircleL.png", ccvs.NameH);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "VoltageCircleR.png", ccvs.NameH);
+                }
+            }
+        }
+
+        private void drawVCVS(VCVS vcvs) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(vcvs.n1.name) - 1;
+            int node2Num = Integer.parseInt(vcvs.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "VoltageCircleU.png", vcvs.NameE);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "VoltageCircleD.png", vcvs.NameE);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    if (y1 > y2)
+                        drawVertical(x1, y1, x2, y2, "VoltageCircleU.png", vcvs.NameE);
+                    else
+                        drawVertical(x1, y1, x2, y2, "VoltageCircleD.png", vcvs.NameE);
+                } else if (y1 == y2) {
+                    if (x1 > x2)
+                        drawHorizontal(x1, y1, x2, y2, "VoltageCircleL.png", vcvs.NameE);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "VoltageCircleR.png", vcvs.NameE);
+                }
+            }
+        }
+
+        private void drawCCCS(CCCS cccs) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(cccs.n1.name) - 1;
+            int node2Num = Integer.parseInt(cccs.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "CurrentU.png", cccs.NameF);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "CurrentD.png", cccs.NameF);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    if (y1 > y2)
+                        drawVertical(x1, y1, x2, y2, "CurrentU.png", cccs.NameF);
+                    else
+                        drawVertical(x1, y1, x2, y2, "CurrentD.png", cccs.NameF);
+                } else if (y1 == y2) {
+                    if (x1 > x2)
+                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", cccs.NameF);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "CurrentR.png", cccs.NameF);
+                }
+            }
+        }
+
+        private void drawVCCS(VCCS vccs) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(vccs.n1.name) - 1;
+            int node2Num = Integer.parseInt(vccs.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "CurrentU.png", vccs.NameG);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "CurrentD.png", vccs.NameG);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    if (y1 > y2)
+                        drawVertical(x1, y1, x2, y2, "CurrentU.png", vccs.NameG);
+                    else
+                        drawVertical(x1, y1, x2, y2, "CurrentD.png", vccs.NameG);
+                } else if (y1 == y2) {
+                    if (x1 > x2)
+                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", vccs.NameG);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "CurrentR.png", vccs.NameG);
+                }
+            }
+        }
+
         private void drawVS(voltageSource voltageSource1) {
             int x1, y1, x2, y2;
             int node1Num = Integer.parseInt(voltageSource1.n1.name) - 1;
             int node2Num = Integer.parseInt(voltageSource1.n2.name) - 1;
+            if (voltageSource1.A != 0){
+                if (node1Num == -1)
+                    connectToEarth(node2Num, "AC.png", voltageSource1.NameV);
+                else if (node2Num == -1)
+                    connectToEarth(node1Num, "AC.png", voltageSource1.NameV);
+                else {
+                    x1 = node1Num % 6;
+                    y1 = 4 - node1Num / 6;
+                    x2 = node2Num % 6;
+                    y2 = 4 - node2Num / 6;
+                    if (x1 == x2) {
+                        if (y1 > y2)
+                            drawVertical(x1, y1, x2, y2, "AC.png", voltageSource1.NameV);
+                        else
+                            drawVertical(x1, y1, x2, y2, "AC.png", voltageSource1.NameV);
+                    } else if (y1 == y2) {
+                        if (x1 > x2)
+                            drawHorizontal(x1, y1, x2, y2, "AC.png", voltageSource1.NameV);
+                        else
+                            drawHorizontal(x1, y1, x2, y2, "AC.png", voltageSource1.NameV);
+                    }
+                }
+                return;
+            }
             if (node1Num == -1)
                 connectToEarth(node2Num, "VoltageU.png", voltageSource1.NameV);
             else if (node2Num == -1)
@@ -1729,6 +1965,33 @@ public class project {
                         drawHorizontal(x1, y1, x2, y2, "VoltageL.png", voltageSource1.NameV);
                     else
                         drawHorizontal(x1, y1, x2, y2, "VoltageR.png", voltageSource1.NameV);
+                }
+            }
+        }
+
+        private void drawD(diode diode1) {
+            int x1, y1, x2, y2;
+            int node1Num = Integer.parseInt(diode1.n1.name) - 1;
+            int node2Num = Integer.parseInt(diode1.n2.name) - 1;
+            if (node1Num == -1)
+                connectToEarth(node2Num, "DiodeU.png", diode1.NameD);
+            else if (node2Num == -1)
+                connectToEarth(node1Num, "DiodeD.png", diode1.NameD);
+            else {
+                x1 = node1Num % 6;
+                y1 = 4 - node1Num / 6;
+                x2 = node2Num % 6;
+                y2 = 4 - node2Num / 6;
+                if (x1 == x2) {
+                    if (y1 > y2)
+                        drawVertical(x1, y1, x2, y2, "DiodeU.png", diode1.NameD);
+                    else
+                        drawVertical(x1, y1, x2, y2, "DiodeD.png", diode1.NameD);
+                } else if (y1 == y2) {
+                    if (x1 > x2)
+                        drawHorizontal(x1, y1, x2, y2, "DiodeL.png", diode1.NameD);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "DiodeR.png", diode1.NameD);
                 }
             }
         }
@@ -1816,6 +2079,10 @@ public class project {
             }
             String string = x1 + "" + y1 + "" + x2 + "" + y2;
             int count = 0;
+            int singleX = 0, singleY = 0;
+            if (paralel2.get(string) == 1){
+                singleY = 30;
+            }
             if (paralel.keySet().contains(string))
                 count = paralel.get(string);
             BufferedImage img = null;
@@ -1826,11 +2093,11 @@ public class project {
             }
             JLabel jLabel = new JLabel();
             if (address.contains("Inductor"))
-                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40 + 12, 70, 25);
+                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40 + 12 + singleY, 70, 25);
             else if (address.contains("Current"))
-                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40 + 10, 70, 32);
+                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40 + 10 + singleY, 70, 32);
             else
-                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40, 70, 50);
+                jLabel.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 35, y1 * 800 / 6 + count * 40 + singleY, 70, 50);
             Image image;
             image = img.getScaledInstance(jLabel.getWidth(), jLabel.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(image);
@@ -1856,13 +2123,13 @@ public class project {
                 additionalX -= 10;
             }
             JLabel jLabel1 = new JLabel(name);
-            jLabel1.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 60 + additionalX, y1 * 800 / 6 + count * 40 - 15 + additionalY, 70, 50);
+            jLabel1.setBounds((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 60 + additionalX, y1 * 800 / 6 + count * 40 - 15 + additionalY + singleY, 70, 50);
 
             add(jLabel1);
             super.paint(getGraphics());
 
-            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, (int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 45, y1 * 800 / 6 + count * 40 + 55);
-            Line2D line2 = new Line2D.Float((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 110, y1 * 800 / 6 + count * 40 + 55, x2 * 1200 / 6 + 100, y1 * 800 / 6 + 80);
+            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, (int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 45, y1 * 800 / 6 + count * 40 + 55 + singleY+8);
+            Line2D line2 = new Line2D.Float((int)((double)(x1 + x2) / 2.0 * (1200 / 6)) + 110, y1 * 800 / 6 + count * 40 + 55 + singleY+8, x2 * 1200 / 6 + 100, y1 * 800 / 6 + 80);
             lines.add(line1);
             lines.add(line2);
             paralel.put(string, count + 1);
@@ -1877,6 +2144,10 @@ public class project {
             }
             String string = x1 + "" + y1 + "" + x2 + "" + y2;
             int count = 0;
+            int singleX = 0, singleY = 0;
+            if (paralel2.keySet().contains(string) && paralel2.get(string) == 1){
+                singleX = 57;
+            }
             if (paralel.keySet().contains(string))
                 count = paralel.get(string);
             BufferedImage img = null;
@@ -1888,13 +2159,13 @@ public class project {
 
             JLabel jLabel = new JLabel();
             if (address.contains("Inductor"))
-                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 22, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 25, 45);
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 22 + singleX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 25, 45);
             else if (address.contains("Current"))
-                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 15, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 40, 50);
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 15 + singleX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 40, 50);
             else if (address.contains("Voltage"))
-                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 17, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 35, 50);
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + 17 + singleX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 35, 50);
             else
-                jLabel.setBounds(x1 * 1200 / 6 + count * 40, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 70, 50);
+                jLabel.setBounds(x1 * 1200 / 6 + count * 40 + singleX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5, 70, 50);
             Image image = img.getScaledInstance(jLabel.getWidth(), jLabel.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(image);
             jLabel.setIcon(imageIcon);
@@ -1916,13 +2187,13 @@ public class project {
                 additionalY -= 11;
             }
             JLabel jLabel1 = new JLabel(name);
-            jLabel1.setBounds(x1 * 1200 / 6 + count * 40 + 8 + additionalX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5 + additionalY, 70, 50);
+            jLabel1.setBounds(x1 * 1200 / 6 + count * 40 + 8 + additionalX + singleX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) - 5 + additionalY, 70, 50);
 
             add(jLabel1);
             super.paint(getGraphics());
-            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 27);
+            Line2D line1 = new Line2D.Float(x1 * 1200 / 6 + 100, y1 * 800 / 6 + 80, x1 * 1200 / 6 + count * 40 + 42 + singleX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 27+8);
             lines.add(line1);
-            Line2D line2 = new Line2D.Float(x1 * 1200 / 6 + count * 40 + 42, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 71, x2 * 1200 / 6 + 100, y2 * 800 / 6 + 80);
+            Line2D line2 = new Line2D.Float(x1 * 1200 / 6 + count * 40 + 42 + singleX, (int)((double)(y1 + y2) / 2.0 * (800 / 6)) + 71+8, x2 * 1200 / 6 + 100, y2 * 800 / 6 + 80);
             lines.add(line2);
 
             paralel.put(string, count + 1);
@@ -2131,10 +2402,34 @@ public class project {
 
 
     public static class ConsolMatni extends JFrame{
-        JButton Load=new JButton("Load");
-        JButton Run=new JButton("Run");
-        JTextField Consol=new JTextField();
+        String x;
+
         ConsolMatni(){
+
+
+            JButton Load=new JButton("Load");
+            JButton Run=new JButton("Run");
+            JTextArea Consol=new JTextArea();
+            JLabel CONSOLMATNI=new JLabel("consol matni :");
+            Load.setBounds(0,0,200,50);
+            Run.setBounds(200,0,200,50);
+            Consol.setBounds(200,100,600,300);
+            CONSOLMATNI.setBounds(100,100,100,50);
+
+            Load.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    x=Consol.getText();
+                    }
+                });
+
+            add(Load);
+            add(Run);
+            add(Consol);
+            add(CONSOLMATNI);
+
+
+
 
 
             setTitle("CONSOL MATNI");
