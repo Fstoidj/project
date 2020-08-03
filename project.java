@@ -1456,7 +1456,7 @@ public class project {
     public static void chapOutput(FileWriter fileWriter) {
         try {
             for (int i = 0; i < N.size(); i++) {
-                System.out.print(N.get(i).name + " :");
+                fileWriter.write(N.get(i).name + " :");
                 for (int j = 0; j < N.get(i).outputVolt.size(); j++) {
 
                     fileWriter.write(" " + N.get(i).outputVolt.get(j));
@@ -1518,7 +1518,39 @@ public class project {
         catch (IOException e) {
         }
     }
-
+    public static int consoleInput(String s, double dT, double T){
+        int i=-1, iteration, error=1;
+        double t;
+        node n1, n2;
+        n1=new node(s.substring(0,s.indexOf(" ")));
+        i=searchNode(s.substring(0,s.indexOf(" ")));
+        if(i==-1){
+            error=0;
+        }
+        else{
+            n1=N.get(i);
+        }
+        s=s.substring(s.indexOf(" ")+1);
+        n2=new node(s.substring(0,s.indexOf(" ")));
+        i=searchNode(s.substring(0,s.indexOf(" ")));
+        if(i==-1){
+            error=0;
+        }
+        else{
+            n2=N.get(i);
+        }
+        s=s.substring(s.indexOf(" ")+1);
+        t=Double.parseDouble(s);
+        if(t>T||t<0){
+            error=0;
+        }
+        iteration=(int)(t/dT);
+        if(error==0){
+            return error;
+        }
+        System.out.println((n1.outputVolt.get(iteration)-n2.outputVolt.get(iteration)-1));
+        return error;
+    }
 
     public static class graphProject extends JFrame{
 
@@ -1972,8 +2004,6 @@ public class project {
             x=b;
             max=x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent));
             min=x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent));
-            System.out.println("max:"+max);
-            System.out.println("min:"+min);
             setTitle("Current Chart");
             setSize(2000, 1000);
             setLayout(null);
@@ -2098,6 +2128,7 @@ public class project {
             return i;
         }
     }
+
 
     public static void main(String[] args) {
 
@@ -2342,9 +2373,27 @@ public class project {
             fileWriter.close();
             graphProject GraphProject = new graphProject();
 
+            int error=1;
+            Scanner scanner =new Scanner(System.in);
+            s=scanner.nextLine();
+            s = s.trim();
+            s = s.replaceAll("( )+", " ");
+            while (!s.equals("END")) {
+                try {
+                    error = consoleInput(s, dT, T);
+                    s += 1 / error;
+                    s = scanner.nextLine();
+                    s = s.trim();
+                    s = s.replaceAll("( )+", " ");
+                }
+                catch (Exception e){
+                    System.out.println("ERROR");
+                }
+            }
+
         }
         catch (Exception e){
-            System.out.println(e);
+            //System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
