@@ -1899,13 +1899,55 @@ public class project {
     }
 
     public static class chartPainterVoltage extends JFrame{
+        branch x;
+        double min,max;
+        ArrayList<Double> VChart=new ArrayList<Double>(0);
         chartPainterVoltage(branch b) {
+            x=b;
+            for(int j=0;j<x.outputCurrent.size();j++){
+                VChart.add(x.n1.outputVolt.get(j)-x.n2.outputVolt.get(j));
+            }
+            max=VChart.get(this.AndisMaxFinder(VChart));
+            min=VChart.get(this.AndisMinFinder(VChart));
             setTitle("Voltage Chart");
             setSize(2000, 1000);
             setLayout(null);
             setVisible(true);
         }
-        public void Rasm(){
+        @Override
+        public void paint(Graphics g){
+            for(int j=0;j<VChart.size()-1;j++){
+                g.drawLine(100+j*1800/VChart.size(),(int)(800-600*(VChart.get(j)-min)/(max-min)),100+(j+1)*1800/VChart.size(), (int)(800 -600 * (VChart.get(j + 1) - min) / (max - min)));
+
+            }
+            if(min<0&&max>0){
+                g.drawLine(50,(int)(800+600*min/(max-min)),1950,(int)(800+600*min/(max-min)));
+                g.drawLine(1930,(int)(800+600*min/(max-min))-20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(1930,(int)(800+600*min/(max-min))+20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(100,950,100,50);
+                g.drawLine(80,70,100,50);
+                g.drawLine(120,70,100,50);
+                for (int j=1;j<10;j++){
+                    g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
+                }
+                for (int j=1;j<20;j++){
+                    g.drawString(Double.toString(100*(j-1)*VChart.size()/1800),100*j-20,900);
+                }
+            }
+            else{
+                g.drawLine(50,900,1950,900);
+                g.drawLine(1930,880,1950,900);
+                g.drawLine(1930,920,1950,900);
+                g.drawLine(100,950,100,50);
+                g.drawLine(80,70,100,50);
+                g.drawLine(120,70,100,50);
+                for (int j=1;j<10;j++){
+                    g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
+                }
+                for (int j=1;j<20;j++){
+                    g.drawString(Double.toString(100*(j-1)*VChart.size()/1800),100*j-20,900);
+                }
+            }
 
         }
         public int AndisMinFinder(ArrayList<Double> A){
@@ -1943,10 +1985,34 @@ public class project {
                 g.drawLine(10+j*1200/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),10+(j+1)*1200/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
 
             }
-          /*  if (x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent))<0&&x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent))>0){
-
-
-            }*/
+            if(min<0&&max>0){
+                g.drawLine(50,(int)(800+600*min/(max-min)),1950,(int)(800+600*min/(max-min)));
+                g.drawLine(1930,(int)(800+600*min/(max-min))-20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(1930,(int)(800+600*min/(max-min))+20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(100,950,100,50);
+                g.drawLine(80,70,100,50);
+                g.drawLine(120,70,100,50);
+                for (int j=1;j<10;j++){
+                    g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
+                }
+                for (int j=1;j<20;j++){
+                    g.drawString(Double.toString(100*(j-1)*x.outputCurrent.size()/1800),100*j-20,900);
+                }
+            }
+            else{
+                g.drawLine(50,900,1950,900);
+                g.drawLine(1930,880,1950,900);
+                g.drawLine(1930,920,1950,900);
+                g.drawLine(100,950,100,50);
+                g.drawLine(80,70,100,50);
+                g.drawLine(120,70,100,50);
+                for (int j=1;j<10;j++){
+                    g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
+                }
+                for (int j=1;j<20;j++){
+                    g.drawString(Double.toString(100*(j-1)*x.outputCurrent.size()/1800),100*j-20,900);
+                }
+            }
 
         }
         public int AndisMinFinder(ArrayList<Double> A){
@@ -1965,12 +2031,58 @@ public class project {
         }
     }
     public static class chartPainterPower extends JFrame{
+        branch x;
+        double min,max;
+        ArrayList<Double> PChart=new ArrayList<Double>(0);
         chartPainterPower(branch b) {
+            x=b;
+            for(int j=0;j<x.outputCurrent.size();j++){
+                PChart.add((x.n1.outputVolt.get(j)-x.n2.outputVolt.get(j))*x.outputCurrent.get(j));
+            }
+            max=PChart.get(this.AndisMaxFinder(PChart));
+            min=PChart.get(this.AndisMinFinder(PChart));
             setTitle("Power Chart");
             setSize(2000, 1000);
             setLayout(null);
             setVisible(true);
         }
+        @Override
+        public void paint(Graphics g){
+            for(int j=0;j<PChart.size()-1;j++){
+                g.drawLine(100+j*1800/PChart.size(),(int)(800-600*(PChart.get(j)-min)/(max-min)),100+(j+1)*1800/PChart.size(), (int)(800 -600 * (PChart.get(j + 1) - min) / (max - min)));
+
+            }
+            if(min<0&&max>0){
+                g.drawLine(50,(int)(800+600*min/(max-min)),1950,(int)(800+600*min/(max-min)));
+                g.drawLine(1930,(int)(800+600*min/(max-min))-20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(1930,(int)(800+600*min/(max-min))+20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(100,950,100,50);
+                g.drawLine(80,70,100,50);
+                g.drawLine(120,70,100,50);
+                for (int j=1;j<10;j++){
+                    g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
+                }
+                for (int j=1;j<20;j++){
+                    g.drawString(Double.toString(100*(j-1)*PChart.size()/1800),100*j-20,900);
+                }
+            }
+            else{
+                g.drawLine(50,900,1950,900);
+                g.drawLine(1930,880,1950,900);
+                g.drawLine(1930,920,1950,900);
+                g.drawLine(100,950,100,50);
+                g.drawLine(80,70,100,50);
+                g.drawLine(120,70,100,50);
+                for (int j=1;j<10;j++){
+                    g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
+                }
+                for (int j=1;j<20;j++){
+                    g.drawString(Double.toString(100*(j-1)*PChart.size()/1800),100*j-20,900);
+                }
+            }
+
+        }
+
         public int AndisMinFinder(ArrayList<Double> A){
             int i=0;
             for(int j=0;j<A.size();j++)
