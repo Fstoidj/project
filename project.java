@@ -1908,8 +1908,11 @@ public class project {
     }
     public static class chartPainterCurrent extends JFrame{
         branch x;
+        double max,min;
         chartPainterCurrent(branch b) {
             x=b;
+            max=x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent));
+            min=x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent));
             setTitle("Current Chart");
             setSize(2000, 1000);
             setLayout(null);
@@ -1918,13 +1921,13 @@ public class project {
         @Override
         public void paint(Graphics g){
             for(int j=0;j<x.outputCurrent.size()-1;j++){
-                g.drawLine(100+j*1800/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent)))/(x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent))-x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent)))),100+(j+1)*1800/x.outputCurrent.size(), (int)(800 - ((600 * (x.outputCurrent.get(j + 1) - x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent)))) / (x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent)) - x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent))))));
+                g.drawLine(100+j*1800/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),100+(j+1)*1800/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
 
             }
-            if (x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent))<0&&x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent))>0){
+          /*  if (x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent))<0&&x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent))>0){
 
 
-            }
+            }*/
 
         }
         public int AndisMinFinder(ArrayList<Double> A){
@@ -2201,7 +2204,7 @@ public class project {
                 errorType=-1;
                 s+=0/0;
             }
-            
+
             chapOutput();
             graphProject GraphProject = new graphProject();
         }
