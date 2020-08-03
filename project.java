@@ -2201,13 +2201,8 @@ public class project {
                 errorType=-1;
                 s+=0/0;
             }
-
-<<<<<<< HEAD
-        graphProject GraphProject = new graphProject();
-=======
+            
             chapOutput();
->>>>>>> 92e83eb4f7674ccca9f6023441e0300960226175
-
             graphProject GraphProject = new graphProject();
         }
         catch (Exception e){
