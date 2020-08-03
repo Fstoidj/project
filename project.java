@@ -1456,7 +1456,7 @@ public class project {
     public static void chapOutput(FileWriter fileWriter) {
         try {
             for (int i = 0; i < N.size(); i++) {
-                fileWriter.write(N.get(i).name + " :");
+                fileWriter.write(""+N.get(i).name + " :");
                 for (int j = 0; j < N.get(i).outputVolt.size(); j++) {
 
                     fileWriter.write(" " + N.get(i).outputVolt.get(j));
