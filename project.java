@@ -1982,7 +1982,7 @@ public class project {
         @Override
         public void paint(Graphics g){
             for(int j=0;j<x.outputCurrent.size()-1;j++){
-                g.drawLine(10+j*1200/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),10+(j+1)*1200/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
+                g.drawLine(100+j*1800/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),100+(j+1)*1800/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
 
             }
             if(min<0&&max>0){
