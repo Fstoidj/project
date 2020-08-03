@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class project {
+
 
 
     static ArrayList<String> input=new ArrayList<String>(0);
@@ -34,6 +36,9 @@ public class project {
     static ArrayList<VCVS> E=new ArrayList<VCVS>(0);
     static ArrayList<CCVS> H=new ArrayList<CCVS>(0);
     static ArrayList<diode> D=new ArrayList<diode>(0);
+
+    public project() throws IOException {
+    }
 
 
     public static int searchNode(String s){
@@ -199,9 +204,14 @@ public class project {
         ArrayList<Double> outputCurrent=new ArrayList<Double>(0);
         node n1, n2;
         double I=0;
-        public void output(){
-            for(int i=0;i<n1.outputVolt.size();i++){
-                System.out.print(" "+(n1.outputVolt.get(i)-n2.outputVolt.get(i))+"|"+outputCurrent.get(i)+"|"+(outputCurrent.get(i)*(n1.outputVolt.get(i)-n2.outputVolt.get(i))));
+        public void output(FileWriter fileWriter){
+            try {
+                for (int i = 0; i < n1.outputVolt.size(); i++) {
+                    fileWriter.write(" " + (n1.outputVolt.get(i) - n2.outputVolt.get(i)) + "|" + outputCurrent.get(i) + "|" + (outputCurrent.get(i) * (n1.outputVolt.get(i) - n2.outputVolt.get(i))));
+                }
+            }
+            catch (Exception e){
+
             }
         }
     }
@@ -1443,65 +1453,72 @@ public class project {
     }
 
 
-    public static void chapOutput(){
-        for(int i=0;i<N.size();i++){
-            System.out.print(N.get(i).name+" :");
-            for (int j=0;j<N.get(i).outputVolt.size();j++){
-                System.out.print(" "+N.get(i).outputVolt.get(j));
-            }
-            System.out.println();
-        }
+    public static void chapOutput(FileWriter fileWriter) {
+        try {
+            for (int i = 0; i < N.size(); i++) {
+                System.out.print(N.get(i).name + " :");
+                for (int j = 0; j < N.get(i).outputVolt.size(); j++) {
 
-        for(int i=0, iR=0, iI=0, iC=0, iL=0, iV=0, iG=0, iF=0, iE=0, iH=0; i<input.size();i++){
-            if(input.get(i).equals("R")){
-                System.out.print(R.get(iR).NameR+" :");
-                R.get(iR).output();
-                iR++;
-            }
-            else if(input.get(i).equals("I")){
-                System.out.print(CS.get(iI).NameI+" :");
-                CS.get(iI).output();
-                iI++;
-            }
-            else if(input.get(i).equals("C")){
-                System.out.print(C.get(iC).NameC+" :");
-                C.get(iC).output();
-                iC++;
-            }
-            else if(input.get(i).equals("L")){
-                System.out.print(L.get(iL).NameL+" :");
-                L.get(iL).output();
-                iL++;
-            }
-            else if(input.get(i).equals("G")){
-                System.out.print(G.get(iG).NameG+" :");
-                G.get(iG).output();
-                iG++;
-            }
-            else if(input.get(i).equals("F")){
-                System.out.print(F.get(iF).NameF+" :");
-                F.get(iF).output();
-                iF++;
-            }
-            else if(input.get(i).equals("V")){
-                System.out.print(VS.get(iV).NameV+" :");
-                VS.get(iV).output();
-                iV++;
-            }
-            else if(input.get(i).equals("E")){
-                System.out.print(E.get(iE).NameE+" :");
-                E.get(iE).output();
-                iE++;
-            }
-            else if(input.get(i).equals("H")){
-                System.out.print(H.get(iH).NameH+" :");
-                H.get(iH).output();
-                iH++;
-            }
-            System.out.println();
-        }
+                    fileWriter.write(" " + N.get(i).outputVolt.get(j));
 
+                }
+                fileWriter.write("\n");
+            }
+
+
+            for (int i = 0, iR = 0, iI = 0, iC = 0, iL = 0, iV = 0, iG = 0, iF = 0, iE = 0, iH = 0; i < input.size(); i++) {
+                if (input.get(i).equals("R")) {
+                    fileWriter.write(R.get(iR).NameR + " :");
+                    R.get(iR).output(fileWriter);
+                    iR++;
+                }
+                else if (input.get(i).equals("I")) {
+                    fileWriter.write(CS.get(iI).NameI + " :");
+                    CS.get(iI).output(fileWriter);
+                    iI++;
+                }
+                else if (input.get(i).equals("C")) {
+                    fileWriter.write(C.get(iC).NameC + " :");
+                    C.get(iC).output(fileWriter);
+                    iC++;
+                }
+                else if (input.get(i).equals("L")) {
+                    fileWriter.write(L.get(iL).NameL + " :");
+                    L.get(iL).output(fileWriter);
+                    iL++;
+                }
+                else if (input.get(i).equals("G")) {
+                    fileWriter.write(G.get(iG).NameG + " :");
+                    G.get(iG).output(fileWriter);
+                    iG++;
+                }
+                else if (input.get(i).equals("F")) {
+                    fileWriter.write(F.get(iF).NameF + " :");
+                    F.get(iF).output(fileWriter);
+                    iF++;
+                }
+                else if (input.get(i).equals("V")) {
+                    fileWriter.write(VS.get(iV).NameV + " :");
+                    VS.get(iV).output(fileWriter);
+                    iV++;
+                }
+                else if (input.get(i).equals("E")) {
+                    fileWriter.write(E.get(iE).NameE + " :");
+                    E.get(iE).output(fileWriter);
+                    iE++;
+                }
+                else if (input.get(i).equals("H")) {
+                    fileWriter.write(H.get(iH).NameH + " :");
+                    H.get(iH).output(fileWriter);
+                    iH++;
+                }
+                fileWriter.write("\n");
+            }
+        }
+        catch (IOException e) {
+        }
     }
+
 
     public static class graphProject extends JFrame{
 
@@ -1913,6 +1930,8 @@ public class project {
             x=b;
             max=x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent));
             min=x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent));
+            System.out.println("max:"+max);
+            System.out.println("min:"+min);
             setTitle("Current Chart");
             setSize(2000, 1000);
             setLayout(null);
@@ -1921,7 +1940,7 @@ public class project {
         @Override
         public void paint(Graphics g){
             for(int j=0;j<x.outputCurrent.size()-1;j++){
-                g.drawLine(100+j*1800/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),100+(j+1)*1800/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
+                g.drawLine(10+j*1200/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),10+(j+1)*1200/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
 
             }
           /*  if (x.outputCurrent.get(this.AndisMinFinder(x.outputCurrent))<0&&x.outputCurrent.get(this.AndisMaxFinder(x.outputCurrent))>0){
@@ -1987,6 +2006,8 @@ public class project {
         try {
 
             File file = new File("test1.txt");
+            File output = new File("output.txt");
+            FileWriter fileWriter = new FileWriter(output);
             Scanner sc= new Scanner(file);
             String s = sc.nextLine();
             s = s.trim();
@@ -2205,7 +2226,7 @@ public class project {
                 s+=0/0;
             }
 
-            chapOutput();
+            chapOutput(fileWriter);
             graphProject GraphProject = new graphProject();
         }
         catch (Exception e){
