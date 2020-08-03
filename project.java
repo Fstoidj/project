@@ -2339,7 +2339,9 @@ public class project {
             }
 
             chapOutput(fileWriter);
+            fileWriter.close();
             graphProject GraphProject = new graphProject();
+
         }
         catch (Exception e){
             System.out.println(e);
