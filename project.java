@@ -1954,35 +1954,35 @@ public class project {
         @Override
         public void paint(Graphics g){
             for(int j=0;j<VChart.size()-1;j++){
-                g.drawLine(100+j*1800/VChart.size(),(int)(800-600*(VChart.get(j)-min)/(max-min)),100+(j+1)*1800/VChart.size(), (int)(800 -600 * (VChart.get(j + 1) - min) / (max - min)));
+                g.drawLine(100+j*1700/VChart.size(),(int)(800-600*(VChart.get(j)-min)/(max-min)),100+(j+1)*1700/VChart.size(), (int)(800 -600 * (VChart.get(j + 1) - min) / (max - min)));
 
             }
             if(min<0&&max>0){
-                g.drawLine(50,(int)(800+600*min/(max-min)),1950,(int)(800+600*min/(max-min)));
-                g.drawLine(1930,(int)(800+600*min/(max-min))-20,1950,(int)(800+600*min/(max-min)));
-                g.drawLine(1930,(int)(800+600*min/(max-min))+20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(50,(int)(800+600*min/(max-min)),1850,(int)(800+600*min/(max-min)));
+                g.drawLine(1830,(int)(800+600*min/(max-min))-20,1850,(int)(800+600*min/(max-min)));
+                g.drawLine(1830,(int)(800+600*min/(max-min))+20,1850,(int)(800+600*min/(max-min)));
                 g.drawLine(100,950,100,50);
                 g.drawLine(80,70,100,50);
                 g.drawLine(120,70,100,50);
                 for (int j=1;j<10;j++){
                     g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
                 }
-                for (int j=1;j<20;j++){
-                    g.drawString(Double.toString(100*(j-1)*VChart.size()/1800),100*j-20,900);
+                for (int j=1;j<19;j++){
+                    g.drawString(Double.toString(100*(j-1)*VChart.size()/1700),100*j-20,900);
                 }
             }
             else{
-                g.drawLine(50,900,1950,900);
-                g.drawLine(1930,880,1950,900);
-                g.drawLine(1930,920,1950,900);
+                g.drawLine(50,900,1850,900);
+                g.drawLine(1830,880,1850,900);
+                g.drawLine(1830,920,1850,900);
                 g.drawLine(100,950,100,50);
                 g.drawLine(80,70,100,50);
                 g.drawLine(120,70,100,50);
                 for (int j=1;j<10;j++){
                     g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
                 }
-                for (int j=1;j<20;j++){
-                    g.drawString(Double.toString(100*(j-1)*VChart.size()/1800),100*j-20,900);
+                for (int j=1;j<19;j++){
+                    g.drawString(Double.toString(100*(j-1)*VChart.size()/1700),100*j-20,900);
                 }
             }
 
@@ -2017,35 +2017,35 @@ public class project {
         @Override
         public void paint(Graphics g){
             for(int j=0;j<x.outputCurrent.size()-1;j++){
-                g.drawLine(100+j*1800/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),100+(j+1)*1800/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
+                g.drawLine(100+j*1700/x.outputCurrent.size(),(int)(800-600*(x.outputCurrent.get(j)-min)/(max-min)),100+(j+1)*1700/x.outputCurrent.size(), (int)(800 -600 * (x.outputCurrent.get(j + 1) - min) / (max - min)));
 
             }
             if(min<0&&max>0){
-                g.drawLine(50,(int)(800+600*min/(max-min)),1950,(int)(800+600*min/(max-min)));
-                g.drawLine(1930,(int)(800+600*min/(max-min))-20,1950,(int)(800+600*min/(max-min)));
-                g.drawLine(1930,(int)(800+600*min/(max-min))+20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(50,(int)(800+600*min/(max-min)),1850,(int)(800+600*min/(max-min)));
+                g.drawLine(1830,(int)(800+600*min/(max-min))-20,1850,(int)(800+600*min/(max-min)));
+                g.drawLine(1830,(int)(800+600*min/(max-min))+20,1850,(int)(800+600*min/(max-min)));
                 g.drawLine(100,950,100,50);
                 g.drawLine(80,70,100,50);
                 g.drawLine(120,70,100,50);
                 for (int j=1;j<10;j++){
                     g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
                 }
-                for (int j=1;j<20;j++){
-                    g.drawString(Double.toString(100*(j-1)*x.outputCurrent.size()/1800),100*j-20,900);
+                for (int j=1;j<19;j++){
+                    g.drawString(Double.toString(100*(j-1)*x.outputCurrent.size()/1700),100*j-20,900);
                 }
             }
             else{
-                g.drawLine(50,900,1950,900);
-                g.drawLine(1930,880,1950,900);
-                g.drawLine(1930,920,1950,900);
+                g.drawLine(50,900,1850,900);
+                g.drawLine(1830,880,1850,900);
+                g.drawLine(1830,920,1850,900);
                 g.drawLine(100,950,100,50);
                 g.drawLine(80,70,100,50);
                 g.drawLine(120,70,100,50);
                 for (int j=1;j<10;j++){
                     g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
                 }
-                for (int j=1;j<20;j++){
-                    g.drawString(Double.toString(100*(j-1)*x.outputCurrent.size()/1800),100*j-20,900);
+                for (int j=1;j<19;j++){
+                    g.drawString(Double.toString(100*(j-1)*x.outputCurrent.size()/1700),100*j-20,900);
                 }
             }
 
@@ -2084,35 +2084,35 @@ public class project {
         @Override
         public void paint(Graphics g){
             for(int j=0;j<PChart.size()-1;j++){
-                g.drawLine(100+j*1800/PChart.size(),(int)(800-600*(PChart.get(j)-min)/(max-min)),100+(j+1)*1800/PChart.size(), (int)(800 -600 * (PChart.get(j + 1) - min) / (max - min)));
+                g.drawLine(100+j*1700/PChart.size(),(int)(800-600*(PChart.get(j)-min)/(max-min)),100+(j+1)*1700/PChart.size(), (int)(800 -600 * (PChart.get(j + 1) - min) / (max - min)));
 
             }
             if(min<0&&max>0){
-                g.drawLine(50,(int)(800+600*min/(max-min)),1950,(int)(800+600*min/(max-min)));
-                g.drawLine(1930,(int)(800+600*min/(max-min))-20,1950,(int)(800+600*min/(max-min)));
-                g.drawLine(1930,(int)(800+600*min/(max-min))+20,1950,(int)(800+600*min/(max-min)));
+                g.drawLine(50,(int)(800+600*min/(max-min)),1850,(int)(800+600*min/(max-min)));
+                g.drawLine(1830,(int)(800+600*min/(max-min))-20,1850,(int)(800+600*min/(max-min)));
+                g.drawLine(1830,(int)(800+600*min/(max-min))+20,1850,(int)(800+600*min/(max-min)));
                 g.drawLine(100,950,100,50);
                 g.drawLine(80,70,100,50);
                 g.drawLine(120,70,100,50);
                 for (int j=1;j<10;j++){
                     g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
                 }
-                for (int j=1;j<20;j++){
-                    g.drawString(Double.toString(100*(j-1)*PChart.size()/1800),100*j-20,900);
+                for (int j=1;j<19;j++){
+                    g.drawString(Double.toString(100*(j-1)*PChart.size()/1700),100*j-20,900);
                 }
             }
             else{
-                g.drawLine(50,900,1950,900);
-                g.drawLine(1930,880,1950,900);
-                g.drawLine(1930,920,1950,900);
+                g.drawLine(50,900,1850,900);
+                g.drawLine(1830,880,1850,900);
+                g.drawLine(1830,920,1850,900);
                 g.drawLine(100,950,100,50);
                 g.drawLine(80,70,100,50);
                 g.drawLine(120,70,100,50);
                 for (int j=1;j<10;j++){
                     g.drawString(Double.toString(min+(800-100*j)*(max-min)/600),50,100*j);
                 }
-                for (int j=1;j<20;j++){
-                    g.drawString(Double.toString(100*(j-1)*PChart.size()/1800),100*j-20,900);
+                for (int j=1;j<19;j++){
+                    g.drawString(Double.toString(100*(j-1)*PChart.size()/1700),100*j-20,900);
                 }
             }
 
@@ -2134,6 +2134,20 @@ public class project {
         }
     }
 
+
+    public static class ConsolMatni extends JFrame{
+        JButton Load=new JButton("Load");
+        JButton Run=new JButton("Run");
+        JTextField Consol=new JTextField();
+        ConsolMatni(){
+
+
+            setTitle("CONSOL MATNI");
+            setSize(1000, 500);
+            setLayout(null);
+            setVisible(true);
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -2399,6 +2413,7 @@ public class project {
                     }
                 }
                 catch (Exception e){
+                    s="";
                     System.out.println("ERROR");
                     s=scanner.nextLine();
                     s = s.trim();
