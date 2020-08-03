@@ -124,6 +124,7 @@ public class project {
                 }
             }
         }
+        s+=0/0;
         return a;
     }
 
@@ -769,6 +770,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n3=N.get(i);
@@ -777,6 +779,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n4=N.get(i);
@@ -920,6 +923,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n3=N.get(i);
@@ -928,6 +932,7 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             if(i==-1){
+                s+=0/0;
             }
             else{
                 n4=N.get(i);
@@ -1456,7 +1461,7 @@ public class project {
     public static void chapOutput(FileWriter fileWriter) {
         try {
             for (int i = 0; i < N.size(); i++) {
-                fileWriter.write(N.get(i).name + " :");
+                fileWriter.write(""+N.get(i).name + " :");
                 for (int j = 0; j < N.get(i).outputVolt.size(); j++) {
 
                     fileWriter.write(" " + N.get(i).outputVolt.get(j));
@@ -2681,6 +2686,7 @@ public class project {
             chapOutput(fileWriter);
             fileWriter.close();
             graphProject GraphProject = new graphProject();
+
 
             int error=1;
             Scanner scanner =new Scanner(System.in);
