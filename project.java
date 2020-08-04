@@ -36,7 +36,7 @@ public class project {
     static ArrayList<VCVS> E=new ArrayList<VCVS>(0);
     static ArrayList<CCVS> H=new ArrayList<CCVS>(0);
     static ArrayList<diode> D=new ArrayList<diode>(0);
-    
+
 
     public static int searchNode(String s){
         for(int i=0;i<N.size();i++){
