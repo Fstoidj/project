@@ -2429,14 +2429,15 @@ public class project {
 
 
             Scanner scanner=new Scanner(file);
-            do{
+            //System.out.println("asda");
+            while (scanner.hasNextLine()){
+
                 String line;
                 line=scanner.nextLine();
                 Consol.append(line+"\n");
             }
-            while (scanner.hasNextLine());
-            final FileWriter[] fileWriter = {new FileWriter(file, false)};
 
+            final FileWriter[] fileWriter = {new FileWriter(file, false)};
 
 
             Load.addActionListener(new ActionListener() {
@@ -2450,6 +2451,19 @@ public class project {
                     int response = fileChooser.showOpenDialog(f1);
                     if (response == JFileChooser.APPROVE_OPTION){
                         file=fileChooser.getSelectedFile();
+                        try {
+                            Scanner scanner = new Scanner(file);
+                            //System.out.println("asda");
+                            while (scanner.hasNextLine()) {
+
+                                String line;
+                                line = scanner.nextLine();
+                                Consol.append(line + "\n");
+                            }
+                        }
+                        catch (Exception z){
+
+                        }
                     }
                 }
                 });
@@ -2809,7 +2823,7 @@ public class project {
 
         }
         catch (Exception e){
-
+            //System.out.println(e);
         }
     }
 }
