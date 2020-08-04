@@ -2445,11 +2445,12 @@ public class project {
 
                 }
                 });
+            //fileWriter.close();
 
             Run.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    main(new String[]{""});
                 }
             });
 
