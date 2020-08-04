@@ -1,6 +1,9 @@
 
+import javafx.stage.FileChooser;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +39,9 @@ public class project {
     static ArrayList<VCVS> E=new ArrayList<VCVS>(0);
     static ArrayList<CCVS> H=new ArrayList<CCVS>(0);
     static ArrayList<diode> D=new ArrayList<diode>(0);
+
+
+    static File file = new File("test1.txt");
 
 
     public static int searchNode(String s){
@@ -2405,9 +2411,9 @@ public class project {
 
     public static class ConsolMatni extends JFrame{
         String x;
-
-
-        ConsolMatni(File f) throws IOException {
+        double[] T=new double[2];
+        {T[0]=-1;T[1]=-1;}
+        ConsolMatni() throws IOException {
             JButton Load=new JButton("Load");
             JButton Run=new JButton("Run");
             JTextArea Consol=new JTextArea();
@@ -2422,30 +2428,29 @@ public class project {
 
 
 
-            Scanner scanner=new Scanner(f);
+            Scanner scanner=new Scanner(file);
             do{
                 String line;
                 line=scanner.nextLine();
                 Consol.append(line+"\n");
             }
             while (scanner.hasNextLine());
-            FileWriter fileWriter=new FileWriter(f,false);
+            final FileWriter[] fileWriter = {new FileWriter(file, false)};
 
 
 
             Load.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try{
-                        x=Consol.getText();
-                        fileWriter.write(x);
-                        fileWriter.close();
+                    JFrame f1 = new JFrame("Testing File Selection");
+                    FileSystemView fsv;
+                    fsv = FileSystemView.getFileSystemView();
+                    File file = new File("C:\\");
+                    JFileChooser fileChooser = new JFileChooser(file,fsv);
+                    int response = fileChooser.showOpenDialog(f1);
+                    if (response == JFileChooser.APPROVE_OPTION){
+                        file=fileChooser.getSelectedFile();
                     }
-                    catch (Exception w){
-
-                    }
-
-
                 }
                 });
 
@@ -2453,7 +2458,61 @@ public class project {
             Run.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    main(new String[]{""});
+                    try{
+                        x=Consol.getText();
+                        fileWriter[0] =new FileWriter(file,false);
+                        fileWriter[0].write(x);
+                        fileWriter[0].close();
+                    }
+                    catch (Exception w){
+                        System.out.println(w);
+                    }
+                    input=new ArrayList<String>(0);
+                    N=new ArrayList<node>(0);
+                    U=new ArrayList<nodes>(0);
+                    R=new ArrayList<resistor>(0);
+                    CS=new ArrayList<currentSource>(0);
+                    VS=new ArrayList<voltageSource>(0);
+                    C=new ArrayList<capacitor>(0);
+                    L=new ArrayList<inductor>(0);
+                    G=new ArrayList<VCCS>(0);
+                    F=new ArrayList<CCCS>(0);
+                    E=new ArrayList<VCVS>(0);
+                    H=new ArrayList<CCVS>(0);
+                    D=new ArrayList<diode>(0);
+
+
+                    T=tahlilMadar(file);
+
+
+                    int error=1;
+                    Scanner scanner =new Scanner(System.in);
+                    String s=scanner.nextLine();
+                    s = s.trim();
+                    s = s.replaceAll("( )+", " ");
+                    while (!s.equals("END")) {
+                        try {
+                            error = consoleInput(s, T[1], T[0]);
+                            s += 1 / error;
+                            s = scanner.nextLine();
+                            s = s.trim();
+                            s = s.replaceAll("( )+", " ");
+                            if(s.equals("END")){
+                                break;
+                            }
+                        }
+                        catch (Exception q){
+                            s="";
+                            System.out.println("ERROR");
+                            s=scanner.nextLine();
+                            s = s.trim();
+                            s = s.replaceAll("( )+", " ");
+                            if(s.equals("END")){
+                                break;
+                            }
+                        }
+                    }
+                    System.out.println("programm ends");
                 }
             });
 
@@ -2472,8 +2531,8 @@ public class project {
         }
     }
 
-    public static void main(String[] args) {
 
+    public static double[] tahlilMadar(File file){
         node n;
         resistor r;
         currentSource cs;
@@ -2485,20 +2544,22 @@ public class project {
         VCCS vccs;
         VCVS vcvs;
         CCVS ccvs;
+        double T=-1, dT=-1,dV=-1, dI=-1;
 
-        double T = -1, dT = -1, dV=-1, dI=-1;
+        double[] tout=new double[2];
+        {tout[0]=-1;tout[1]=-1;}
+
         int lineNumber=1, errorType=0;
         try {
 
-            File file = new File("test1.txt");
             File output = new File("output.txt");
             FileWriter fileWriter = new FileWriter(output);
             Scanner sc= new Scanner(file);
+
             String s = sc.nextLine();
             s = s.trim();
             s = s.replaceAll("( )+", " ");
 
-            new ConsolMatni(file);
 
             while (!s.equals(".end")) {
                 if (s.charAt(0) == '*') { }
@@ -2715,50 +2776,40 @@ public class project {
                 s+=0/0;
             }
 
+
             chapOutput(fileWriter);
             fileWriter.close();
+
+
             graphProject GraphProject = new graphProject();
 
+            tout[0]=T;
+            tout[1]=dT;
 
-            int error=1;
-            Scanner scanner =new Scanner(System.in);
-            s=scanner.nextLine();
-            s = s.trim();
-            s = s.replaceAll("( )+", " ");
-            while (!s.equals("END")) {
-                try {
-                    error = consoleInput(s, dT, T);
-                    s += 1 / error;
-                    s = scanner.nextLine();
-                    s = s.trim();
-                    s = s.replaceAll("( )+", " ");
-                    s=scanner.nextLine();
-                    s = s.trim();
-                    s = s.replaceAll("( )+", " ");
-                    if(s.equals("END")){
-                        break;
-                    }
-                }
-                catch (Exception e){
-                    s="";
-                    System.out.println("ERROR");
-                    s=scanner.nextLine();
-                    s = s.trim();
-                    s = s.replaceAll("( )+", " ");
-                    if(s.equals("END")){
-                        break;
-                    }
-                }
-            }
         }
         catch (Exception e){
-            System.out.println(e);
+            //System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
             else{
                 System.out.println("Error : "+errorType);
             }
+        }
+        return tout;
+    }
+
+
+    public static void main(String[] args) {
+        try {
+
+            new ConsolMatni();
+
+
+
+        }
+        catch (Exception e){
+
         }
     }
 }
