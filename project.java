@@ -1779,6 +1779,11 @@ public class project {
                 drawD(diode1);
             }
             drawLines();
+            for (int j=0;j<N.size();j++){
+                if (!N.get(j).name.equals("0"))
+                    g.drawString(N.get(j).name,100+(Integer.parseInt(N.get(j).name)-1)%6*200,80+(4-Integer.parseInt(N.get(j).name)/6)*800/6);
+
+            }
         }
 
         private void fillHash2(String name1, String name2) {
