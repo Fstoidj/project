@@ -2412,6 +2412,8 @@ public class project {
             JButton Run=new JButton("Run");
             JTextArea Consol=new JTextArea();
             Consol.setEditable(true);
+            Consol.setLineWrap(true);
+            Consol.setWrapStyleWord(true);
             JLabel CONSOLMATNI=new JLabel("consol matni :");
             Load.setBounds(0,0,200,50);
             Run.setBounds(200,0,200,50);
@@ -2427,7 +2429,7 @@ public class project {
                 Consol.append(line+"\n");
             }
             while (scanner.hasNextLine());
-            FileWriter fileWriter=new FileWriter(f);
+            FileWriter fileWriter=new FileWriter(f,false);
 
 
 
@@ -2437,6 +2439,7 @@ public class project {
                     try{
                         x=Consol.getText();
                         fileWriter.write(x);
+                        fileWriter.close();
                     }
                     catch (Exception w){
 
@@ -2445,7 +2448,7 @@ public class project {
 
                 }
                 });
-            //fileWriter.close();
+
 
             Run.addActionListener(new ActionListener() {
                 @Override
@@ -2458,7 +2461,6 @@ public class project {
             add(Run);
             add(Consol);
             add(CONSOLMATNI);
-
 
 
 
