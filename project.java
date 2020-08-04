@@ -1055,7 +1055,10 @@ public class project {
             return I;
         }
         public void updateV(int iteration){
-            V=n3.outputVolt.get(iteration)-n4.outputVolt.get(iteration);
+            if(n3.outputVolt.size()>0&&n4.outputVolt.size()>0)
+                V=n3.outputVolt.get(iteration)-n4.outputVolt.get(iteration);
+            else
+                V=0;
             V*=a;
         }
     }
@@ -2925,8 +2928,8 @@ public class project {
             tout[1]=dT;
 
         }
-        catch (Exception e){
-            //System.out.println(e);
+        catch (IOException e){
+            System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
@@ -2947,7 +2950,7 @@ public class project {
 
         }
         catch (Exception e){
-            //System.out.println(e);
+            System.out.println(e);
         }
     }
 }
