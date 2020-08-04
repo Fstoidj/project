@@ -427,20 +427,25 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             int j=searchUnion(n1.union);
-            if(i==-1){
-                n.union=n1.union;
-                U.get(j).n.add(n);
-                N.add(n);
-                n2=n;
-            }
-            else{
-                int k=searchUnion(N.get(i).union);
-                for(int l=0;l<U.get(k).n.size();l++){
-                    U.get(k).n.get(l).union=U.get(j).union;
-                    U.get(j).n.add(U.get(k).n.get(l));
+            if(n.equal(n1)!=1) {
+                if (i == -1) {
+                    n.union = n1.union;
+                    U.get(j).n.add(n);
+                    N.add(n);
+                    n2 = n;
                 }
-                U.remove(k);
-                n2=N.get(i);
+                else {
+                    int k = searchUnion(N.get(i).union);
+                    for (int l = 0; l < U.get(k).n.size(); l++) {
+                        U.get(k).n.get(l).union = U.get(j).union;
+                        U.get(j).n.add(U.get(k).n.get(l));
+                    }
+                    U.remove(k);
+                    n2 = N.get(i);
+                }
+            }
+            else {
+                n2=n1;
             }
             s=s.substring(s.indexOf(" ")+1);
             s=s.replaceAll("k", "000");
@@ -907,20 +912,25 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             int j=searchUnion(n1.union);
-            if(i==-1){
-                n.union=n1.union;
-                U.get(j).n.add(n);
-                N.add(n);
-                n2=n;
-            }
-            else{
-                int k=searchUnion(N.get(i).union);
-                for(int l=0;l<U.get(k).n.size();l++){
-                    U.get(k).n.get(l).union=U.get(j).union;
-                    U.get(j).n.add(U.get(k).n.get(l));
+            if(n.equal(n1)!=1) {
+                if (i == -1) {
+                    n.union = n1.union;
+                    U.get(j).n.add(n);
+                    N.add(n);
+                    n2 = n;
                 }
-                U.remove(k);
-                n2=N.get(i);
+                else {
+                    int k = searchUnion(N.get(i).union);
+                    for (int l = 0; l < U.get(k).n.size(); l++) {
+                        U.get(k).n.get(l).union = U.get(j).union;
+                        U.get(j).n.add(U.get(k).n.get(l));
+                    }
+                    U.remove(k);
+                    n2 = N.get(i);
+                }
+            }
+            else {
+                n2=n1;
             }
             s=s.substring(s.indexOf(" ")+1);
             n=new node(s.substring(0, s.indexOf(" ")));
@@ -1073,20 +1083,25 @@ public class project {
             n=new node(s.substring(0, s.indexOf(" ")));
             i=searchNode(s.substring(0,s.indexOf(" ")));
             int j=searchUnion(n1.union);
-            if(i==-1){
-                n.union=n1.union;
-                U.get(j).n.add(n);
-                N.add(n);
-                n2=n;
-            }
-            else{
-                int k=searchUnion(N.get(i).union);
-                for(int l=0;l<U.get(k).n.size();l++){
-                    U.get(k).n.get(l).union=U.get(j).union;
-                    U.get(j).n.add(U.get(k).n.get(l));
+            if(n.equal(n1)!=1) {
+                if (i == -1) {
+                    n.union = n1.union;
+                    U.get(j).n.add(n);
+                    N.add(n);
+                    n2 = n;
                 }
-                U.remove(k);
-                n2=N.get(i);
+                else {
+                    int k = searchUnion(N.get(i).union);
+                    for (int l = 0; l < U.get(k).n.size(); l++) {
+                        U.get(k).n.get(l).union = U.get(j).union;
+                        U.get(j).n.add(U.get(k).n.get(l));
+                    }
+                    U.remove(k);
+                    n2 = N.get(i);
+                }
+            }
+            else {
+                n2=n1;
             }
             s=s.substring(s.indexOf(" ")+1);
             inputCurrent=findBranchCurrent(s.substring(0, s.indexOf(" ")));
@@ -1463,11 +1478,12 @@ public class project {
 
     public static void chapOutput(FileWriter fileWriter) {
         try {
+            int groundIndex=searchNode("0");
             for (int i = 0; i < N.size(); i++) {
                 fileWriter.write(""+N.get(i).name + " :");
                 for (int j = 0; j < N.get(i).outputVolt.size(); j++) {
 
-                    fileWriter.write(" " + N.get(i).outputVolt.get(j));
+                    fileWriter.write(" " + (N.get(i).outputVolt.get(j)-N.get(groundIndex).outputVolt.get(j)));
 
                 }
                 fileWriter.write("\n");
@@ -1559,6 +1575,39 @@ public class project {
         System.out.println((n1.outputVolt.get(iteration)-n2.outputVolt.get(iteration)-1));
         return error;
     }
+
+
+    public static int checkGround(double dT, int iteration){
+        for(int i=0;i<VS.size();i++){
+            if(VS.get(i).n1.name.equals(VS.get(i).n2.name)){
+                if (VS.get(i).n1.outputVolt.get(iteration)!=0) {
+                    return -1;
+                }
+            }
+        }
+        for(int i=0;i<E.size();i++){
+            if(E.get(i).n1.name.equals(E.get(i).n2.name)){
+                if (E.get(i).n1.outputVolt.get(iteration)!=0) {
+                    return -1;
+                }
+            }
+        }
+        for(int i=0;i<H.size();i++){
+            if(H.get(i).n1.name.equals(H.get(i).n2.name)){
+                if (H.get(i).n1.outputVolt.get(iteration)!=0) {
+                    return -1;
+                }
+            }
+        }
+        return 0;
+    }
+    public static int checkVS(double dT, int iteration){
+        for(int i=0;i<U.size();i++){
+
+        }
+        return 0;
+    }
+
 
     public static class graphProject extends JFrame{
 
@@ -2779,8 +2828,17 @@ public class project {
                 U.get(j).addInputUnionVolts(0, 0, 0, dT);
             }
 
+            int checkingGround=searchNode("0");
+            int checkingVS=0;
+
             if (dT > 0 && T > 0 && dI > 0 && dV > 0) {
                 for (int i = 0; i < T / dT; i += 1) {
+                    checkingGround=checkGround(dT, i);
+                    if(checkingGround==-1){
+                        errorType=-4;
+                        s+=0/0;
+                    }
+                    checkingVS=checkVS(dT, i);
                     calcNodeVolts(dT, dV, dI, i);
                     calcBranchCurrents(dT, dV, dI, i);
                 }
@@ -2789,6 +2847,8 @@ public class project {
                 errorType=-1;
                 s+=0/0;
             }
+
+
 
 
             chapOutput(fileWriter);
