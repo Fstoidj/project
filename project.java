@@ -1604,32 +1604,58 @@ public class project {
     public static int checkVS(double dT, int iteration){
         double v=0;
         for(int i=0;i<U.size();i++){
-            for(int j=0, k=0;j<U.get(i).n.size();j++){
-                for(int m=0;m<VS.size();m++){
-                    if(VS.get(m).n1.name.equals(U.get(i).n.get(j).name)){
-                        if(k>1&&v!=VS.get(i).V+VS.get(i).A*Math.sin(VS.get(i).p+VS.get(i).w*(iteration)*dT)){
-                            return -1;
+            for(int j1=0;j1<U.get(i).n.size();j1++){
+                for(int j2=j1+1, k=0; j2<U.get(i).n.size();j2++) {
+                    for (int m = 0; m < VS.size(); m++) {
+                        if (VS.get(m).n1.name.equals(U.get(i).n.get(j1).name)&&VS.get(m).n2.name.equals(U.get(i).n.get(j2).name)) {
+                            if (k > 1 && v != VS.get(i).V + VS.get(i).A * Math.sin(VS.get(i).p + VS.get(i).w * (iteration) * dT)) {
+                                return -1;
+                            }
+                            k++;
+                            v = VS.get(i).V + VS.get(i).A * Math.sin(VS.get(i).p + VS.get(i).w * (iteration) * dT);
                         }
-                        v=VS.get(i).V+VS.get(i).A*Math.sin(VS.get(i).p+VS.get(i).w*(iteration)*dT);
-                    }
-                }
-                for(int m=0;m<E.size();m++){
-                    if(E.get(m).n1.name.equals(U.get(i).n.get(j).name)){
-                        if(k>1&&v!=E.get(i).V){
-                            return -1;
+                        else if (VS.get(m).n2.name.equals(U.get(i).n.get(j1).name)&&VS.get(m).n1.name.equals(U.get(i).n.get(j2).name)) {
+                            if (k > 1 && v != -VS.get(i).V + VS.get(i).A * Math.sin(VS.get(i).p + VS.get(i).w * (iteration) * dT)) {
+                                return -1;
+                            }
+                            k++;
+                            v = -VS.get(i).V + VS.get(i).A * Math.sin(VS.get(i).p + VS.get(i).w * (iteration) * dT);
                         }
-                        v=E.get(i).V;
                     }
-                }
-                for(int m=0;m<H.size();m++){
-                    if(H.get(m).n1.name.equals(U.get(i).n.get(j).name)){
-                        if(k>1&&v!=H.get(i).V){
-                            return -1;
+                    for (int m = 0; m < E.size(); m++) {
+                        if (E.get(m).n1.name.equals(U.get(i).n.get(j1).name)&&E.get(m).n2.name.equals(U.get(i).n.get(j2).name)) {
+                            if (k > 1 && v != E.get(i).V) {
+                                return -1;
+                            }
+                            k++;
+                            v = E.get(i).V;
                         }
-                        v=H.get(i).V;
+                        else if (E.get(m).n2.name.equals(U.get(i).n.get(j1).name)&&E.get(m).n1.name.equals(U.get(i).n.get(j2).name)) {
+                            if (k > 1 && v != -E.get(i).V) {
+                                return -1;
+                            }
+                            k++;
+                            v = -E.get(i).V;
+                        }
                     }
+                    for (int m = 0; m < H.size(); m++) {
+                        if (H.get(m).n1.name.equals(U.get(i).n.get(j1).name)&&H.get(m).n2.name.equals(U.get(i).n.get(j2).name)) {
+                            if (k > 1 && v != H.get(i).V) {
+                                return -1;
+                            }
+                            k++;
+                            v = H.get(i).V;
+                        }
+                        else if (H.get(m).n2.name.equals(U.get(i).n.get(j1).name)&&H.get(m).n1.name.equals(U.get(i).n.get(j2).name)) {
+                            if (k > 1 && v != -H.get(i).V) {
+                                return -1;
+                            }
+                            k++;
+                            v = -H.get(i).V;
+                        }
+                    }
+                    k = 0;
                 }
-                k=0;
             }
         }
         return 0;
