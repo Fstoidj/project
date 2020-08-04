@@ -2926,7 +2926,7 @@ public class project {
 
         }
         catch (Exception e){
-            //System.out.println(e);
+            System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
