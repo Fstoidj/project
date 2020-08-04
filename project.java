@@ -2406,24 +2406,52 @@ public class project {
     public static class ConsolMatni extends JFrame{
         String x;
 
-        ConsolMatni(){
 
-
+        ConsolMatni(File f) throws IOException {
             JButton Load=new JButton("Load");
             JButton Run=new JButton("Run");
             JTextArea Consol=new JTextArea();
+            Consol.setEditable(true);
             JLabel CONSOLMATNI=new JLabel("consol matni :");
             Load.setBounds(0,0,200,50);
             Run.setBounds(200,0,200,50);
             Consol.setBounds(200,100,600,300);
             CONSOLMATNI.setBounds(100,100,100,50);
 
+
+
+            Scanner scanner=new Scanner(f);
+            do{
+                String line;
+                line=scanner.nextLine();
+                Consol.append(line+"\n");
+            }
+            while (scanner.hasNextLine());
+            FileWriter fileWriter=new FileWriter(f);
+
+
+
             Load.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    x=Consol.getText();
+                    try{
+                        x=Consol.getText();
+                        fileWriter.write(x);
                     }
+                    catch (Exception w){
+
+                    }
+
+
+                }
                 });
+
+            Run.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
 
             add(Load);
             add(Run);
@@ -2466,6 +2494,8 @@ public class project {
             String s = sc.nextLine();
             s = s.trim();
             s = s.replaceAll("( )+", " ");
+
+            new ConsolMatni(file);
 
             while (!s.equals(".end")) {
                 if (s.charAt(0) == '*') { }
