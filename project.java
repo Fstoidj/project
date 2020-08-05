@@ -1542,7 +1542,7 @@ public class project {
                 fileWriter.write("\n");
             }
         }
-        catch (IOException e) {
+        catch (Exception e) {
         }
     }
     public static int consoleInput(String s, double dT, double T){
@@ -2928,8 +2928,8 @@ public class project {
             tout[1]=dT;
 
         }
-        catch (IOException e){
-            System.out.println(e);
+        catch (Exception e){
+            //System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
