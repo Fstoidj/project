@@ -1542,7 +1542,7 @@ public class project {
                 fileWriter.write("\n");
             }
         }
-        catch (IOException e) {
+        catch (Exception e) {
         }
     }
     public static int consoleInput(String s, double dT, double T){
@@ -2553,10 +2553,11 @@ public class project {
             Load.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    Consol.setText("");
                     JFrame f1 = new JFrame("Testing File Selection");
                     FileSystemView fsv;
                     fsv = FileSystemView.getFileSystemView();
-                    File file = new File("C:\\");
+                    file = new File("C:\\");
                     JFileChooser fileChooser = new JFileChooser(file,fsv);
                     int response = fileChooser.showOpenDialog(f1);
                     if (response == JFileChooser.APPROVE_OPTION){
@@ -2929,7 +2930,6 @@ public class project {
 
         }
         catch (Exception e){
-            System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
