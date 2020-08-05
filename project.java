@@ -127,6 +127,13 @@ public class project {
                 }
             }
         }
+        else if (s.charAt(0) == 'D') {
+            for (int i=0;i<D.size();i++){
+                if(D.get(i).NameD.equals(s)){
+                    return D.get(i).outputCurrent;
+                }
+            }
+        }
         s+=0/0;
         return a;
     }
@@ -610,6 +617,14 @@ public class project {
                     I += H.get(k).outputCurrent.get(iteration);
                 }
             }
+            for(int k=0; k<D.size();k++){
+                if(D.get(k).n1.name.equals(n1.name)){
+                    I-=D.get(k).outputCurrent.get(iteration);
+                }
+                else if(D.get(k).n2.name.equals(n1.name)){
+                    I+=D.get(k).outputCurrent.get(iteration);
+                }
+            }
             return I;
         }
     }
@@ -1052,6 +1067,14 @@ public class project {
                     I += H.get(k).outputCurrent.get(iteration);
                 }
             }
+            for(int k=0; k<D.size();k++){
+                if(D.get(k).n1.name.equals(n1.name)){
+                    I-=D.get(k).outputCurrent.get(iteration);
+                }
+                else if(D.get(k).n2.name.equals(n1.name)){
+                    I+=D.get(k).outputCurrent.get(iteration);
+                }
+            }
             return I;
         }
         public void updateV(int iteration){
@@ -1210,6 +1233,14 @@ public class project {
                     }
                 }
             }
+            for(int k=0; k<D.size();k++){
+                if(D.get(k).n1.name.equals(n1.name)){
+                    I-=D.get(k).outputCurrent.get(iteration);
+                }
+                else if(D.get(k).n2.name.equals(n1.name)){
+                    I+=D.get(k).outputCurrent.get(iteration);
+                }
+            }
             return I;
         }
         public void updateV(int iteration){
@@ -1252,13 +1283,10 @@ public class project {
                 n2=N.get(i);
             }
         }
-        void checdiod(){
-            if(I<0){
-                I=0;
-            }
-            else if(n1.volt-n2.volt>0){
-                n1.volt=n2.volt;
-            }
+        public double calcI(int iteration, double dV){
+            double i=0, is=0.00000000000001, vt=0.00000000000001;
+            i=is*(Math.exp((n1.outputVolt.get(iteration)-n2.outputVolt.get(iteration)+dV)/vt)-1);
+            return i;
         }
     }
 
@@ -1341,6 +1369,14 @@ public class project {
                     }
                     else if(H.get(k).n2.name.equals(U.get(i).n.get(j).name)){
                         i1-=H.get(k).outputCurrent.get(iteration);
+                    }
+                }
+                for(int k=0; k<D.size();k++){
+                    if(D.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i1-=D.get(k).calcI(iteration,0);
+                    }
+                    else if(D.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i1+=D.get(k).calcI(iteration, 0);
                     }
                 }
             }
@@ -1430,7 +1466,16 @@ public class project {
                         i2-=H.get(k).outputCurrent.get(iteration);
                     }
                 }
+                for(int k=0; k<D.size();k++){
+                    if(D.get(k).n1.name.equals(U.get(i).n.get(j).name)){
+                        i2-=D.get(k).calcI(iteration, dV);
+                    }
+                    else if(D.get(k).n2.name.equals(U.get(i).n.get(j).name)){
+                        i2+=D.get(k).calcI(iteration, -dV);
+                    }
+                }
             }
+
             U.get(i).n.get(0).outputVolt.add(U.get(i).n.get(0).volt+((Math.abs(i1)-Math.abs(i2))*dV)/dI);
             U.get(i).addInputUnionVolts(0, 0, iteration, dT);
             i1=0;
@@ -1476,6 +1521,9 @@ public class project {
             I=H.get(i).calcOutputCurrent(dT, dV, dI, iteration);
             H.get(i).outputCurrent.add(I);
         }
+        for (int i=0; i<D.size();i++){
+            D.get(i).outputCurrent.add(D.get(i).calcI(iteration, 0));
+        }
     }
 
 
@@ -1493,7 +1541,7 @@ public class project {
             }
 
 
-            for (int i = 0, iR = 0, iI = 0, iC = 0, iL = 0, iV = 0, iG = 0, iF = 0, iE = 0, iH = 0; i < input.size(); i++) {
+            for (int i = 0, iR = 0, iI = 0, iC = 0, iL = 0, iV = 0, iG = 0, iF = 0, iE = 0, iH = 0, iD=0; i < input.size(); i++) {
                 if (input.get(i).equals("R")) {
                     fileWriter.write(R.get(iR).NameR + " :");
                     R.get(iR).output(fileWriter);
@@ -1538,6 +1586,11 @@ public class project {
                     fileWriter.write(H.get(iH).NameH + " :");
                     H.get(iH).output(fileWriter);
                     iH++;
+                }
+                else if (input.get(i).equals("D")) {
+                    fileWriter.write(D.get(iD).NameD + " :");
+                    D.get(iD).output(fileWriter);
+                    iD++;
                 }
                 fileWriter.write("\n");
             }
@@ -1660,6 +1713,89 @@ public class project {
                     k = 0;
                 }
             }
+        }
+        return 0;
+    }
+    public static int checkCS(double dT, int iteration){
+        double I=0;
+        for(int i=0;i<N.size();i++){
+            for(int k=0; k<R.size();k++){
+                if(R.get(k).n1.name.equals(N.get(i).name)) {
+                    if (!R.get(k).n2.name.equals(N.get(i).name)) {
+                        return 0;
+                    }
+                }
+            }
+            for(int k=0; k<C.size();k++){
+                if(C.get(k).n1.name.equals(N.get(i).name)) {
+                    if (!C.get(k).n2.name.equals(N.get(i).name)) {
+                        return 0;
+                    }
+                }
+            }
+            for(int k=0; k<L.size();k++){
+                if(L.get(k).n1.name.equals(N.get(i).name)) {
+                    if (!L.get(k).n2.name.equals(N.get(i).name)) {
+                        return 0;
+                    }
+                }
+            }
+            for(int k=0; k<VS.size();k++){
+                if(VS.get(k).n1.name.equals(N.get(i).name)) {
+                    if (!VS.get(k).n2.name.equals(N.get(i).name)) {
+                        return 0;
+                    }
+                }
+            }
+            for(int k=0; k<E.size();k++){
+                if(E.get(k).n1.name.equals(N.get(i).name)) {
+                    if (!E.get(k).n2.name.equals(N.get(i).name)) {
+                        return 0;
+                    }
+                }
+            }
+            for(int k=0; k<H.size();k++){
+                if(H.get(k).n1.name.equals(N.get(i).name)) {
+                    if (!H.get(k).n2.name.equals(N.get(i).name)) {
+                        return 0;
+                    }
+                }
+            }
+            for(int j=0; j<CS.size();j++){
+                if(CS.get(j).n1.name.equals(N.get(i).name)){
+                    I+=CS.get(j).outputCurrent.get(iteration);
+                }
+                else if(CS.get(j).n2.name.equals(N.get(i).name)){
+                    I-=CS.get(j).outputCurrent.get(iteration);
+                }
+            }
+            for(int j=0; j<F.size();j++){
+                if(F.get(j).n1.name.equals(N.get(i).name)){
+                    I+=F.get(j).outputCurrent.get(iteration);
+                }
+                else if(F.get(j).n2.name.equals(N.get(i).name)){
+                    I-=F.get(j).outputCurrent.get(iteration);
+                }
+            }
+            for(int j=0; j<G.size();j++){
+                if(G.get(j).n1.name.equals(N.get(i).name)){
+                    I+=G.get(j).outputCurrent.get(iteration);
+                }
+                else if(G.get(j).n2.name.equals(N.get(i).name)){
+                    I-=G.get(j).outputCurrent.get(iteration);
+                }
+            }
+            for(int k=0; k<D.size();k++){
+                if(D.get(k).n1.name.equals(N.get(i).name)) {
+                    if (!D.get(k).n2.name.equals(N.get(i).name)) {
+                        return 0;
+                    }
+                }
+            }
+            if(I!=0){
+                return -1;
+            }
+            I=0;
         }
         return 0;
     }
@@ -2539,7 +2675,6 @@ public class project {
 
 
             Scanner scanner=new Scanner(file);
-            //System.out.println("asda");
             while (scanner.hasNextLine()){
 
                 String line;
@@ -2907,6 +3042,10 @@ public class project {
                     checkingVS=checkVS(dT, i);
                     if(checkingVS==-1){
                         errorType=-3;
+                        s+=0/0;
+                    }
+                    if(checkCS(dT, i)==-1){
+                        errorType=-2;
                         s+=0/0;
                     }
                     calcNodeVolts(dT, dV, dI, i);
