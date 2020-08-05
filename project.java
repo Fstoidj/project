@@ -182,29 +182,104 @@ public class project {
         public int addInputUnionVolts(int i, int n_Place, int iteration, double dT){
             if(i<n.size()){
                 for(int j=0, k=0;j<VS.size();j++){
-                    if(VS.get(j).n1.name.equals(n.get(n_Place).name)){
+                    if(VS.get(j).n1.name.equals(n.get(n_Place).name) && iteration+2>VS.get(j).n2.outputVolt.size()){
                         VS.get(j).n2.volt=VS.get(j).V+VS.get(j).A*Math.sin(VS.get(j).p+VS.get(j).w*(iteration)*dT)+VS.get(j).n1.volt;
                         VS.get(j).n2.outputVolt.add(VS.get(j).n2.volt);
                         k=searchNodeInUnion(VS.get(j).n2.name);
                         i=addInputUnionVolts(i+1, k, iteration, dT);
                     }
+                    else if(VS.get(j).n2.name.equals(n.get(n_Place).name) && iteration+2>VS.get(j).n1.outputVolt.size()){
+                        VS.get(j).n1.volt=-VS.get(j).V-VS.get(j).A*Math.sin(VS.get(j).p+VS.get(j).w*(iteration)*dT)+VS.get(j).n2.volt;
+                        VS.get(j).n1.outputVolt.add(VS.get(j).n1.volt);
+                        k=searchNodeInUnion(VS.get(j).n1.name);
+                        i=addInputUnionVolts(i+1, k, iteration, dT);
+                    }
+
+
                 }
                 for(int j=0, k=0;j<E.size();j++){
-                    if(E.get(j).n1.name.equals(n.get(n_Place).name)){
+                    if(E.get(j).n1.name.equals(n.get(n_Place).name) && iteration+2>E.get(j).n2.outputVolt.size()){
                         E.get(j).updateV(iteration);
                         E.get(j).n2.volt=E.get(j).V+E.get(j).n1.volt;
                         E.get(j).n2.outputVolt.add(E.get(j).n2.volt);
                         k=searchNodeInUnion(E.get(j).n2.name);
                         i=addInputUnionVolts(i+1, k,iteration, dT);
                     }
+                    else if(E.get(j).n2.name.equals(n.get(n_Place).name) && iteration+2>E.get(j).n1.outputVolt.size()){
+                        E.get(j).updateV(iteration);
+                        E.get(j).n1.volt=E.get(j).V+E.get(j).n2.volt;
+                        E.get(j).n1.outputVolt.add(E.get(j).n1.volt);
+                        k=searchNodeInUnion(E.get(j).n1.name);
+                        i=addInputUnionVolts(i+1, k,iteration, dT);
+                    }
                 }
                 for(int j=0, k=0;j<H.size();j++){
-                    if(H.get(j).n1.name.equals(n.get(n_Place).name)){
+                    if(H.get(j).n1.name.equals(n.get(n_Place).name) && iteration+2>H.get(j).n2.outputVolt.size()){
                         H.get(j).updateV(iteration);
                         H.get(j).n2.volt=H.get(j).V+H.get(j).n1.volt;
                         H.get(j).n2.outputVolt.add(H.get(j).n2.volt);
                         k=searchNodeInUnion(H.get(j).n2.name);
                         i=addInputUnionVolts(i+1, k, iteration, dT);
+                    }
+                    else if(H.get(j).n2.name.equals(n.get(n_Place).name) && iteration+2>H.get(j).n1.outputVolt.size()){
+                        H.get(j).updateV(iteration);
+                        H.get(j).n1.volt=H.get(j).V+H.get(j).n2.volt;
+                        H.get(j).n1.outputVolt.add(H.get(j).n1.volt);
+                        k=searchNodeInUnion(H.get(j).n1.name);
+                        i=addInputUnionVolts(i+1, k, iteration, dT);
+                    }
+                }
+            }
+            return i;
+        }
+        public int addInputUnionVolts0(int i, int n_Place, int iteration, double dT){
+            if(i<n.size()){
+                for(int j=0, k=0;j<VS.size();j++){
+                    if(VS.get(j).n1.name.equals(n.get(n_Place).name) && iteration+1>VS.get(j).n2.outputVolt.size()){
+                        VS.get(j).n2.volt=VS.get(j).V+VS.get(j).A*Math.sin(VS.get(j).p+VS.get(j).w*(iteration)*dT)+VS.get(j).n1.volt;
+                        VS.get(j).n2.outputVolt.add(VS.get(j).n2.volt);
+                        k=searchNodeInUnion(VS.get(j).n2.name);
+                        i=addInputUnionVolts0(i+1, k, iteration, dT);
+                    }
+                    else if(VS.get(j).n2.name.equals(n.get(n_Place).name) && iteration+1>VS.get(j).n1.outputVolt.size()){
+                        VS.get(j).n1.volt=-VS.get(j).V-VS.get(j).A*Math.sin(VS.get(j).p+VS.get(j).w*(iteration)*dT)+VS.get(j).n2.volt;
+                        VS.get(j).n1.outputVolt.add(VS.get(j).n1.volt);
+                        k=searchNodeInUnion(VS.get(j).n1.name);
+                        i=addInputUnionVolts0(i+1, k, iteration, dT);
+                    }
+
+
+                }
+                for(int j=0, k=0;j<E.size();j++){
+                    if(E.get(j).n1.name.equals(n.get(n_Place).name) && iteration+1>E.get(j).n2.outputVolt.size()){
+                        E.get(j).updateV(iteration);
+                        E.get(j).n2.volt=E.get(j).V+E.get(j).n1.volt;
+                        E.get(j).n2.outputVolt.add(E.get(j).n2.volt);
+                        k=searchNodeInUnion(E.get(j).n2.name);
+                        i=addInputUnionVolts0(i+1, k,iteration, dT);
+                    }
+                    else if(E.get(j).n2.name.equals(n.get(n_Place).name) && iteration+1>E.get(j).n1.outputVolt.size()){
+                        E.get(j).updateV(iteration);
+                        E.get(j).n1.volt=E.get(j).V+E.get(j).n2.volt;
+                        E.get(j).n1.outputVolt.add(E.get(j).n1.volt);
+                        k=searchNodeInUnion(E.get(j).n1.name);
+                        i=addInputUnionVolts0(i+1, k,iteration, dT);
+                    }
+                }
+                for(int j=0, k=0;j<H.size();j++){
+                    if(H.get(j).n1.name.equals(n.get(n_Place).name) && iteration+1>H.get(j).n2.outputVolt.size()){
+                        H.get(j).updateV(iteration);
+                        H.get(j).n2.volt=H.get(j).V+H.get(j).n1.volt;
+                        H.get(j).n2.outputVolt.add(H.get(j).n2.volt);
+                        k=searchNodeInUnion(H.get(j).n2.name);
+                        i=addInputUnionVolts0(i+1, k, iteration, dT);
+                    }
+                    else if(H.get(j).n2.name.equals(n.get(n_Place).name) && iteration+1>H.get(j).n1.outputVolt.size()){
+                        H.get(j).updateV(iteration);
+                        H.get(j).n1.volt=H.get(j).V+H.get(j).n2.volt;
+                        H.get(j).n1.outputVolt.add(H.get(j).n1.volt);
+                        k=searchNodeInUnion(H.get(j).n1.name);
+                        i=addInputUnionVolts0(i+1, k, iteration, dT);
                     }
                 }
             }
@@ -1269,8 +1344,8 @@ public class project {
             }
             s=s.substring(s.indexOf(" ")+1);
             nodz =new nodes();
-            n=new node(s.substring(0, s.indexOf(" ")));
-            i=searchNode(s.substring(0,s.indexOf(" ")));
+            n=new node(s);
+            i=searchNode(s);
             if(i==-1){
                 n.union=N.size();
                 nodz.n.add(n);
@@ -1284,7 +1359,7 @@ public class project {
             }
         }
         public double calcI(int iteration, double dV){
-            double i=0, is=0.00000000000001, vt=0.00000000000001;
+            double i=0, is=0.00001, vt=0.0026;
             i=is*(Math.exp((n1.outputVolt.get(iteration)-n2.outputVolt.get(iteration)+dV)/vt)-1);
             return i;
         }
@@ -1518,7 +1593,6 @@ public class project {
             E.get(i).outputCurrent.add(I);
         }
         for (int i=0;i<H.size();i++){
-            I=H.get(i).calcOutputCurrent(dT, dV, dI, iteration);
             H.get(i).outputCurrent.add(I);
         }
         for (int i=0; i<D.size();i++){
@@ -2814,22 +2888,22 @@ public class project {
 
             File output = new File("output.txt");
             FileWriter fileWriter = new FileWriter(output);
-            Scanner sc= new Scanner(file);
+            Scanner sc = new Scanner(file);
 
             String s = sc.nextLine();
             s = s.trim();
             s = s.replaceAll("( )+", " ");
 
 
-            while (!s.equals(".end")) {
-                if (s.charAt(0) == '*') { }
+            while (s.indexOf(".tran") == -1) {
+                if (s.charAt(0) == '*') {}
                 else if (s.charAt(0) == 'R') {
                     r = new resistor(s);
                     r.outputCurrent.add(0.0);
                     R.add(r);
                     input.add("R");
-                    if(r.R<0){
-                        s+=0/0;
+                    if (r.R < 0) {
+                        s += 0 / 0;
                     }
                 }
                 else if (s.charAt(0) == 'L') {
@@ -2837,8 +2911,8 @@ public class project {
                     l.outputCurrent.add(0.0);
                     L.add(l);
                     input.add("L");
-                    if(l.L<0){
-                        s+=0/0;
+                    if (l.L < 0) {
+                        s += 0 / 0;
                     }
                 }
                 else if (s.charAt(0) == 'I') {
@@ -2857,8 +2931,8 @@ public class project {
                     c.outputCurrent.add(0.0);
                     C.add(c);
                     input.add("C");
-                    if(c.C<0){
-                        s+=0/0;
+                    if (c.C < 0) {
+                        s += 0 / 0;
                     }
                 }
                 else if (s.charAt(0) == 'G') {
@@ -2886,35 +2960,6 @@ public class project {
                     D.add(d);
                     input.add("D");
                 }
-                else if (s.indexOf(".tran") != -1) {
-                    s = s.substring(s.indexOf(" ") + 1);
-                    s = s.replaceAll("k", "000");
-                    s = s.replaceAll("M", "000000");
-                    s = s.replaceAll("G", "000000000");
-                    if (s.indexOf("m") != -1) {
-                        T = 0.001;
-                        s = s.replaceAll("m", "");
-                    }
-                    else if (s.indexOf("u") != -1) {
-                        T = 0.000001;
-                        s = s.replaceAll("u", "");
-                    }
-                    else if (s.indexOf("n") != -1) {
-                        T = 0.000000001;
-                        s = s.replaceAll("n", "");
-                    }
-                    else if (s.indexOf("p") != -1) {
-                        T = 0.000000000001;
-                        s = s.replaceAll("p", "");
-                    }
-                    else {
-                        T = 1;
-                    }
-                    T *= Double.parseDouble(s);
-                    if(T<=0){
-                        s+=0/0;
-                    }
-                }
                 else if (s.indexOf("dT") != -1) {
                     s = s.substring(s.indexOf(" ") + 1);
                     s = s.replaceAll("k", "000");
@@ -2923,25 +2968,21 @@ public class project {
                     if (s.indexOf("m") != -1) {
                         dT = 0.001;
                         s = s.replaceAll("m", "");
-                    }
-                    else if (s.indexOf("u") != -1) {
+                    } else if (s.indexOf("u") != -1) {
                         dT = 0.000001;
                         s = s.replaceAll("u", "");
-                    }
-                    else if (s.indexOf("n") != -1) {
+                    } else if (s.indexOf("n") != -1) {
                         dT = 0.000000001;
                         s = s.replaceAll("n", "");
-                    }
-                    else if (s.indexOf("p") != -1) {
+                    } else if (s.indexOf("p") != -1) {
                         dT = 0.000000000001;
                         s = s.replaceAll("p", "");
-                    }
-                    else {
+                    } else {
                         dT = 1;
                     }
                     dT *= Double.parseDouble(s);
-                    if(dT<=0){
-                        s+=0/0;
+                    if (dT <= 0) {
+                        s += 0 / 0;
                     }
                 }
                 else if (s.indexOf("dV") != -1) {
@@ -2952,25 +2993,21 @@ public class project {
                     if (s.indexOf("m") != -1) {
                         dV = 0.001;
                         s = s.replaceAll("m", "");
-                    }
-                    else if (s.indexOf("u") != -1) {
+                    } else if (s.indexOf("u") != -1) {
                         dV = 0.000001;
                         s = s.replaceAll("u", "");
-                    }
-                    else if (s.indexOf("n") != -1) {
+                    } else if (s.indexOf("n") != -1) {
                         dV = 0.000000001;
                         s = s.replaceAll("n", "");
-                    }
-                    else if (s.indexOf("p") != -1) {
+                    } else if (s.indexOf("p") != -1) {
                         dV = 0.000000000001;
                         s = s.replaceAll("p", "");
-                    }
-                    else {
+                    } else {
                         dV = 1;
                     }
                     dV *= Double.parseDouble(s);
-                    if(dV<=0){
-                        s+=0/0;
+                    if (dV <= 0) {
+                        s += 0 / 0;
                     }
                 }
                 else if (s.indexOf("dI") != -1) {
@@ -2981,25 +3018,21 @@ public class project {
                     if (s.indexOf("m") != -1) {
                         dI = 0.001;
                         s = s.replaceAll("m", "");
-                    }
-                    else if (s.indexOf("u") != -1) {
+                    } else if (s.indexOf("u") != -1) {
                         dI = 0.000001;
                         s = s.replaceAll("u", "");
-                    }
-                    else if (s.indexOf("n") != -1) {
+                    } else if (s.indexOf("n") != -1) {
                         dI = 0.000000001;
                         s = s.replaceAll("n", "");
-                    }
-                    else if (s.indexOf("p") != -1) {
+                    } else if (s.indexOf("p") != -1) {
                         dI = 0.000000000001;
                         s = s.replaceAll("p", "");
-                    }
-                    else {
+                    } else {
                         dI = 1;
                     }
                     dI *= Double.parseDouble(s);
-                    if(dI<=0){
-                        s+=0/0;
+                    if (dI <= 0) {
+                        s += 0 / 0;
                     }
                 }
                 else {
@@ -3009,52 +3042,84 @@ public class project {
                 s = sc.nextLine();
                 s = s.trim();
                 s = s.replaceAll("( )+", " ");
-
             }
+
+            s = s.substring(s.indexOf(" ") + 1);
+            s = s.replaceAll("k", "000");
+            s = s.replaceAll("M", "000000");
+            s = s.replaceAll("G", "000000000");
+            if (s.indexOf("m") != -1) {
+                T = 0.001;
+                s = s.replaceAll("m", "");
+            }
+            else if (s.indexOf("u") != -1) {
+                T = 0.000001;
+                s = s.replaceAll("u", "");
+            }
+            else if (s.indexOf("n") != -1) {
+                T = 0.000000001;
+                s = s.replaceAll("n", "");
+            }
+            else if (s.indexOf("p") != -1) {
+                T = 0.000000000001;
+                s = s.replaceAll("p", "");
+            }
+            else {
+                T = 1;
+            }
+            T *= Double.parseDouble(s);
+            if (T <= 0) {
+                s += 0 / 0;
+            }
+
 
 
             for (int j = 0; j < U.size(); j++) {
                 U.get(j).n.get(0).outputVolt.add(0.0);
-                /*
-                for (int x = 0; x < U.get(j).n.size(); x++) {
-                    System.out.println(U.get(j).n.get(x).name + " : " + U.get(j).n.get(x).union + " in: " + U.get(j).union + " Volt: " + U.get(j).n.get(x).outputVolt);
-                }
-                */
             }
             for (int j = 0; j < U.size(); j++) {
-                U.get(j).addInputUnionVolts(0, 0, 0, dT);
+                U.get(j).addInputUnionVolts0(0, 0, 0, dT);
+                /*for (int x = 0; x < U.get(j).n.size(); x++) {
+                    System.out.println(U.get(j).n.get(x).name + " : " + U.get(j).n.get(x).union + " in: " + U.get(j).union + " Volt: " + U.get(j).n.get(x).outputVolt);
+                }*/
             }
 
-            int checkingGround=searchNode("0");
-            if(checkingGround==-1){
-                errorType=-4;
-                s+=0/0;
+            int checkingGround = searchNode("0");
+            if (checkingGround == -1) {
+                errorType = -4;
+                s += 0 / 0;
             }
-            int checkingVS=0;
+            int checkingVS = 0;
 
             if (dT > 0 && T > 0 && dI > 0 && dV > 0) {
-                for (int i = 0; i < T / dT; i += 1) {
-                    checkingGround=checkGround(dT, i);
-                    if(checkingGround==-1){
-                        errorType=-4;
-                        s+=0/0;
+                for (int i = 0; i <= T / dT; i += 1) {
+                    checkingGround = checkGround(dT, i);
+                    if (checkingGround == -1) {
+                        errorType = -4;
+                        s += 0 / 0;
                     }
-                    checkingVS=checkVS(dT, i);
-                    if(checkingVS==-1){
-                        errorType=-3;
-                        s+=0/0;
+                    checkingVS = checkVS(dT, i);
+                    if (checkingVS == -1) {
+                        errorType = -3;
+                        s += 0 / 0;
                     }
-                    if(checkCS(dT, i)==-1){
-                        errorType=-2;
-                        s+=0/0;
+                    if (checkCS(dT, i) == -1) {
+                        errorType = -2;
+                        s += 0 / 0;
                     }
                     calcNodeVolts(dT, dV, dI, i);
                     calcBranchCurrents(dT, dV, dI, i);
+                    /*System.out.println("RAN : "+i);
+                    for (int j = 0; j < U.size(); j++) {
+                        for (int x = 0; x < U.get(j).n.size(); x++) {
+                            System.out.println(U.get(j).n.get(x).name + " : " + U.get(j).n.get(x).union + " in: " + U.get(j).union + " Volt: " + U.get(j).n.get(x).outputVolt);
+                        }
+                    }*/
                 }
             }
             else {
-                errorType=-1;
-                s+=0/0;
+                errorType = -1;
+                s += 0 / 0;
             }
 
 
@@ -3064,11 +3129,12 @@ public class project {
 
             graphProject GraphProject = new graphProject();
 
-            tout[0]=T;
-            tout[1]=dT;
+            tout[0] = T;
+            tout[1] = dT;
 
         }
         catch (Exception e){
+            System.out.println(e);
             if(errorType==0) {
                 System.out.println("Error on line: " + lineNumber);
             }
