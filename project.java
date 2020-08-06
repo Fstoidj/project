@@ -1359,7 +1359,7 @@ public class project {
             }
         }
         public double calcI(int iteration, double dV){
-            double i=0, is=0.00001, vt=0.0026;
+            double i=0, is=0.0000000000001, vt=0.0000026;
             i=is*(Math.exp((n1.outputVolt.get(iteration)-n2.outputVolt.get(iteration)+dV)/vt)-1);
             return i;
         }
