@@ -1359,7 +1359,9 @@ public class project {
             }
         }
         public double calcI(int iteration, double dV){
-            double i=0, is=0.0000000000001, vt=0.0000026;
+
+            double i=0, is=0.0000001, vt=0.0026;
+
             i=is*(Math.exp((n1.outputVolt.get(iteration)-n2.outputVolt.get(iteration)+dV)/vt)-1);
             return i;
         }
@@ -2143,9 +2145,9 @@ public class project {
             int node1Num = Integer.parseInt(ccvs.n1.name) - 1;
             int node2Num = Integer.parseInt(ccvs.n2.name) - 1;
             if (node1Num == -1)
-                connectToEarth(node2Num, "VoltageCircleU.png", ccvs.NameH);
+                connectToEarth(node2Num, "VoltageCircleD.png", ccvs.NameH);
             else if (node2Num == -1)
-                connectToEarth(node1Num, "VoltageCircleD.png", ccvs.NameH);
+                connectToEarth(node1Num, "VoltageCircleU.png", ccvs.NameH);
             else {
                 x1 = node1Num % 6;
                 y1 = 4 - node1Num / 6;
@@ -2153,14 +2155,14 @@ public class project {
                 y2 = 4 - node2Num / 6;
                 if (x1 == x2) {
                     if (y1 > y2)
-                        drawVertical(x1, y1, x2, y2, "VoltageCircleU.png", ccvs.NameH);
-                    else
                         drawVertical(x1, y1, x2, y2, "VoltageCircleD.png", ccvs.NameH);
+                    else
+                        drawVertical(x1, y1, x2, y2, "VoltageCircleU.png", ccvs.NameH);
                 } else if (y1 == y2) {
                     if (x1 > x2)
-                        drawHorizontal(x1, y1, x2, y2, "VoltageCircleL.png", ccvs.NameH);
-                    else
                         drawHorizontal(x1, y1, x2, y2, "VoltageCircleR.png", ccvs.NameH);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "VoltageCircleL.png", ccvs.NameH);
                 }
             }
         }
@@ -2197,9 +2199,9 @@ public class project {
             int node1Num = Integer.parseInt(cccs.n1.name) - 1;
             int node2Num = Integer.parseInt(cccs.n2.name) - 1;
             if (node1Num == -1)
-                connectToEarth(node2Num, "CurrentU.png", cccs.NameF);
+                connectToEarth(node2Num, "CurrentD.png", cccs.NameF);
             else if (node2Num == -1)
-                connectToEarth(node1Num, "CurrentD.png", cccs.NameF);
+                connectToEarth(node1Num, "CurrentU.png", cccs.NameF);
             else {
                 x1 = node1Num % 6;
                 y1 = 4 - node1Num / 6;
@@ -2207,14 +2209,14 @@ public class project {
                 y2 = 4 - node2Num / 6;
                 if (x1 == x2) {
                     if (y1 > y2)
-                        drawVertical(x1, y1, x2, y2, "CurrentU.png", cccs.NameF);
-                    else
                         drawVertical(x1, y1, x2, y2, "CurrentD.png", cccs.NameF);
+                    else
+                        drawVertical(x1, y1, x2, y2, "CurrentU.png", cccs.NameF);
                 } else if (y1 == y2) {
                     if (x1 > x2)
-                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", cccs.NameF);
-                    else
                         drawHorizontal(x1, y1, x2, y2, "CurrentR.png", cccs.NameF);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", cccs.NameF);
                 }
             }
         }
@@ -2224,9 +2226,9 @@ public class project {
             int node1Num = Integer.parseInt(vccs.n1.name) - 1;
             int node2Num = Integer.parseInt(vccs.n2.name) - 1;
             if (node1Num == -1)
-                connectToEarth(node2Num, "CurrentU.png", vccs.NameG);
+                connectToEarth(node2Num, "CurrentD.png", vccs.NameG);
             else if (node2Num == -1)
-                connectToEarth(node1Num, "CurrentD.png", vccs.NameG);
+                connectToEarth(node1Num, "CurrentU.png", vccs.NameG);
             else {
                 x1 = node1Num % 6;
                 y1 = 4 - node1Num / 6;
@@ -2234,14 +2236,14 @@ public class project {
                 y2 = 4 - node2Num / 6;
                 if (x1 == x2) {
                     if (y1 > y2)
-                        drawVertical(x1, y1, x2, y2, "CurrentU.png", vccs.NameG);
-                    else
                         drawVertical(x1, y1, x2, y2, "CurrentD.png", vccs.NameG);
+                    else
+                        drawVertical(x1, y1, x2, y2, "CurrentU.png", vccs.NameG);
                 } else if (y1 == y2) {
                     if (x1 > x2)
-                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", vccs.NameG);
-                    else
                         drawHorizontal(x1, y1, x2, y2, "CurrentR.png", vccs.NameG);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", vccs.NameG);
                 }
             }
         }
@@ -2350,9 +2352,9 @@ public class project {
             int node1Num = Integer.parseInt(currentSource1.n1.name) - 1;
             int node2Num = Integer.parseInt(currentSource1.n2.name) - 1;
             if (node1Num == -1)
-                connectToEarth(node2Num, "CurrentU.png", currentSource1.NameI);
+                connectToEarth(node2Num, "CurrentD.png", currentSource1.NameI);
             else if (node2Num == -1)
-                connectToEarth(node1Num, "CurrentD.png", currentSource1.NameI);
+                connectToEarth(node1Num, "CurrentU.png", currentSource1.NameI);
             else {
                 x1 = node1Num % 6;
                 y1 = 4 - node1Num / 6;
@@ -2360,14 +2362,14 @@ public class project {
                 y2 = 4 - node2Num / 6;
                 if (x1 == x2) {
                     if (y1 > y2)
-                        drawVertical(x1, y1, x2, y2, "CurrentU.png", currentSource1.NameI);
-                    else
                         drawVertical(x1, y1, x2, y2, "CurrentD.png", currentSource1.NameI);
+                    else
+                        drawVertical(x1, y1, x2, y2, "CurrentU.png", currentSource1.NameI);
                 } else if (y1 == y2) {
                     if (x1 > x2)
-                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", currentSource1.NameI);
-                    else
                         drawHorizontal(x1, y1, x2, y2, "CurrentR.png", currentSource1.NameI);
+                    else
+                        drawHorizontal(x1, y1, x2, y2, "CurrentL.png", currentSource1.NameI);
                 }
             }
         }
